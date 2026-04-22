@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=À propos de matOS
+Name[fr]=À propos de matOS RALAMBO
+Name[en]=About matOS RALAMBO
+Comment=Afficher les informations sur matOS RALAMBO
+Comment[en]=View information about matOS RALAMBO
+Exec=mx-welcome --about --title "À propos de matOS RALAMBO"
+Terminal=false
+Type=Application
+Icon=/usr/share/MatOS/logos/logo-blue.svg
+Categories=System;
+NoDisplay=false
+StartupNotify=false

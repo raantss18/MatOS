@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=Manuel d’utilisation
+GenericName=MX Manuel d’utilisation
+Comment=Guide et informations
+Icon=help-browser
+Exec=mx-manual --title "Manuel d’utilisation"
+Actions=
+Categories=System;
+StartupNotify=true

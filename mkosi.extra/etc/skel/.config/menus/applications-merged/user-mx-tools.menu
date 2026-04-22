@@ -1,0 +1,33 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+    "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<!-- Do not edit manually - generated and managed by xdg-desktop-menu -->
+<Menu>
+    <Name>Applications</Name>
+<Menu>
+    <Name>mx-tools</Name>
+    <Directory>mx-tools.directory</Directory>
+    <Include>
+        <Filename>about-mx-linux.desktop</Filename>
+        <Filename>mx-tour.desktop</Filename>
+        <Filename>mx-tweak.desktop</Filename>
+        <Filename>mx-select-sound.desktop</Filename>
+        <Filename>mx-network-assistant.desktop</Filename>
+        <Filename>mx-welcome.desktop</Filename>
+        <Filename>mx-remastercc.desktop</Filename>
+        <Filename>mx-conky.desktop</Filename>
+        <Filename>mx-datetime.desktop</Filename>
+        <Filename>mx-repo-manager.desktop</Filename>
+        <Filename>mx-user.desktop</Filename>
+        <Filename>mx-packageinstaller.desktop</Filename>
+        <Filename>mx-snapshot.desktop</Filename>
+        <Filename>mx-live-usb-maker.desktop</Filename>
+        <Filename>mx-cleanup.desktop</Filename>
+        <Filename>mx-boot-options.desktop</Filename>
+        <Filename>mx-tools.desktop</Filename>
+        <Filename>mx-boot-repair.desktop</Filename>
+        <Filename>mx-checkaptgpg.desktop</Filename>
+        <Filename>mx-samba-config.desktop</Filename>
+        <Filename>mx-system-sounds.desktop</Filename>
+    </Include>
+</Menu>
+</Menu>

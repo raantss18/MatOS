@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Installer matOS
+Name[fr]=Installer matOS
+Comment=Installer matOS RALAMBO sur votre disque dur
+Exec=pkexec calamares
+Icon=calamares
+Categories=System;

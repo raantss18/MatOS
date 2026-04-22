@@ -1,0 +1,2 @@
+to reset MX defaults, remove all files in this directory
+to use Xfce project defaults instead of MX defaults, remove all files in this directory except xfce-mx-defaults

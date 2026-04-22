@@ -1,0 +1,82 @@
+name: Build matOS RALAMBO
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install mkosi and dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y mkosi systemd-container debian-archive-keyring squashfs-tools
+
+    - name: Build matOS RALAMBO image
+      run: sudo mkosi --force
+
+    - name: Compress artifact
+      run: |
+        ls -lh matos-ralambo.raw* 2>/dev/null || true
+
+    - name: Upload image artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: matos-ralambo-${{ github.run_number }}
+        path: |
+          matos-ralambo.raw.zst
+          matos-ralambo.raw
+        retention-days: 14
+        if-no-files-found: warn
+
+  smoke-test:
+    runs-on: ubuntu-24.04
+    needs: build
+    if: github.event_name != 'pull_request'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: matos-ralambo-${{ github.run_number }}
+
+    - name: Install test dependencies
+      run: sudo apt-get install -y systemd-container zstd
+
+    - name: Decompress image
+      run: |
+        if [ -f matos-ralambo.raw.zst ]; then
+          zstd -d matos-ralambo.raw.zst
+        fi
+
+    - name: Run smoke test in nspawn
+      run: |
+        sudo systemd-nspawn -bi matos-ralambo.raw --pipe -- bash -s << 'SCRIPT'
+        set -e
+        echo "=== Test: paquets mathématiques ==="
+        for pkg in sagemath maxima pari-gp gap-core r-base; do
+          dpkg -l "$pkg" | grep -q "^ii" && echo "OK: $pkg" || echo "ABSENT: $pkg"
+        done
+        echo "=== Test: binaires ==="
+        which sage && echo "OK: sage" || echo "ABSENT: sage"
+        which maxima && echo "OK: maxima" || echo "ABSENT: maxima"
+        which gp && echo "OK: gp (pari)" || echo "ABSENT: gp"
+        which R && echo "OK: R" || echo "ABSENT: R"
+        echo "=== Test: fichiers de configuration ==="
+        test -f /etc/skel/.config/xfce4/panel/logo1.svg && echo "OK: logo SVG" || echo "ABSENT: logo.svg"
+        test -d /etc/skel/Ressources && echo "OK: dossier Ressources" || echo "ABSENT: Ressources"
+        echo "=== Tous les tests terminés ==="
+        SCRIPT

@@ -1,0 +1,27 @@
+componentName: matos
+
+strings:
+  productName:         matOS RALAMBO
+  shortProductName:    matOS
+  version:             0.6
+  shortVersion:        0.6
+  versionedName:       matOS RALAMBO 0.6
+  shortVersionedName:  matOS 0.6
+  bootloaderEntryName: matOS
+  productUrl:          https://github.com/raantss/matos
+  supportUrl:          https://github.com/raantss/matos/issues
+  releaseNotesUrl:     https://github.com/raantss/matos/releases
+
+images:
+  productLogo:         "logo.png"
+  productIcon:         "logo.png"
+  productWelcome:      "welcome.png"
+
+slideshow:             "show.qml"
+slideshowAPI:          2
+
+style:
+  sidebarBackground:   "#1a1a2e"
+  sidebarText:         "#e0e0e0"
+  sidebarTextSelect:   "#ffffff"
+  sidebarTextHighlight: "#4a9eff"

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Bienvenue dans matOS
+Exec=bash -c 'sleep 5 && mx-welcome --title "Bienvenue dans matOS RALAMBO"'
+Terminal=false
+Type=Application
+Icon=/usr/share/MatOS/logos/logo-blue.svg
+NoDisplay=false

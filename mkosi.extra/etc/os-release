@@ -1,0 +1,10 @@
+PRETTY_NAME="matOS 0.6 RALAMBO"
+NAME="matOS"
+VERSION_ID="0.6"
+VERSION="0.6 (RALAMBO)"
+ID=matos
+ID_LIKE=debian
+HOME_URL="https://github.com/raantss/matos"
+SUPPORT_URL="https://github.com/raantss/matos/issues"
+BUG_REPORT_URL="https://github.com/raantss/matos/issues"
+LOGO=logo-blue

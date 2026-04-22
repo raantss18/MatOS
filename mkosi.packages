@@ -1,0 +1,134 @@
+# matOS RALAMBO — liste des paquets supplémentaires
+# Générée depuis l'analyse de matOS 0.5 Archimedes (MX Linux 23 Xfce)
+
+# ── Logiciels de calcul formel ──────────────────────────────────────
+sagemath
+sagemath-database-conway-polynomials
+sagemath-database-elliptic-curves
+sagemath-database-graphs
+sagemath-database-mutually-combinatorial-designs
+sagemath-database-polytopes
+python3-sage
+maxima
+maxima-sage
+maxima-sage-share
+wxmaxima
+mathpiper
+ecl
+eclib-tools
+coq
+
+# ── Théorie des groupes et algèbre computationnelle ─────────────────
+gap-core
+gap-dev
+gap-libs
+gap-online-help
+gap-gapdoc
+gap-alnuth
+gap-atlasrep
+gap-autpgrp
+gap-polycyclic
+gap-primgrp
+gap-smallgrp
+gap-table-of-marks
+gap-transgrp
+gap-utils
+
+# ── PARI/GP (théorie des nombres) ───────────────────────────────────
+pari-gp
+pari-gp2c
+pari-doc
+pari-elldata
+pari-galdata
+pari-galpol
+pari-seadata
+python3-cypari2
+python3-cysignals-pari
+
+# ── Singular (géométrie algébrique) ─────────────────────────────────
+singular
+singular-data
+singular-modules
+singular-ui
+
+# ── Géométrie et visualisation ──────────────────────────────────────
+geogebra
+gfan
+gnuplot
+gnuplot-x11
+
+# ── Algèbre linéaire et optimisation ────────────────────────────────
+fflas-ffpack
+fflas-ffpack-common
+flintqs
+coinor-libcbc3
+coinor-libcgl1
+coinor-libclp1
+coinor-libcoinmp1v5
+coinor-libcoinutils3v5
+coinor-libosi1v5
+
+# ── Python scientifique ─────────────────────────────────────────────
+python3-numpy
+python3-scipy
+python3-matplotlib
+python3-matplotlib-inline
+python3-sympy
+python3-mpmath
+python3-jupyter-client
+python3-jupyter-core
+python3-jupyterlab-pygments
+jupyter-core
+jupyter-nbextension-jupyter-js-widgets
+cython3
+
+# ── Statistiques (R) ────────────────────────────────────────────────
+r-base
+r-base-core
+r-base-dev
+r-cran-boot
+r-cran-class
+r-cran-cluster
+r-cran-codetools
+r-cran-foreign
+r-cran-kernsmooth
+r-cran-lattice
+r-cran-mass
+r-cran-matrix
+r-cran-mgcv
+r-cran-nlme
+r-cran-nnet
+r-cran-rpart
+r-cran-spatial
+r-cran-survival
+
+# ── LaTeX ────────────────────────────────────────────────────────────
+texlive
+texlive-base
+texlive-bibtex-extra
+texlive-binaries
+texlive-fonts-recommended
+texlive-lang-greek
+texlive-latex-base
+texlive-latex-extra
+texlive-latex-recommended
+texlive-pictures
+texlive-science
+biber
+preview-latex-style
+
+# ── Développement et compilation ────────────────────────────────────
+build-essential
+gfortran
+gfortran-12
+cargo
+bc
+default-jre
+default-jre-headless
+ghostscript
+ghostscript-x
+
+# ── Outils système ───────────────────────────────────────────────────
+gh
+genisoimage
+fuseiso

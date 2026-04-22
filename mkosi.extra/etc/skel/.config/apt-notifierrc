@@ -1,0 +1,6 @@
+IconLook=wireframe-dark
+LeftClick=ViewAndUpgrade
+UpgradeAssumeYes=true
+UpgradeAutoClose=false
+UpgradeType=dist-upgrade
+WireframeTransparent=true

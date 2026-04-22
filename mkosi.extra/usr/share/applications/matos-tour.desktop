@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Visite de matOS
+Name[fr]=Découvrir matOS RALAMBO
+Name[en]=Explore matOS RALAMBO
+Comment=Découvrir les fonctionnalités de matOS
+Comment[en]=Discover matOS features
+Exec=mx-tour --title "Visite de matOS RALAMBO"
+Terminal=false
+Type=Application
+Icon=/usr/share/MatOS/logos/logo-blue.svg
+Categories=System;
+NoDisplay=false
+StartupNotify=false

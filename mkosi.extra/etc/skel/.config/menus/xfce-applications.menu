@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE Menu
+  PUBLIC '-//freedesktop//DTD Menu 1.0//EN'
+  'http://standards.freedesktop.org/menu-spec/menu-1.0.dtd'>
+<Menu>
+	<Name>Xfce</Name>
+	<DefaultAppDirs />
+	<DefaultDirectoryDirs />
+	<DefaultMergeDirs />
+	<Include>
+		<Category>X-Xfce-Toplevel</Category>
+	</Include>
+	<MergeFile type="parent">/etc/xdg/menus/xfce-applications.menu</MergeFile>
+	<Menu>
+		<Name>Settings</Name>
+		<Directory>xfce-settings.directory</Directory>
+		<Menu>
+			<Name>Screensavers</Name>
+			<Directory>xfce-screensavers.directory</Directory>
+			<Layout>
+				<Merge type="menus" />
+				<Merge type="files" />
+			</Layout>
+		</Menu>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>xfce-settings-manager.desktop</Filename>
+			<Separator />
+			<Filename>xfce4-accessibility-settings.desktop</Filename>
+			<Filename>blueman-adapters.desktop</Filename>
+			<Filename>xfce-display-settings.desktop</Filename>
+			<Filename>org.bluesabre.Mugshot.desktop</Filename>
+			<Filename>xfce-ui-settings.desktop</Filename>
+			<Filename>xfce4-mime-settings.desktop</Filename>
+			<Filename>xfce-backdrop-settings.desktop</Filename>
+			<Filename>xfce-keyboard-settings.desktop</Filename>
+			<Filename>system-keyboard-qt.desktop</Filename>
+			<Filename>system-config-printer.desktop</Filename>
+			<Filename>gufw.desktop</Filename>
+			<Filename>nm-connection-editor.desktop</Filename>
+			<Filename>pavucontrol.desktop</Filename>
+			<Filename>papirus-folder-colors.desktop</Filename>
+			<Filename>thunar-volman-settings.desktop</Filename>
+			<Filename>xfce4-screensaver-preferences.desktop</Filename>
+			<Menuname>Screensavers</Menuname>
+			<Filename>menulibre.desktop</Filename>
+			<Filename>xfce4-settings-editor.desktop</Filename>
+			<Filename>compton-conf.desktop</Filename>
+			<Filename>xfce-workspaces-settings.desktop</Filename>
+			<Filename>blueman-manager.desktop</Filename>
+			<Filename>xfce4-power-manager-settings.desktop</Filename>
+			<Filename>xfce-wm-settings.desktop</Filename>
+			<Filename>synaptic.desktop</Filename>
+			<Filename>grub-customizer.desktop</Filename>
+			<Filename>lightdm-gtk-greeter-settings.desktop</Filename>
+			<Filename>mx-tweak-systray.desktop</Filename>
+			<Filename>mx-tweak.desktop</Filename>
+			<Filename>mx-tools.desktop</Filename>
+			<Filename>mx-system-sounds.desktop</Filename>
+			<Filename>xfce4-notifyd-config.desktop</Filename>
+			<Filename>onboard-settings.desktop</Filename>
+			<Filename>thunar-settings.desktop</Filename>
+			<Filename>xfce4-clipman-settings.desktop</Filename>
+			<Filename>xfce4-terminal-settings.desktop</Filename>
+			<Filename>xfce-wmtweaks-settings.desktop</Filename>
+			<Filename>org.xfce.orage-settings.desktop</Filename>
+			<Filename>xfce4-color-settings.desktop</Filename>
+			<Filename>xfce-session-settings.desktop</Filename>
+			<Filename>xfce-mouse-settings.desktop</Filename>
+			<Filename>advert-block.desktop</Filename>
+			<Filename>panel-preferences.desktop</Filename>
+			<Filename>texdoctk.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Accessories</Name>
+		<Directory>xfce-accessories.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>xfce4-about.desktop</Filename>
+			<Filename>xfce4-screenshooter.desktop</Filename>
+			<Filename>compton.desktop</Filename>
+			<Filename>conky-manager2.desktop</Filename>
+			<Filename>conky-toggle.desktop</Filename>
+			<Filename>menulibre.desktop</Filename>
+			<Filename>xfce4-terminal-emulator.desktop</Filename>
+			<Filename>xfce4-run.desktop</Filename>
+			<Filename>featherpad.desktop</Filename>
+			<Filename>galculator.desktop</Filename>
+			<Filename>org.gnome.FileRoller.desktop</Filename>
+			<Filename>xfce4-file-manager.desktop</Filename>
+			<Filename>thunar.desktop</Filename>
+			<Filename>xfce4-clipman.desktop</Filename>
+			<Filename>xfce4-taskmanager.desktop</Filename>
+			<Filename>org.gtkhash.gtkhash.desktop</Filename>
+			<Filename>gxkb.desktop</Filename>
+			<Filename>lightdm-gtk-greeter-settings.desktop</Filename>
+			<Filename>xfce4-appfinder.desktop</Filename>
+			<Filename>luckybackup.desktop</Filename>
+			<Filename>magnus.desktop</Filename>
+			<Filename>mc.desktop</Filename>
+			<Filename>mcedit.desktop</Filename>
+			<Filename>org.gnome.seahorse.Application.desktop</Filename>
+			<Filename>apt-notifier.desktop</Filename>
+			<Filename>xfce4-notes.desktop</Filename>
+			<Filename>onboard.desktop</Filename>
+			<Filename>onboard-settings.desktop</Filename>
+			<Filename>org.xfce.Catfish.desktop</Filename>
+			<Filename>thunar-bulk-rename.desktop</Filename>
+			<Filename>info.desktop</Filename>
+			<Filename>xfce4-sensors.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Other</Name>
+		<Directory>xfce-other.directory</Directory>
+		<Include>
+			<Filename>gcr-viewer.desktop</Filename>
+		</Include>
+		<Include>
+			<Filename>panel-desktop-handler.desktop</Filename>
+		</Include>
+		<Include>
+			<Filename>gcr-prompter.desktop</Filename>
+		</Include>
+		<Include>
+			<Filename>Jar-Loader.desktop</Filename>
+		</Include>
+		<Include>
+			<Filename>libreoffice-xsltfilter.desktop</Filename>
+		</Include>
+		<Include>
+			<Filename>nano.desktop</Filename>
+		</Include>
+		<Include>
+			<Filename>minstall.desktop</Filename>
+		</Include>
+		<Include>
+			<Filename>nm-applet.desktop</Filename>
+		</Include>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>gcr-viewer.desktop</Filename>
+			<Filename>panel-desktop-handler.desktop</Filename>
+			<Filename>gcr-prompter.desktop</Filename>
+			<Filename>Jar-Loader.desktop</Filename>
+			<Filename>libreoffice-xsltfilter.desktop</Filename>
+			<Filename>nano.desktop</Filename>
+			<Filename>minstall.desktop</Filename>
+			<Filename>Py-Loader.desktop</Filename>
+			<Filename>nm-applet.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Office</Name>
+		<Directory>xfce-office.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>org.gnome.Evince-previewer.desktop</Filename>
+			<Filename>org.xfce.orage.desktop</Filename>
+			<Filename>org.goldendict.GoldenDict.desktop</Filename>
+			<Filename>libreoffice-base.desktop</Filename>
+			<Filename>libreoffice-calc.desktop</Filename>
+			<Filename>libreoffice-draw.desktop</Filename>
+			<Filename>libreoffice-impress.desktop</Filename>
+			<Filename>libreoffice-math.desktop</Filename>
+			<Filename>libreoffice-startcenter.desktop</Filename>
+			<Filename>libreoffice-writer.desktop</Filename>
+			<Filename>com.github.jeromerobert.pdfarranger.desktop</Filename>
+			<Filename>texstudio.desktop</Filename>
+			<Filename>org.gnome.Evince.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Development</Name>
+		<Directory>xfce-development.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>geany.desktop</Filename>
+			<Filename>idle-python3.11.desktop</Filename>
+			<Filename>yad-icon-browser.desktop</Filename>
+			<Filename>ocaml.desktop</Filename>
+			<Filename>python3.11.desktop</Filename>
+			<Filename>assistant-qt5.desktop</Filename>
+			<Filename>designer-qt5.desktop</Filename>
+			<Filename>linguist-qt5.desktop</Filename>
+			<Filename>rstudio.desktop</Filename>
+			<Filename>org.thonny.Thonny.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Education</Name>
+		<Directory>xfce-education.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>geogebra.desktop</Filename>
+			<Filename>org.goldendict.GoldenDict.desktop</Filename>
+			<Filename>jmol.desktop</Filename>
+			<Filename>libreoffice-math.desktop</Filename>
+			<Filename>io.github.wxmaxima_developers.wxMaxima.desktop</Filename>
+			<Filename>xcas.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Graphics</Name>
+		<Directory>xfce-graphics.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>org.gnome.Evince-previewer.desktop</Filename>
+			<Filename>feh.desktop</Filename>
+			<Filename>display-im6.q16.desktop</Filename>
+			<Filename>org.inkscape.Inkscape.desktop</Filename>
+			<Filename>libreoffice-draw.desktop</Filename>
+			<Filename>org.nomacs.ImageLounge.desktop</Filename>
+			<Filename>simple-scan.desktop</Filename>
+			<Filename>R.desktop</Filename>
+			<Filename>org.gnome.Shotwell.desktop</Filename>
+			<Filename>org.gnome.Shotwell-Viewer.desktop</Filename>
+			<Filename>org.gnome.Shotwell-Profile-Browser.desktop</Filename>
+			<Filename>org.gnome.Evince.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Network</Name>
+		<Directory>xfce-network.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>xfce4-mail-reader.desktop</Filename>
+			<Filename>mx-viewer.desktop</Filename>
+			<Filename>xfce4-web-browser.desktop</Filename>
+			<Filename>transmission-qt.desktop</Filename>
+			<Filename>vivaldi-stable.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Games</Name>
+		<Directory>xfce-games.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>lbreakout2.desktop</Filename>
+			<Filename>org.gnome.Mahjongg.desktop</Filename>
+			<Filename>peg-e.desktop</Filename>
+			<Filename>org.gnome.SwellFoop.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Multimedia</Name>
+		<Directory>xfce-multimedia.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>alsamixer.desktop</Filename>
+			<Filename>pavucontrol.desktop</Filename>
+			<Filename>gmtp.desktop</Filename>
+			<Filename>guvcview.desktop</Filename>
+			<Filename>vlc.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>mx-tools</Name>
+		<Directory>mx-tools.directory</Directory>
+		<DirectoryDir>/home/matos/.local/share/desktop-directories</DirectoryDir>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>about-mx-linux.desktop</Filename>
+			<Filename>chroot-rescue-scan.desktop</Filename>
+			<Filename>system-keyboard-qt.desktop</Filename>
+			<Filename>papirus-folder-colors.desktop</Filename>
+			<Filename>disk-manager.desktop</Filename>
+			<Filename>mx-tour.desktop</Filename>
+			<Filename>formatusb.desktop</Filename>
+			<Filename>mx-service-manager.desktop</Filename>
+			<Filename>Quick_System_Info.desktop</Filename>
+			<Filename>deb-installer.desktop</Filename>
+			<Filename>ddm-nvidia.desktop</Filename>
+			<Filename>mx-tweak-systray.desktop</Filename>
+			<Filename>antix-live-kernel-updater.desktop</Filename>
+			<Filename>mx-tweak.desktop</Filename>
+			<Filename>mx-select-sound.desktop</Filename>
+			<Filename>mx-network-assistant.desktop</Filename>
+			<Filename>mx-welcome.desktop</Filename>
+			<Filename>mx-remastercc.desktop</Filename>
+			<Filename>mx-conky.desktop</Filename>
+			<Filename>mx-datetime.desktop</Filename>
+			<Filename>mx-repo-manager.desktop</Filename>
+			<Filename>mx-user.desktop</Filename>
+			<Filename>mx-packageinstaller.desktop</Filename>
+			<Filename>mx-snapshot.desktop</Filename>
+			<Filename>mx-live-usb-maker.desktop</Filename>
+			<Filename>mx-cleanup.desktop</Filename>
+			<Filename>mx-boot-options.desktop</Filename>
+			<Filename>mx-tools.desktop</Filename>
+			<Filename>mx-boot-repair.desktop</Filename>
+			<Filename>mx-checkaptgpg.desktop</Filename>
+			<Filename>mx-samba-config.desktop</Filename>
+			<Filename>mx-system-sounds.desktop</Filename>
+			<Filename>job-scheduler.desktop</Filename>
+			<Filename>user-installed-packages.desktop</Filename>
+			<Filename>mx-locale.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>Science</Name>
+		<Directory>xfce-science.directory</Directory>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>menulibre-nouveau-lanceur.desktop</Filename>
+			<Filename>jmol.desktop</Filename>
+			<Filename>R.desktop</Filename>
+			<Filename>io.github.wxmaxima_developers.wxMaxima.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Menu>
+		<Name>System</Name>
+		<Directory>xfce-system.directory</Directory>
+		<DirectoryDir>/home/matos/.local/share/desktop-directories</DirectoryDir>
+		<Layout>
+			<Merge type="menus" />
+			<Filename>org.gnome.baobab.desktop</Filename>
+			<Filename>about-mx-linux.desktop</Filename>
+			<Filename>bashrc-config.desktop</Filename>
+			<Filename>chroot-rescue-scan.desktop</Filename>
+			<Filename>system-keyboard-qt.desktop</Filename>
+			<Filename>system-config-printer.desktop</Filename>
+			<Filename>conky.desktop</Filename>
+			<Filename>conky-toggle.desktop</Filename>
+			<Filename>papirus-folder-colors.desktop</Filename>
+			<Filename>xfce4-session-logout.desktop</Filename>
+			<Filename>disk-manager.desktop</Filename>
+			<Filename>ca.desrt.dconf-editor.desktop</Filename>
+			<Filename>gparted.desktop</Filename>
+			<Filename>mx-tour.desktop</Filename>
+			<Filename>FAQ.desktop</Filename>
+			<Filename>formatusb.desktop</Filename>
+			<Filename>thunar.desktop</Filename>
+			<Filename>synaptic.desktop</Filename>
+			<Filename>mx-service-manager.desktop</Filename>
+			<Filename>xfce4-taskmanager.desktop</Filename>
+			<Filename>grub-customizer.desktop</Filename>
+			<Filename>gsmartcontrol.desktop</Filename>
+			<Filename>htop.desktop</Filename>
+			<Filename>hardinfo.desktop</Filename>
+			<Filename>Quick_System_Info.desktop</Filename>
+			<Filename>deb-installer.desktop</Filename>
+			<Filename>ddm-nvidia.desktop</Filename>
+			<Filename>lightdm-gtk-greeter-settings.desktop</Filename>
+			<Filename>luckybackup-su.desktop</Filename>
+			<Filename>mx-tweak-systray.desktop</Filename>
+			<Filename>mc.desktop</Filename>
+			<Filename>antix-live-kernel-updater.desktop</Filename>
+			<Filename>mx-tweak.desktop</Filename>
+			<Filename>mx-select-sound.desktop</Filename>
+			<Filename>mx-network-assistant.desktop</Filename>
+			<Filename>mx-welcome.desktop</Filename>
+			<Filename>mx-remastercc.desktop</Filename>
+			<Filename>mx-conky.desktop</Filename>
+			<Filename>mx-datetime.desktop</Filename>
+			<Filename>mx-usb-unmounter.desktop</Filename>
+			<Filename>mx-repo-manager.desktop</Filename>
+			<Filename>mx-user.desktop</Filename>
+			<Filename>mx-packageinstaller.desktop</Filename>
+			<Filename>mx-snapshot.desktop</Filename>
+			<Filename>mx-live-usb-maker.desktop</Filename>
+			<Filename>Help.desktop</Filename>
+			<Filename>apt-notifier.desktop</Filename>
+			<Filename>mx-cleanup.desktop</Filename>
+			<Filename>mx-boot-options.desktop</Filename>
+			<Filename>mx-boot-repair.desktop</Filename>
+			<Filename>mx-checkaptgpg.desktop</Filename>
+			<Filename>mx-samba-config.desktop</Filename>
+			<Filename>mx-system-sounds.desktop</Filename>
+			<Filename>job-scheduler.desktop</Filename>
+			<Filename>user-installed-packages.desktop</Filename>
+			<Filename>mx-locale.desktop</Filename>
+			<Filename>xfce4-terminal.desktop</Filename>
+			<Filename>timeshift-gtk.desktop</Filename>
+			<Filename>xfce4-sensors.desktop</Filename>
+			<Merge type="files" />
+		</Layout>
+	</Menu>
+	<Layout>
+		<Filename>xfce4-run.desktop</Filename>
+		<Separator />
+		<Filename>xfce4-terminal-emulator.desktop</Filename>
+		<Filename>xfce4-file-manager.desktop</Filename>
+		<Filename>xfce4-mail-reader.desktop</Filename>
+		<Filename>xfce4-web-browser.desktop</Filename>
+		<Separator />
+		<Menuname>Settings</Menuname>
+		<Separator />
+		<Menuname>Accessories</Menuname>
+		<Menuname>Other</Menuname>
+		<Menuname>Office</Menuname>
+		<Menuname>Development</Menuname>
+		<Menuname>Education</Menuname>
+		<Menuname>Graphics</Menuname>
+		<Menuname>Network</Menuname>
+		<Menuname>Games</Menuname>
+		<Menuname>Multimedia</Menuname>
+		<Menuname>mx-tools</Menuname>
+		<Menuname>Science</Menuname>
+		<Menuname>System</Menuname>
+		<Separator />
+		<Filename>xfce4-about.desktop</Filename>
+		<Filename>xfce4-session-logout.desktop</Filename>
+	</Layout>
+</Menu>

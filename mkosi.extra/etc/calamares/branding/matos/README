@@ -1,0 +1,13 @@
+Dossier de branding pour matOS RALAMBO
+======================================
+
+Placez les fichiers images suivants dans ce dossier :
+
+  logo.png      — Logo principal de matOS (utilisé dans la barre latérale et
+                  comme icône de l'installateur). Taille recommandée : 64x64 px.
+
+  welcome.png   — Image d'accueil affichée sur la page de bienvenue de
+                  Calamares. Taille recommandée : 600x400 px.
+
+Ces fichiers sont référencés dans branding.desc et doivent être présents
+pour que l'installateur s'affiche correctement.
