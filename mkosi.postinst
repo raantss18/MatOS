@@ -11,6 +11,7 @@ if ! id matos &>/dev/null; then
     useradd -m -s /bin/bash -G sudo,audio,video,plugdev,netdev matos
 fi
 echo "matos:matos" | chpasswd
+echo "root:MOT_DE_PASSE_SUPPRIME" | chpasswd
 
 # ── Autologin LightDM ───────────────────────────────────────────────
 mkdir -p /etc/lightdm/lightdm.conf.d/

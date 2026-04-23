@@ -1,0 +1,7 @@
+mkosi.tools/
+mkosi.tools.manifest
+*.iso
+*.raw
+*.raw.zst
+build/
+.buildinfo

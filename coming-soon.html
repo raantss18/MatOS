@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>matOS — Coming Soon</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #080818;
+      --accent: #4a9eff;
+      --accent-secondary: #9b59b6;
+      --text-primary: #e8e8f0;
+      --text-secondary: #6b7080;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(74, 158, 255, 0.15);
+      --card-border-hover: rgba(74, 158, 255, 0.5);
+      --font: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* ── Canvas particules ── */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Contenu principal ── */
+    .main {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 900px;
+      padding: 80px 24px 60px;
+      gap: 0;
+    }
+
+    /* ── Logo matOS ── */
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 56px;
+      animation: logoPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1.0); }
+      50% { transform: scale(1.02); }
+    }
+
+    .logo-svg text {
+      font-family: var(--font);
+    }
+
+    /* ── Badge OS ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      background: rgba(74, 158, 255, 0.06);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 158, 255, 0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(74, 158, 255, 0); }
+    }
+
+    /* ── Titre principal ── */
+    .headline {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-align: center;
+      color: var(--text-primary);
+      line-height: 1.15;
+      min-height: 1.3em;
+      margin-bottom: 20px;
+    }
+
+    .headline-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 0.85em;
+      background: var(--accent);
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: cursorBlink 0.9s step-end infinite;
+    }
+
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .headline-cursor.hide {
+      opacity: 0;
+      animation: none;
+    }
+
+    /* ── Sous-titre ── */
+    .subtitle {
+      font-size: clamp(14px, 2.2vw, 18px);
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 540px;
+      line-height: 1.6;
+      font-weight: 400;
+      margin-bottom: 52px;
+    }
+
+    /* ── Barre de progression ── */
+    .progress-section {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 64px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .progress-pct {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent-secondary), var(--accent));
+      position: relative;
+      overflow: hidden;
+      transition: width 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+      animation: progressSheen 2.4s ease-in-out infinite;
+    }
+
+    @keyframes progressSheen {
+      0% { left: -60%; }
+      100% { left: 120%; }
+    }
+
+    /* ── Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 640px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 820px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .card:last-child {
+        grid-column: 1 / -1;
+        max-width: 50%;
+        margin: 0 auto;
+        width: 100%;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      cursor: default;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-border-hover);
+      box-shadow: 0 8px 40px rgba(74, 158, 255, 0.12), 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(74, 158, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* ── Section email ── */
+    .notify-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 460px;
+      margin-bottom: 72px;
+    }
+
+    .notify-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+    }
+
+    .notify-form {
+      display: flex;
+      width: 100%;
+      gap: 10px;
+    }
+
+    @media (max-width: 440px) {
+      .notify-form {
+        flex-direction: column;
+      }
+    }
+
+    .notify-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .notify-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .notify-input:focus {
+      border-color: rgba(74, 158, 255, 0.45);
+      background: rgba(74, 158, 255, 0.04);
+    }
+
+    .notify-btn {
+      padding: 12px 22px;
+      border-radius: 10px;
+      border: none;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      background-size: 200% 200%;
+      background-position: 0% 50%;
+      transition: background-position 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .notify-btn:hover {
+      background-position: 100% 50%;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(74, 158, 255, 0.35);
+    }
+
+    .notify-btn:active {
+      transform: translateY(0);
+    }
+
+    .notify-success {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #4ade80;
+      font-weight: 500;
+    }
+
+    .notify-success.show {
+      display: flex;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .footer-text span {
+      color: rgba(74, 158, 255, 0.6);
+      margin: 0 6px;
+    }
+
+    /* ── Glow ambiant ── */
+    .glow-top {
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(74, 158, 255, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-bottom {
+      position: fixed;
+      bottom: -200px;
+      left: 30%;
+      width: 500px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(155, 89, 182, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="glow-top"></div>
+  <div class="glow-bottom"></div>
+
+  <main class="main">
+
+    <!-- Logo matOS SVG -->
+    <div class="logo-wrapper">
+      <svg class="logo-svg" width="220" height="56" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="matOS">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#9b59b6"/>
+            <stop offset="50%" stop-color="#4a9eff"/>
+            <stop offset="100%" stop-color="#4a9eff"/>
+          </linearGradient>
+          <filter id="logoGlow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Background pill -->
+        <rect x="0" y="0" width="220" height="56" rx="14" fill="rgba(74,158,255,0.06)" stroke="rgba(74,158,255,0.2)" stroke-width="1"/>
+        <!-- mat (lowercase, weight 300) -->
+        <text x="18" y="39" font-family="'SF Pro Display','Inter',system-ui,sans-serif" font-size="32" font-weight="300" fill="url(#logoGrad)" filter="url(#logoGlow)" letter-spacing="-1">mat</text>
+        <!-- OS (uppercase, weight 700) -->
+        <text x="108" y="39" font-family="'SF Pro Display','Inter',system-ui,sans-serif" font-size="32" font-weight="700" fill="url(#logoGrad)" filter="url(#logoGlow)" letter-spacing="-1">OS</text>
+        <!-- Separator dot -->
+        <circle cx="101" cy="32" r="3" fill="rgba(74,158,255,0.5)"/>
+      </svg>
+    </div>
+
+    <!-- Badge -->
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Linux &middot; Mathematics
+    </div>
+
+    <!-- Titre typewriter -->
+    <h1 class="headline">
+      <span id="typewriter-text"></span><span class="headline-cursor" id="cursor"></span>
+    </h1>
+
+    <!-- Sous-titre -->
+    <p class="subtitle">
+      La prochaine version de matOS réinvente l'expérience mathématique sur Linux
+    </p>
+
+    <!-- Barre de progression -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Finalisation en cours</span>
+        <span class="progress-pct">87%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards">
+
+      <!-- Card 1 : Nouveau moteur -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 7h3m0 0V4m0 3L3 3M4 17h3m0 0v3m0-3-4 4M17 7h3m0 0V4m0 3 4-4M17 17h3m0 0v3m0-3 4 4" stroke="#4a9eff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="8" y="8" width="8" height="8" rx="2" stroke="#9b59b6" stroke-width="1.8"/>
+            <path d="M10 12h4M12 10v4" stroke="#4a9eff" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="card-title">Nouveau moteur</div>
+        <div class="card-desc">Base système moderne avec les derniers logiciels de calcul formel, numérique et symbolique.</div>
+      </div>
+
+      <!-- Card 2 : Interface repensée -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="4" width="18" height="14" rx="2" stroke="#4a9eff" stroke-width="1.8"/>
+            <path d="M8 20h8M12 18v2" stroke="#4a9eff" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M7 9h4M7 12h6M7 15h2" stroke="#9b59b6" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="17" cy="11" r="2.2" stroke="#4a9eff" stroke-width="1.5"/>
+            <path d="m18.6 12.6 1.4 1.4" stroke="#4a9eff" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="card-title">Interface repensée</div>
+        <div class="card-desc">Bureau optimisé pour les mathématiques. Espace de travail pensé pour la recherche et l'enseignement.</div>
+      </div>
+
+      <!-- Card 3 : Installation simplifiée -->
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3v12M8.5 11.5 12 15l3.5-3.5" stroke="#4a9eff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 17v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1" stroke="#9b59b6" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="8" cy="8" r="1" fill="#4a9eff" opacity="0.5"/>
+            <circle cx="6" cy="12" r="0.8" fill="#9b59b6" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="card-title">Installation simplifiée</div>
+        <div class="card-desc">Installe sans connexion. En quelques clics, un environnement mathématique complet est opérationnel.</div>
+      </div>
+
+    </div>
+
+    <!-- Section notification email -->
+    <div class="notify-section">
+      <div class="notify-label">Être notifié au lancement</div>
+      <div class="notify-form" id="notify-form">
+        <input
+          class="notify-input"
+          type="email"
+          id="email-input"
+          placeholder="votre@email.com"
+          autocomplete="email"
+        />
+        <button class="notify-btn" id="notify-btn" type="button">Rejoindre</button>
+      </div>
+      <div class="notify-success" id="notify-success">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7.5" stroke="#4ade80" stroke-width="1"/>
+          <path d="m5 8 2 2 4-4" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Vous serez notifié au lancement. Merci !
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p class="footer-text">
+      matOS<span>·</span>Mathematics<span>·</span>Linux<span>·</span>Excellence
+    </p>
+  </footer>
+
+  <script>
+    /* ═══════════════════════════════════════════════
+       CANVAS PARTICULES MATHÉMATIQUES
+    ═══════════════════════════════════════════════ */
+    (function () {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      const mathSymbols = ['∑', 'π', '∫', '∂', 'φ', '√', '∞', 'Δ', 'λ', 'θ', 'α', 'β'];
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function rand(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      function createParticle() {
+        const isSymbol = Math.random() > 0.55;
+        return {
+          x: rand(0, W),
+          y: rand(0, H),
+          vx: rand(0.08, 0.28) * (Math.random() > 0.5 ? 1 : -1),
+          vy: rand(0.06, 0.2),
+          size: isSymbol ? rand(9, 15) : rand(1.2, 2.6),
+          opacity: rand(0.04, 0.18),
+          isSymbol,
+          symbol: mathSymbols[Math.floor(Math.random() * mathSymbols.length)],
+          color: Math.random() > 0.5 ? '74,158,255' : '155,89,182',
+        };
+      }
+
+      function initParticles() {
+        particles = [];
+        const count = Math.min(38, Math.floor(W * H / 28000) + 20);
+        for (let i = 0; i < count; i++) particles.push(createParticle());
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of particles) {
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
+          if (p.isSymbol) {
+            ctx.fillStyle = `rgb(${p.color})`;
+            ctx.font = `300 ${p.size}px 'SF Pro Display','Inter',system-ui,sans-serif`;
+            ctx.fillText(p.symbol, p.x, p.y);
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgb(${p.color})`;
+            ctx.fill();
+          }
+          ctx.restore();
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Wrap around edges
+          if (p.x < -30) p.x = W + 20;
+          if (p.x > W + 30) p.x = -20;
+          if (p.y > H + 20) p.y = -20;
+          if (p.y < -20) p.y = H + 10;
+        }
+      }
+
+      let raf;
+      function loop() {
+        drawParticles();
+        raf = requestAnimationFrame(loop);
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+        initParticles();
+      });
+
+      resize();
+      initParticles();
+      loop();
+    })();
+
+    /* ═══════════════════════════════════════════════
+       TYPEWRITER EFFECT
+    ═══════════════════════════════════════════════ */
+    (function () {
+      const target = 'Something extraordinary is coming';
+      const el = document.getElementById('typewriter-text');
+      const cursor = document.getElementById('cursor');
+      let i = 0;
+      const delay = 55; // ms par lettre
+
+      function type() {
+        if (i <= target.length) {
+          el.textContent = target.slice(0, i);
+          i++;
+          setTimeout(type, i === 1 ? 400 : delay + rand(-10, 10));
+        } else {
+          // Curseur disparaît après 2.5s
+          setTimeout(() => cursor.classList.add('hide'), 2500);
+        }
+      }
+
+      function rand(a, b) { return Math.random() * (b - a) + a; }
+
+      // Démarrer après 500ms
+      setTimeout(type, 500);
+    })();
+
+    /* ═══════════════════════════════════════════════
+       BARRE DE PROGRESSION
+    ═══════════════════════════════════════════════ */
+    (function () {
+      const fill = document.getElementById('progress-fill');
+      // Animer après 800ms (après le chargement visuel)
+      setTimeout(() => {
+        fill.style.width = '87%';
+      }, 800);
+    })();
+
+    /* ═══════════════════════════════════════════════
+       BOUTON NOTIFICATION
+    ═══════════════════════════════════════════════ */
+    (function () {
+      const btn = document.getElementById('notify-btn');
+      const input = document.getElementById('email-input');
+      const form = document.getElementById('notify-form');
+      const success = document.getElementById('notify-success');
+
+      function isValidEmail(e) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim());
+      }
+
+      btn.addEventListener('click', () => {
+        const val = input.value.trim();
+        if (!isValidEmail(val)) {
+          input.style.borderColor = 'rgba(239,68,68,0.5)';
+          input.focus();
+          setTimeout(() => { input.style.borderColor = ''; }, 1500);
+          return;
+        }
+        // Simuler l'enregistrement
+        form.style.display = 'none';
+        success.classList.add('show');
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') btn.click();
+      });
+    })();
+  </script>
+
+</body>
+</html>
