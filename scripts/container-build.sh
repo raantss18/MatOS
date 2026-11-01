@@ -80,6 +80,8 @@ image="matos-$MATOS_VERSION-$MATOS_CODENAME"
 live_params="boot=live components quiet splash locales=fr_FR.UTF-8 keyboard-layouts=fr timezone=Indian/Antananarivo"
 
 cd "$LB"
+# Squashfs : zstd niveau 22, blocs de 1 Mio = -6 % par rapport à (19, 128 Kio) pour la même
+# vitesse de lecture (mesuré sur les vraies données) ; le « type » est passé tel quel à mksquashfs.
 lb config noauto \
     --mode debian \
     --distribution "$DEBIAN_SUITE" \
@@ -98,8 +100,6 @@ lb config noauto \
     --bootloaders "syslinux grub-efi" \
     --uefi-secure-boot enable \
     --firmware-chroot true --firmware-binary true \
-    # zstd niveau 22, blocs de 1 Mio : -6 % par rapport à (19, 128 Kio), même vitesse de lecture
-    # (mesuré sur les vraies données) ; les options passent telles quelles à mksquashfs
     --chroot-squashfs-compression-type "zstd -b 1M" \
     --chroot-squashfs-compression-level 22 \
     --checksums sha256 \
