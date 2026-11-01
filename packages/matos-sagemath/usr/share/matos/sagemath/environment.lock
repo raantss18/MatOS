@@ -352,6 +352,7 @@ sagetex=3.6.1=pyhd8ed1ab_1
 scipy=1.18.1=py313he2a5f1a_2
 sed=4.10=h19d0853_0
 send2trash=2.1.0=pyha191276_1
+setuptools=84.2.1=pyhe730653_0
 singular=4.4.1.p5=h0d6ddee_0
 sirocco=2.1.1=ha2cd14c_0
 six=1.17.0=pyhe01879c_1

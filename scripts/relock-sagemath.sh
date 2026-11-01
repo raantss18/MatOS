@@ -25,7 +25,8 @@ export CONDA_OVERRIDE_ARCHSPEC=x86_64 CONDA_OVERRIDE_GLIBC=2.41 CONDA_OVERRIDE_L
 
 # Cœur : SageMath, Jupyter et l'essentiel du calcul scientifique
 CORE_SPECS=(python=3.13 "sage=$SAGE_VERSION" jupyterlab notebook ipywidgets ipympl
-            numpy scipy sympy matplotlib pandas networkx)
+            numpy scipy sympy matplotlib pandas networkx
+            setuptools)  # setuptools : distutils pour %cython (retiré de Python 3.13)
 # Facultatifs : apprentissage automatique, visualisation avancée, animations
 PYTHON_EXTRAS=(scikit-learn statsmodels numba plotly seaborn manim pylatex)
 
