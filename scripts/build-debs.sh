@@ -235,7 +235,7 @@ build_matos_sagemath() {
     # compilation d'une extension avec le gcc de Debian (le gcc de conda est un extra)
     run_as_nobody sh "$dir/usr/bin/sage" -c 'import os; open("carre.pyx", "w").write("def carre(int n):\n    return n * n\n"); from sage.misc.cython import cython_import_all; cython_import_all(os.path.abspath("carre.pyx"), globals()); assert carre(12) == 144; print("cython OK")'
     # un graphique 3D sans Java (threejs) et le calcul symbolique
-    run_as_nobody "$prefix/bin/sage" -c 'y = var("y"); p = plot3d(sin(x*y), (x, -2, 2), (y, -2, 2)); assert p is not None; assert (integrate(x*exp(x), x) - (x - 1)*exp(x)).simplify_full() == 0; print("3d+symbolique OK")'
+    run_as_nobody "$prefix/bin/sage" -c 'x, y = var("x y"); p = plot3d(sin(x*y), (x, -2, 2), (y, -2, 2)); assert p is not None; assert (integrate(x*exp(x), x) - (x - 1)*exp(x)).simplify_full() == 0; print("3d+symbolique OK")'
 
     log "Test des extras (installation puis retrait d'un extra)"
     export MATOS_SAGE_PREFIX="$prefix" MATOS_SAGE_DIR="$sage_dir" MATOS_MM="$BUILD_DIR/micromamba" \
