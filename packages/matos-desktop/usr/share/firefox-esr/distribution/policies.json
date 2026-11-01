@@ -1,0 +1,11 @@
+{
+  "policies": {
+    "OverrideFirstRunPage": "",
+    "OverridePostUpdatePage": "",
+    "DontCheckDefaultBrowser": true,
+    "NoDefaultBookmarks": true,
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "Homepage": { "URL": "file:///usr/share/matos/bienvenue/index.html", "StartPage": "homepage" }
+  }
+}
