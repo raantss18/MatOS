@@ -34,6 +34,8 @@ Les essais précédents de la 0.6 ne démarraient pas ou étaient incomplets :
   *Mathematics in Lean*…). Chaque livre a une licence libre vérifiée dans son texte
   (`scripts/livre-verifier.sh`) et un SHA256 figé.
 - **Documentation hors ligne** (Python, R, Maxima, Octave, Coq, Git, LibreOffice…).
+- **ISO de 8,3 Go** (9,99 Go avant allègement) : SageMath en cœur + extras réinstallables
+  (`matos-sage-extras`), RStudio sans LLVM, firmwares de serveurs retirés, zstd 22.
 - **Machines modestes** : zram, earlyoom, composition coupée automatiquement à 4 Go,
   démarrage UEFI 32 bits sur processeur 64 bits. 64 bits uniquement.
 - Page de **bienvenue** hors ligne, dédiée au Professeur Ralambo.

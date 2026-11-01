@@ -15,7 +15,7 @@ dédiée à la mémoire du Professeur Ralambo (Université d'Antananarivo).
 
 | Domaine | Logiciels |
 |---|---|
-| Calcul formel | **SageMath 10.9**, Maxima/wxMaxima, Xcas/Giac, SymPy |
+| Calcul formel | **SageMath 10.9** (cœur ; extras installables : `sudo matos-sage-extras liste`), Maxima/wxMaxima, Xcas/Giac, SymPy |
 | Algèbre, nombres | PARI/GP, GAP (+ bibliothèques), Singular |
 | Preuves formelles | **Lean 4 + Mathlib précompilée**, Coq/CoqIDE |
 | Géométrie | **GeoGebra Classic 6**, Kig |
@@ -35,7 +35,7 @@ Seul prérequis : **Docker** ou **Podman** (le build se fait dans un conteneur
 disque libre et une bonne connexion pour le premier build.
 
 ```bash
-./build.sh            # ISO complète (~10 Go), plusieurs heures
+./build.sh            # ISO complète (≈ 8,3 Go), plusieurs heures
 ./build.sh --rapide   # ISO de test sans SageMath ni Lean
 ./build.sh --paquets  # seulement les paquets matos-* (build/debs/)
 ./build.sh --test     # démarre l'ISO dans QEMU (UEFI si OVMF est installé)
@@ -68,6 +68,18 @@ Dans un projet Lean créé par `matos-lean-projet`, ne lancez pas `lake update` 
 Mathlib y est partagée en lecture seule et figée à la version de matOS.
 
 ---
+
+## Allègement et extras
+
+- **SageMath** : le cœur (Jupyter, NumPy, SciPy, SymPy, Matplotlib, pandas, NetworkX) est dans
+  l'ISO. Les compilateurs conda, Java/Jmol, giac, pandoc et les extras Python (scikit-learn,
+  statsmodels, numba, plotly, seaborn, manim) s'ajoutent à l'identique, avec réseau :
+  `sudo matos-sage-extras installer python|compilateurs|java-3d|giac|pandoc`.
+- **RStudio** : paquet officiel sans sa dépendance `libclang-dev` (≈ 1 Go de LLVM évités) ;
+  la complétion C++ est dégradée, `sudo apt install libclang-dev` la rétablit.
+- **Lean + Mathlib** : aucun élagage possible (Lake reconstruit tout module dont une sortie manque).
+- **Compression** : zstd niveau 22, blocs de 1 Mio (mesuré : −6 % sans ralentir la lecture ;
+  xz serait −13,5 % mais 3 fois plus lent à décompresser sur un vieux processeur).
 
 ## Machines modestes
 
@@ -188,7 +200,8 @@ utilisateurs. `matos-stats --montrer` affiche le corps exact de la requête.
 
 ## Limites connues
 
-- L'ISO complète fait environ 10 Go : il faut une clé USB de 16 Go (pas de DVD).
+- L'ISO complète fait 8,3 Go : il faut une clé USB de 16 Go (pas de DVD, et la clé de 8 Go ne suffit pas).
+  Descendre sous 5 Go impose de sortir Mathlib (1,7 Go compressé) ou SageMath (≈ 1 Go) de l'ISO.
   L'installation occupe environ 25 Go, et l'installateur exige 32 Go libres.
 - RStudio ne publie pas de paquet propre à Debian 13 : c'est le paquet officiel
   « jammy », compatible et figé par SHA256.
