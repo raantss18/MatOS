@@ -1,10 +1,9 @@
 # matOS — environnement conda figé (SageMath + Python scientifique)
-# Généré par résolution conda-forge (linux-64). Une ligne = un paquet exact.
-# Régénérer : scripts/relock-sagemath.sh
+# Généré par scripts/relock-sagemath.sh (conda-forge, linux-64, niveau x86-64 de base).
+# Une ligne = un paquet exact.
 _openmp_mutex=4.5=20_gnu
 _python_abi3_support=1.0=hd8ed1ab_3
 _r-mutex=1.0.1=anacondar_1
-_x86_64-microarch-level=3=3_zen3
 alabaster=1.0.0=pyhd8ed1ab_1
 alsa-lib=1.2.16.1=h7cc23a3_1
 anyio=4.15.1=pyh5ded981_1
@@ -188,7 +187,7 @@ ld_impl_linux-64=2.46.1=default_hbd61a6d_103
 lerc=4.3.0=he78707d_0
 level-zero=1.34.0=h7148c6a_0
 libabseil=20260817.0=cxx17_hbb87c76_2
-libamd=3.3.3=haaf9dc3_7100102
+libamd=3.3.3=h456b2da_7100101
 libass=0.17.5=h3b6f6bf_1
 libblas=3.11.0=11_h4a7cf45_openblas
 libbraiding=1.3.2=hecca717_0
@@ -196,18 +195,18 @@ libbrial=1.2.15=hf69d4a9_0
 libbrotlicommon=1.2.1=h39a168f_0
 libbrotlidec=1.2.1=ha411449_0
 libbrotlienc=1.2.1=h018ffa1_0
-libbtf=2.3.2=h32481e8_7100102
-libcamd=3.3.3=h32481e8_7100102
+libbtf=2.3.2=hf02c80a_7100101
+libcamd=3.3.3=hf02c80a_7100101
 libcap=2.78=h084b8d7_1
 libcblas=3.11.0=11_h0358290_openblas
-libccolamd=3.3.4=h32481e8_7100102
-libcholmod=5.3.1=h59ddab4_7100102
+libccolamd=3.3.4=hf02c80a_7100101
+libcholmod=5.3.1=h9cf07ce_7100101
 libclang-cpp23.1=23.1.4=default_h0acdd01_1
 libclang13=23.1.4=default_h6e6c352_1
-libcolamd=3.3.4=h32481e8_7100102
+libcolamd=3.3.4=hf02c80a_7100101
 libcups=2.3.3=h7a8fb5f_6
 libcurl=8.23.0=ha042cf0_0
-libcxsparse=4.4.1=h32481e8_7100102
+libcxsparse=4.4.1=hf02c80a_7100101
 libdav1d7=1.5.4=hebe6cf0_4
 libdeflate=1.25=hd45a770_1
 libdovi=3.4.0=h39d0f39_1
@@ -244,10 +243,10 @@ libhwy=1.4.0=h57c4cff_2
 libiconv=1.18=h0cb94f2_3
 libjpeg-turbo=3.2.1=h7cc23a3_0
 libjxl=0.12.0=heb2dce7_4
-libklu=2.3.5=hf24d653_7100102
+libklu=2.3.5=h95ff59c_7100101
 liblapack=3.11.0=11_h47877c9_openblas
 liblapacke=3.11.0=11_h6ae95b6_openblas
-libldl=3.3.2=h32481e8_7100102
+libldl=3.3.2=hf02c80a_7100101
 libllvm23=23.1.4=h474f4eb_1
 liblzma=5.8.3=hb03c661_1
 libmpdec=4.0.0=hb03c661_2
@@ -273,7 +272,7 @@ libopenvino-tensorflow-lite-frontend=2026.4.1=h90c3318_1
 libopus=1.6.1=hebe6cf0_1
 libpango=1.58.2=hce4e988_3
 libpango-devel=1.58.2=h317d9d0_3
-libparu=1.0.0=h17147ab_7100102
+libparu=1.0.0=hc6afc67_7100101
 libpciaccess=0.19=hb03c661_1
 libplacebo=7.360.1=h9669efe_2
 libpng=1.6.59=h922cc85_0
@@ -282,24 +281,24 @@ libprotobuf=7.35.1=h8a00109_4
 libpsl=0.23.1=hd9e3e90_1
 libpython=3.13.18=hd51c5da_100_cp313
 libraqm=0.11.0=h6406941_0
-librbio=4.3.4=h32481e8_7100102
+librbio=4.3.4=hf02c80a_7100101
 librsvg=2.62.4=ha427ee3_0
 libsanitizer=16.2.0=h3048135_7
 libskia=143.0.0=h4dbf13b_0
 libsndfile=1.2.2=hbc6d301_3
 libsodium=1.0.22=hebe6cf0_3
-libspex=3.2.3=had10066_7100102
-libspqr=4.3.4=h852d39f_7100102
+libspex=3.2.3=h9226d62_7100101
+libspqr=4.3.4=h23b7119_7100101
 libsqlite=3.54.1=h13e7031_0
 libssh2=1.11.1=h6154650_1
 libstdcxx=16.2.0=h934c35e_7
 libstdcxx-devel_linux-64=16.2.0=h86e191b_107
 libstdcxx-ng=16.2.0=hdf11a46_7
-libsuitesparseconfig=7.10.1=h92d6892_7100102
+libsuitesparseconfig=7.10.1=h901830b_7100101
 libsystemd0=262.1=h26e0ef7_0
 libtiff=4.7.2=hcc2c06a_1
 libudev1=262.1=h26e0ef7_0
-libumfpack=6.3.5=heb53515_7100102
+libumfpack=6.3.5=h873dde6_7100101
 libunwind=1.8.3=hd2e8b67_1
 liburing=2.14=h4dbf13b_1
 libusb=1.0.30=h0d1bbbc_1
@@ -499,7 +498,7 @@ sqlite=3.54.1=h9ffa6c4_0
 srt=3.5.3=pyhd8ed1ab_1
 stack_data=0.6.3=pyhd8ed1ab_1
 statsmodels=0.15.0=np2py313hfeff522_2
-suitesparse=7.10.1=ha0f6916_7100102
+suitesparse=7.10.1=h5b2951e_7100101
 svgelements=1.9.6=pyhcf101f3_1
 svt-av1=4.2.0=hd2095e1_1
 symmetrica=3.1.0=hb03c661_0

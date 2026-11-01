@@ -182,11 +182,18 @@ build_matos_sagemath() {
 
     rm -rf "$prefix"
     grep -v '^#' "$lock" > "$BUILD_DIR/sage-specs.txt"
+    # Niveau x86-64 de base, quel que soit le processeur de la machine de build :
+    # l'image doit tourner sur de vieux Atom et Core 2 (voir scripts/relock-sagemath.sh)
+    export CONDA_OVERRIDE_ARCHSPEC=x86_64
     MAMBA_ROOT_PREFIX="$BUILD_DIR/mamba" "$BUILD_DIR/micromamba" create -y \
         -p "$prefix" --override-channels -c conda-forge --file "$BUILD_DIR/sage-specs.txt"
     # Trace exacte (URL + empreinte) de ce qui a été installé
     MAMBA_ROOT_PREFIX="$BUILD_DIR/mamba" "$BUILD_DIR/micromamba" env export \
         -p "$prefix" --explicit --md5 > "$dir/usr/share/matos/sagemath/environment.explicit.txt"
+    if compgen -G "$prefix/conda-meta/_x86_64-microarch-level-*" >/dev/null \
+       && ! compgen -G "$prefix/conda-meta/_x86_64-microarch-level-1-*" >/dev/null; then
+        die "environnement SageMath optimisé pour processeurs récents : relancer scripts/relock-sagemath.sh"
+    fi
     rm -rf "$prefix/pkgs" "$prefix/conda-meta/history"
     chmod -R a+rX "$prefix"
 
