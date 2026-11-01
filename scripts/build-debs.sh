@@ -246,6 +246,8 @@ example (a b : ℝ) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by ring
 
 theorem racine_deux_irrationnelle : Irrational (√2) := irrational_sqrt_two
 EOF
+    # cache des oleans Mathlib conservé entre deux builds (plusieurs Go)
+    export MATHLIB_CACHE_DIR="$BUILD_DIR/mathlib-cache"; mkdir -p "$MATHLIB_CACHE_DIR"
     (cd "$modele" && lake update && lake exe cache get)
     # La toolchain doit être exactement celle de Mathlib, sinon tout serait recompilé
     cmp -s "$modele/lean-toolchain" "$modele/.lake/packages/mathlib/lean-toolchain" \
@@ -255,6 +257,8 @@ EOF
     chmod -R a+rX "$prefix"
 
     log "Test Lean + Mathlib (utilisateur sans droits, /opt en lecture seule)"
+    # même réglage que DEBIAN/postinst de matos-lean
+    git config --system --add safe.directory "$prefix/modele/.lake/packages/*"
     run_as_nobody env ELAN_HOME="$ELAN_HOME" PATH="$ELAN_HOME/bin:/usr/bin:/bin" sh -c '
         sh "$0" essai && cd essai && lake build && echo "lean OK"' \
         "$dir/usr/bin/matos-lean-projet"

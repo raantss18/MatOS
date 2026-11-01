@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+# Mathlib est partagée en lecture seule et appartient à root ; lake appelle git
+# dessus en tant qu'utilisateur ordinaire, ce que git refuse (« dubious ownership »).
+# On déclare ce dossier sûr dans /etc/gitconfig, sans toucher à rien d'autre.
+if [ "$1" = configure ]; then
+    d='/opt/matos/lean/modele/.lake/packages/*'
+    if ! git config --system --get-all safe.directory 2>/dev/null | grep -qxF "$d"; then
+        git config --system --add safe.directory "$d"
+    fi
+fi
