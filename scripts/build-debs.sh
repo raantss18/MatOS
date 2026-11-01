@@ -95,6 +95,7 @@ build_matos_installer() {
           "$work/root/usr/share/glib-2.0" "$dir/usr/share/"
 
     local c="$dir/etc/calamares"
+    [ -f "$c/modules/locale.conf" ] || die "locale.conf (fuseau de Madagascar) a disparu du paquet matos-installer"
     sed -i 's/^branding: .*/branding: matos/' "$c/settings.conf"
     grep -q '^branding: matos$' "$c/settings.conf" || die "settings.conf : branding non remplacé"
     # Supprimer aussi l'installateur et Calamares du système installé
