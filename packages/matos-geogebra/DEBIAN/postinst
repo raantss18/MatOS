@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+# bac à sable Chromium d'Electron : doit appartenir à root avec le bit setuid
+chmod 4755 /opt/matos/geogebra/chrome-sandbox

@@ -1,0 +1,11 @@
+Package: matos-lean
+Version: @MATHLIB_VERSION@+matos@MATOS_VERSION@
+Architecture: amd64
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: math
+Priority: optional
+Depends: matos-base, git, libc6
+Description: matOS - Lean 4 et Mathlib précompilée (hors ligne)
+ Lean 4 (@LEAN_TOOLCHAIN@) et Mathlib @MATHLIB_VERSION@ entièrement
+ compilée, dans /opt/matos/lean. La commande matos-lean-projet crée un
+ projet qui utilise cette Mathlib sans aucun téléchargement.

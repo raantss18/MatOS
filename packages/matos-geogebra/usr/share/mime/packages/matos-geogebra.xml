@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/vnd.geogebra.file">
+    <comment>GeoGebra file</comment>
+    <comment xml:lang="fr">Fichier GeoGebra</comment>
+    <glob pattern="*.ggb"/>
+  </mime-type>
+  <mime-type type="application/vnd.geogebra.tool">
+    <comment>GeoGebra tool</comment>
+    <comment xml:lang="fr">Outil GeoGebra</comment>
+    <glob pattern="*.ggt"/>
+  </mime-type>
+</mime-info>

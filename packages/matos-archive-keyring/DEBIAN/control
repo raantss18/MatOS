@@ -1,0 +1,9 @@
+Package: matos-archive-keyring
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: misc
+Priority: optional
+Description: matOS - clé et source du dépôt APT matOS
+ Clé publique OpenPGP du dépôt matOS et déclaration de la source APT
+ qui distribue les mises à jour des paquets matos-*.

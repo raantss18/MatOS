@@ -1,0 +1,7 @@
+#!/bin/sh
+# Lance JupyterLab (noyaux Python 3 et SageMath) dans le dossier personnel.
+export CC="${CC:-gcc}" CXX="${CXX:-g++}"
+# pkg-config de conda : il connaît les bibliothèques (gmp, pari...) de l'environnement
+export PKG_CONFIG="${PKG_CONFIG:-/opt/matos/sagemath/bin/pkg-config}"
+cd "$HOME"
+exec /opt/matos/sagemath/bin/jupyter-lab "$@"

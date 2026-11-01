@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+if [ "$1" = purge ]; then
+    deb-systemd-helper purge matos-stats.timer
+    rm -rf /var/lib/matos-stats /var/lib/private/matos-stats
+fi

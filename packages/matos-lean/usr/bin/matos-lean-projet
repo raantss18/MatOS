@@ -1,0 +1,27 @@
+#!/bin/sh
+# Crée un projet Lean 4 utilisant la Mathlib précompilée de matOS (hors ligne).
+# Usage : matos-lean-projet DOSSIER
+set -e
+modele=/opt/matos/lean/modele
+if [ $# -ne 1 ]; then
+    echo "Usage : matos-lean-projet DOSSIER" >&2
+    exit 2
+fi
+dest="$1"
+if [ -e "$dest" ]; then
+    echo "matos-lean-projet : « $dest » existe déjà." >&2
+    exit 1
+fi
+mkdir -p "$dest/.lake"
+cp "$modele/lean-toolchain" "$modele/lakefile.toml" "$modele/lake-manifest.json" \
+   "$modele/Projet.lean" "$dest/"
+mkdir -p "$dest/Projet"
+cp "$modele/Projet/Basic.lean" "$dest/Projet/"
+# Les dépendances (Mathlib, Batteries, Aesop...) sont partagées en lecture seule.
+ln -s "$modele/.lake/packages" "$dest/.lake/packages"
+cat <<MSG
+Projet créé dans « $dest ».
+  Ouvrir : codium "$dest"   (puis Projet/Basic.lean)
+  Compiler : cd "$dest" && lake build
+N'utilisez pas « lake update » : Mathlib est figée et partagée par matOS.
+MSG

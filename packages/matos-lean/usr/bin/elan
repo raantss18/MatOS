@@ -1,0 +1,6 @@
+#!/bin/sh
+# Lean 4 matOS : toolchain figée dans /opt/matos/lean/elan.
+# Pour installer d'autres toolchains, définir ELAN_HOME vers un dossier personnel.
+: "${ELAN_HOME:=/opt/matos/lean/elan}"
+export ELAN_HOME
+exec "$ELAN_HOME/bin/elan" "$@"

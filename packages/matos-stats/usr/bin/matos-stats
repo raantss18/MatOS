@@ -1,0 +1,71 @@
+#!/bin/sh
+# matOS — statistiques anonymes.
+#
+# Liste blanche exacte du corps envoyé :
+#   matos_version  version de matOS (os-release)
+#   mode           « live » ou « installe »
+#   langue         code de langue du système (fr, en, mg...)
+#   pays           pays du fuseau horaire (MG pour Indian/Antananarivo), ou vide
+# Aucun identifiant d'installation, nom, fichier, matériel ni position.
+# L'hébergeur reçoit l'adresse IP de connexion comme pour tout accès HTTP ;
+# matOS ne l'ajoute pas aux statistiques.
+#
+# Usage : matos-stats [--envoyer|--montrer|--etat|--activer|--desactiver]
+set -eu
+
+conf=/etc/matos/stats.conf
+endpoint=/usr/lib/matos/stats-endpoint
+state_dir="${STATE_DIRECTORY:-/var/lib/matos-stats}"
+
+envoi_active() {
+    [ -r "$conf" ] && grep -qx 'ENVOYER=oui' "$conf"
+}
+
+corps() {
+    version=$(. /usr/lib/os-release && echo "${VERSION_ID:-}")
+    if grep -qw 'boot=live' /proc/cmdline 2>/dev/null; then mode=live; else mode=installe; fi
+    lang=$( (LANG=""; [ -r /etc/default/locale ] && . /etc/default/locale; echo "${LANG:-}") )
+    langue=$(echo "$lang" | sed -n 's/^\([a-z]\{2,3\}\)\([_.@].*\)\{0,1\}$/\1/p')
+    zone=$(readlink /etc/localtime 2>/dev/null | sed -n 's|.*/zoneinfo/||p')
+    pays=""
+    if [ -n "$zone" ] && [ -r /usr/share/zoneinfo/zone.tab ]; then
+        pays=$(awk -v z="$zone" '$3 == z { print $1; exit }' /usr/share/zoneinfo/zone.tab)
+    fi
+    # Chaque champ suit un motif strict : le corps reste un JSON sûr et minimal
+    echo "$version" | grep -qx '[0-9A-Za-z.+~-]\{1,20\}' || version=""
+    echo "$langue" | grep -qx '[a-z]\{2,3\}' || langue=""
+    echo "$pays" | grep -qx '[A-Z][A-Z]' || pays=""
+    printf '{"matos_version":"%s","mode":"%s","langue":"%s","pays":"%s"}\n' \
+        "$version" "$mode" "$langue" "$pays"
+}
+
+envoyer() {
+    envoi_active || exit 0
+    [ -r "$endpoint" ] || exit 0          # image construite sans point d'accès
+    . "$endpoint"
+    case "${STATS_URL:-}" in https://*) ;; *) exit 0 ;; esac
+    [ -n "${STATS_ANON_KEY:-}" ] || exit 0
+    today=$(date -u +%F)
+    [ "$(cat "$state_dir/dernier-essai" 2>/dev/null || true)" = "$today" ] && exit 0
+    # Une seule tentative par jour, même en cas d'échec réseau (pas de boucle)
+    mkdir -p "$state_dir"
+    echo "$today" > "$state_dir/dernier-essai"
+    corps | curl -fsS --max-time 20 -o /dev/null \
+        -H "apikey: $STATS_ANON_KEY" -H "Authorization: Bearer $STATS_ANON_KEY" \
+        -H 'Content-Type: application/json' -H 'Prefer: return=minimal' \
+        --data-binary @- "$STATS_URL/rest/v1/matos_pings" || true
+}
+
+regler() {
+    [ "$(id -u)" = 0 ] || { echo "matos-stats : à lancer avec sudo." >&2; exit 1; }
+    printf '# Statistiques anonymes matOS : oui ou non.\nENVOYER=%s\n' "$1" > "$conf"
+}
+
+case "${1:---envoyer}" in
+    --envoyer)    envoyer ;;
+    --montrer)    corps ;;
+    --etat)       if envoi_active; then echo activé; else echo désactivé; fi ;;
+    --activer)    regler oui ;;
+    --desactiver) regler non ;;
+    *) echo "Usage : matos-stats [--envoyer|--montrer|--etat|--activer|--desactiver]" >&2; exit 2 ;;
+esac

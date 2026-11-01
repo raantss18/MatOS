@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=MatOS-Dark
+Comment=Thème sombre matOS (basé sur Greybird-dark)
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=MatOS-Dark
+MetacityTheme=Greybird-dark
+IconTheme=Papirus-Dark
+CursorTheme=Bibata-Modern-Classic

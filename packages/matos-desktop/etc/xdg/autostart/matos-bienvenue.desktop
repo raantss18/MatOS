@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=matOS welcome
+Name[fr]=Bienvenue dans matOS
+Exec=matos-bienvenue --premier-lancement
+Icon=matos
+NoDisplay=true
+OnlyShowIn=XFCE;
+X-XFCE-Autostart-Override=true

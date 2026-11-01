@@ -1,0 +1,35 @@
+#!/bin/sh
+# matOS : échoue si un composant essentiel manque. Une image incomplète
+# ne doit jamais être produite silencieusement.
+set -e
+manque=""
+for cmd in startxfce4 lightdm calamares maxima wxmaxima xcas gp gap Singular \
+           coqc octave scilab R rstudio codium geogebra6 latexmk pdflatex \
+           texstudio python3 firefox-esr libreoffice; do
+    command -v "$cmd" >/dev/null 2>&1 || manque="$manque $cmd"
+done
+# SageMath et Lean sont absents des builds de test rapides (build.sh --rapide)
+if grep -qx matos-sagemath /usr/share/matos/paquets-attendus 2>/dev/null; then
+    for cmd in sage matos-python matos-jupyterlab; do
+        command -v "$cmd" >/dev/null 2>&1 || [ -x "/opt/matos/bin/$cmd" ] || manque="$manque $cmd"
+    done
+fi
+if grep -qx matos-lean /usr/share/matos/paquets-attendus 2>/dev/null; then
+    for cmd in lean lake matos-lean-projet; do
+        command -v "$cmd" >/dev/null 2>&1 || manque="$manque $cmd"
+    done
+fi
+for f in /usr/share/plymouth/themes/matos/matos.plymouth \
+         /etc/calamares/branding/matos/branding.desc \
+         /etc/calamares/branding/matos/welcome.png \
+         /usr/share/icons/Bibata-Modern-Classic/cursor.theme \
+         /usr/share/themes/Greybird-dark/gtk-3.0/gtk.css; do
+    [ -e "$f" ] || manque="$manque $f"
+done
+[ "$(plymouth-set-default-theme)" = matos ] || manque="$manque thème-plymouth"
+if [ -n "$manque" ]; then
+    echo "matOS : composants manquants :$manque" >&2
+    exit 1
+fi
+dpkg-query -W -f='${Package}\t${Version}\n' > /usr/share/matos/paquets.txt
+echo "matOS : vérification de l'image réussie."

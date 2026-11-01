@@ -1,0 +1,14 @@
+Package: matos-stats
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: misc
+Priority: optional
+Depends: matos-base, curl, zenity, pkexec
+Description: matOS - statistiques anonymes (désactivables)
+ Au plus un envoi par jour de quatre informations : version de matOS,
+ session live ou système installé, langue du système et pays déduit du
+ fuseau horaire. Aucun identifiant, nom, fichier, matériel ni adresse.
+ .
+ « matos-stats --montrer » affiche exactement ce qui serait envoyé ;
+ « Statistiques anonymes » dans le menu permet de désactiver l'envoi.

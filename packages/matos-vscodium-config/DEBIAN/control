@@ -1,0 +1,11 @@
+Package: matos-vscodium-config
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: editors
+Priority: optional
+Depends: codium (>= 1.143), fonts-ibm-plex
+Description: matOS - extensions et réglages de VSCodium
+ Extensions figées installées pour tous les utilisateurs (Lean 4,
+ LaTeX Workshop, Python, Jupyter, Material Icon Theme) et réglages par
+ défaut adaptés à matOS (Python de SageMath, LaTeX à l'enregistrement).

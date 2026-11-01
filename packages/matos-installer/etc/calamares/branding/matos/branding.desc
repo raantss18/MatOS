@@ -1,0 +1,37 @@
+---
+componentName:   matos
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 860px,600px
+windowPlacement: center
+
+strings:
+    productName:         matOS RALAMBO
+    shortProductName:    matOS
+    version:             @MATOS_VERSION@
+    shortVersion:        @MATOS_VERSION@
+    versionedName:       matOS @MATOS_VERSION@ RALAMBO
+    shortVersionedName:  matOS @MATOS_VERSION@
+    bootloaderEntryName: matOS
+    productUrl:          https://github.com/raantss18/MatOS
+    supportUrl:          https://github.com/raantss18/MatOS/issues
+    knownIssuesUrl:      https://github.com/raantss18/MatOS/issues
+    releaseNotesUrl:     https://github.com/raantss18/MatOS/releases
+
+sidebar: widget
+navigation: widget
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "logo.png"
+    productWelcome:      "welcome.png"
+
+slideshow:               "show.qml"
+slideshowAPI:            2
+
+style:
+   SidebarBackground:        "#0d1b2a"
+   SidebarText:              "#f0f4f8"
+   SidebarTextCurrent:       "#ffffff"
+   SidebarBackgroundCurrent: "#00a88b"

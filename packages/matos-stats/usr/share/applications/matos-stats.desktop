@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Anonymous statistics
+Name[fr]=Statistiques anonymes
+Comment[fr]=Voir et régler l'envoi des statistiques anonymes de matOS
+Exec=matos-stats-reglages
+Icon=preferences-system-privacy
+Categories=Settings;System;

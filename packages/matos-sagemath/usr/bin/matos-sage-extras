@@ -1,0 +1,43 @@
+#!/bin/sh
+# matOS — extras facultatifs de SageMath, retirés de l'image pour l'alléger.
+# Chaque extra se réinstalle à l'identique (versions et builds figés) depuis conda-forge.
+#
+# Usage : matos-sage-extras liste
+#         sudo matos-sage-extras installer NOM     (réseau nécessaire)
+set -eu
+
+# les variables MATOS_SAGE_* ne servent qu'aux tests de construction
+prefix=${MATOS_SAGE_PREFIX:-/opt/matos/sagemath}
+dir=${MATOS_SAGE_DIR:-/usr/share/matos/sagemath}
+mm=${MATOS_MM:-/opt/matos/bin/micromamba}
+
+groupes() {   # nom|description (python en premier)
+    echo "python|scikit-learn, statsmodels, numba, plotly, seaborn, manim, pylatex"
+    grep -v '^#' "$dir/groupes.conf" | grep . | cut -d'|' -f1,2
+}
+
+installe() {  # le premier paquet du lock est-il présent ?
+    premier=$(grep -v '^#' "$dir/extras/$1.lock" | head -1 | cut -d= -f1)
+    [ -n "$premier" ] && ls "$prefix"/conda-meta/"$premier"-[0-9]*.json >/dev/null 2>&1
+}
+
+case "${1:-}" in
+    liste)
+        printf '%-14s %-10s %s\n' EXTRA ÉTAT DESCRIPTION
+        groupes | while IFS='|' read -r nom desc; do
+            if installe "$nom"; then etat=installé; else etat=absent; fi
+            printf '%-14s %-10s %s\n' "$nom" "$etat" "$desc"
+        done ;;
+    installer)
+        nom=${2:?usage : matos-sage-extras installer NOM}
+        [ -f "$dir/extras/$nom.lock" ] || { echo "Extra inconnu : $nom (voir « matos-sage-extras liste »)" >&2; exit 1; }
+        if installe "$nom"; then echo "« $nom » est déjà installé."; exit 0; fi
+        if [ "$(id -u)" != 0 ]; then exec pkexec "$0" installer "$nom"; fi
+        export MAMBA_ROOT_PREFIX=${MAMBA_ROOT_PREFIX:-/var/cache/matos/mamba} CONDA_OVERRIDE_ARCHSPEC=x86_64
+        # --no-deps : le cœur est figé, l'extra a été résolu pour s'installer dessus tel quel
+        "$mm" install -y -p "$prefix" --no-deps --override-channels -c conda-forge \
+            $(grep -v '^#' "$dir/extras/$nom.lock")
+        chmod -R a+rX "$prefix"
+        echo "Extra « $nom » installé." ;;
+    *) echo "Usage : matos-sage-extras liste | installer NOM" >&2; exit 2 ;;
+esac

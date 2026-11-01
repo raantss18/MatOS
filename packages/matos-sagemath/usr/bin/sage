@@ -1,0 +1,6 @@
+#!/bin/sh
+# Compilateurs de Debian pour %cython et autres : ceux de conda sont un extra facultatif.
+export CC="${CC:-gcc}" CXX="${CXX:-g++}"
+# pkg-config de conda : il connaît les bibliothèques (gmp, pari...) de l'environnement
+export PKG_CONFIG="${PKG_CONFIG:-/opt/matos/sagemath/bin/pkg-config}"
+exec /opt/matos/sagemath/bin/sage "$@"

@@ -1,0 +1,83 @@
+# matOS — paquets de l'image live (et donc du système installé).
+# Les paquets matos-* sont construits par scripts/build-debs.sh.
+
+matos-base
+matos-stats
+matos-desktop
+matos-math
+matos-installer
+matos-bibliotheque
+matos-documentation
+matos-geogebra
+matos-vscodium-config
+codium
+rstudio
+
+# Système live
+live-boot
+live-config
+live-config-systemd
+
+# Matériel
+firmware-linux
+firmware-linux-nonfree
+firmware-misc-nonfree
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+firmware-amd-graphics
+amd64-microcode
+intel-microcode
+xserver-xorg
+xserver-xorg-video-all
+xserver-xorg-input-all
+
+# Amorçage du système installé (BIOS et UEFI, Secure Boot)
+grub-pc-bin
+grub-efi-amd64-bin
+grub-efi-ia32-bin
+grub-efi-amd64-signed
+shim-signed
+efibootmgr
+os-prober
+
+# Réseau, son, Bluetooth
+network-manager
+network-manager-gnome
+pipewire-audio
+wireplumber
+pavucontrol
+blueman
+
+# Bureautique et Internet
+firefox-esr
+firefox-esr-l10n-fr
+libreoffice-writer
+libreoffice-calc
+libreoffice-impress
+libreoffice-gtk3
+libreoffice-l10n-fr
+hunspell-fr
+mythes-fr
+evince
+vlc
+file-roller
+
+# Impression
+cups
+system-config-printer
+printer-driver-gutenprint
+
+# Outils système
+gparted
+timeshift
+synaptic
+htop
+btop
+curl
+wget
+ntfs-3g
+exfatprogs
+dosfstools
+gvfs-backends
+udisks2

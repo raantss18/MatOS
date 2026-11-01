@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=SageMath
+Comment=Computer algebra system
+Comment[fr]=Système de calcul formel
+Exec=sage
+Icon=utilities-terminal
+Terminal=true
+Categories=Education;Science;Math;
+Keywords=sage;algebra;calcul;formel;

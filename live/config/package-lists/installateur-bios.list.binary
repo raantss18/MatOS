@@ -1,0 +1,9 @@
+# matOS — dépôt embarqué dans l'ISO (dossier pool/), partie BIOS.
+# Calamares installe grub-pc (BIOS) ou grub-efi (UEFI) avec apt depuis ce dépôt :
+# l'installation reste possible sans réseau. grub-pc et grub-efi-amd64 se
+# contredisent : live-build résout chaque fichier de liste séparément, d'où
+# deux fichiers (installateur-efi.list.binary pour l'UEFI).
+grub-pc
+cryptsetup
+cryptsetup-initramfs
+keyutils

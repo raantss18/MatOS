@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=JupyterLab (SageMath, Python)
+Comment[fr]=Carnets interactifs SageMath et Python — fermer le terminal arrête le serveur
+Exec=/opt/matos/bin/matos-jupyterlab
+Icon=jupyter
+Terminal=true
+Categories=Education;Science;Math;Development;
+Keywords=jupyter;notebook;carnet;python;sage;

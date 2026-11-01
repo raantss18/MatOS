@@ -1,7 +1,8 @@
-mkosi.tools/
-mkosi.tools.manifest
+# Produits de build
+/build/
+/out/
 *.iso
-*.raw
-*.raw.zst
-build/
-.buildinfo
+*.iso.sha256
+
+# Point d’accès des statistiques (clé publique d’insertion, injectée au build)
+/keys/stats.env

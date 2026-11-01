@@ -1,0 +1,22 @@
+Package: matos-desktop
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: x11
+Priority: optional
+Depends: matos-base,
+ xfce4, xfce4-terminal, xfce4-whiskermenu-plugin, xfce4-docklike-plugin,
+ xfce4-pulseaudio-plugin, xfce4-power-manager, xfce4-notifyd,
+ xfce4-screenshooter, xfce4-taskmanager, xfce4-clipman-plugin,
+ thunar-archive-plugin, thunar-volman, ristretto, mousepad, catfish,
+ lightdm, lightdm-gtk-greeter, greybird-gtk-theme, papirus-icon-theme,
+ fonts-ibm-plex, fonts-noto-core, fonts-noto-color-emoji, fonts-dejavu,
+ fonts-liberation, plymouth, plymouth-label, mesa-utils, xdg-user-dirs-gtk, xdg-utils, firefox-esr
+Description: matOS - bureau XFCE
+ Réglages par défaut du bureau XFCE de matOS : panneau, menu
+ Mathématiques, thème MatOS-Dark, icônes Papirus, curseur Bibata,
+ fonds d'écran, écran de connexion et écran de démarrage.
+ .
+ Les réglages sont livrés dans /etc/xdg/matos, placé en tête de
+ XDG_CONFIG_DIRS : aucun fichier des paquets XFCE n'est modifié, et
+ chaque utilisateur peut les personnaliser librement.

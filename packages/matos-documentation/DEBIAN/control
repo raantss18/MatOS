@@ -1,0 +1,17 @@
+Package: matos-documentation
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: doc
+Priority: optional
+Depends: matos-base, python3-doc, python-sympy-doc, r-doc-html, r-doc-pdf, maxima-doc,
+ octave-doc, gnuplot-doc, coq-doc, singular-doc, git-doc, debian-reference-fr,
+ manpages-fr, libreoffice-help-fr
+Recommends: gap-online-help, pari-doc
+Description: matOS - documentation hors ligne
+ Documentation officielle des logiciels de matOS, fournie par Debian donc
+ mise à jour avec le système : Python, SymPy, R, Maxima, Octave, Gnuplot, Coq,
+ Singular, Git, LibreOffice (aide en français), pages de manuel en français et
+ « Debian Reference ». Les documentations de GAP et PARI/GP viennent avec ces
+ logiciels. Les gros manuels (NumPy, SciPy, pandas, scikit-learn, TeX Live)
+ ne sont pas inclus ; voir la bibliothèque (Scipy Lecture Notes, lshort).

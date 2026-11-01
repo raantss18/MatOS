@@ -1,0 +1,7 @@
+# matOS : les réglages par défaut de /etc/xdg/matos passent avant /etc/xdg.
+# (95dbus_update-activation-env transmet ensuite la variable à D-Bus/xfconfd)
+case ":${XDG_CONFIG_DIRS:-}:" in
+    *:/etc/xdg/matos:*) ;;
+    *) XDG_CONFIG_DIRS="/etc/xdg/matos:${XDG_CONFIG_DIRS:-/etc/xdg}" ;;
+esac
+export XDG_CONFIG_DIRS

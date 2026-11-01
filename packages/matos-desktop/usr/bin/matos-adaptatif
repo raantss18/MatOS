@@ -1,0 +1,22 @@
+#!/bin/sh
+# matOS : adapte la session à la machine, une seule fois par utilisateur.
+# Sur une machine modeste (≤ 4 Go de RAM, ou rendu graphique logiciel), coupe la
+# composition d'xfwm4 (ombres, transparences) qui consomme mémoire et processeur.
+# Les réglages faits ensuite par l'utilisateur sont respectés.
+set -eu
+flag="${XDG_CONFIG_HOME:-$HOME/.config}/matos/adaptatif-fait"
+[ -e "$flag" ] && exit 0
+
+ram_ko=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
+modeste=0
+[ "${ram_ko:-0}" -le 4400000 ] && modeste=1          # « 4 Go » affiche ~3,7 à 4,2 Gio
+if command -v glxinfo >/dev/null 2>&1 && glxinfo -B 2>/dev/null | grep -qiE 'llvmpipe|softpipe|swrast'; then
+    modeste=1                                         # pas d'accélération 3D
+fi
+
+if [ "$modeste" = 1 ]; then
+    xfconf-query -c xfwm4 -p /general/use_compositing -n -t bool -s false 2>/dev/null \
+        || xfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null || true
+fi
+mkdir -p "$(dirname "$flag")"
+echo "modeste=$modeste ram_ko=$ram_ko" > "$flag"

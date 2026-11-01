@@ -1,0 +1,14 @@
+{
+  "editor.fontFamily": "'IBM Plex Mono', monospace",
+  "editor.fontSize": 14,
+  "terminal.integrated.fontFamily": "'IBM Plex Mono'",
+  "workbench.iconTheme": "material-icon-theme",
+  "update.mode": "none",
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "telemetry.telemetryLevel": "off",
+  "python.defaultInterpreterPath": "/opt/matos/sagemath/bin/python",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "lean4.alwaysAskBeforeInstallingLeanVersions": true
+}

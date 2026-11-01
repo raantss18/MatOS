@@ -1,0 +1,18 @@
+#!/bin/sh
+# matOS : réglages finaux de l'image et vérification de son contenu.
+set -e
+
+# Langue par défaut du système installé (live : paramètres de boot)
+sed -i 's/^# *\(fr_FR.UTF-8 UTF-8\)/\1/; s/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+locale-gen
+update-locale LANG=fr_FR.UTF-8
+
+# GRUB du système installé : voir /etc/default/grub.d/90-matos.cfg (matos-base).
+# grub-pc / grub-efi sont installés par Calamares depuis le dépôt de l'ISO.
+
+# Firmwares de matériel de serveur (cartes SmartNIC, commutateurs, GPU de datacenter) :
+# 260 Mo inutiles sur un PC. Tous les firmwares de PC (Wi-Fi, Bluetooth, graphique, son) restent.
+apt-get purge -y firmware-netronome firmware-nvidia-tesla-535-gsp firmware-marvell-prestera
+
+# Thème Plymouth matOS dans l'initramfs
+plymouth-set-default-theme matos
