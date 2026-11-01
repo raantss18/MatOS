@@ -242,10 +242,13 @@ double amorçage, consommation mémoire de SageMath et de Lean.
 
 ## Limites connues
 
-- **Fuseau horaire de l'installateur** : sans réseau, Calamares propose « New York » et fixe
-  les dates en anglais américain (le système est bien en français). Correction envisagée, non
-  testée : `etc/calamares/modules/locale.conf` avec `region: Indian` et `zone: Antananarivo`,
-  et `partition.conf` avec `initialPartitioningChoice: erase` pour présélectionner « Effacer le disque ».
+- **Fuseau et dates** : le fuseau par défaut de l'installateur est Madagascar (Indian/Antananarivo,
+  vérifié : l'horloge du système installé affiche l'heure de Madagascar). Les nombres et dates se règlent
+  sur le pays choisi, donc en **malgache** (« Ihd 01 Nov ») alors que le système reste en français ;
+  le bouton « Modification… » de la page Emplacement permet de choisir français (France).
+- **Écran verrouillé en session live** : après quelques minutes d'inactivité, l'écran se verrouille ;
+  le mot de passe de la session live est `live`. Correction à prévoir : désactiver le verrouillage en live.
+- **Sélection du disque** : « Effacer le disque » doit être choisi à la main (présélection à prévoir).
 
 - L'ISO complète fait 8,3 Go : il faut une clé USB de 16 Go (pas de DVD, et la clé de 8 Go ne suffit pas).
   Descendre sous 5 Go impose de sortir Mathlib (1,7 Go compressé) ou SageMath (≈ 1 Go) de l'ISO.
