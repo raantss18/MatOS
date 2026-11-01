@@ -1,0 +1,16 @@
+# Extra « compilateurs » : voir groupes.conf
+gcc=16.2.0=hc6a0c74_7
+gcc_linux-64=16.2.0=h0ab548f_2
+gcc_impl_linux-64=16.2.0=h9891192_7
+gxx=16.2.0=hc6a0c74_7
+gxx_linux-64=16.2.0=h23aca61_2
+gxx_impl_linux-64=16.2.0=h0d273dc_7
+gfortran_impl_linux-64=16.2.0=hf930d89_7
+binutils_impl_linux-64=2.46.1=default_hfdba357_103
+binutils_linux-64=2.46.1=default_h4852527_103
+conda-gcc-specs=16.2.0=hf8037ed_7
+sysroot_linux-64=2.39=hc4b9eeb_6
+kernel-headers_linux-64=6.12.0=he073ed8_6
+libstdcxx-devel_linux-64=16.2.0=h86e191b_107
+libgcc-devel_linux-64=16.2.0=he3ce08f_107
+libsanitizer=16.2.0=h3048135_7

@@ -1,2 +1,4 @@
 #!/bin/sh
+# Compilateurs de Debian pour %cython et autres : ceux de conda sont un extra facultatif.
+export CC="${CC:-gcc}" CXX="${CXX:-g++}"
 exec /opt/matos/sagemath/bin/sage "$@"

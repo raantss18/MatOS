@@ -140,7 +140,22 @@ build_upstream() {
     log "Paquet amont figé : $name"
 }
 build_codium()  { build_upstream "$VSCODIUM_URL" "$VSCODIUM_SHA256" "codium_${VSCODIUM_VERSION}_amd64.deb"; }
-build_rstudio() { build_upstream "$RSTUDIO_URL" "$RSTUDIO_SHA256" "rstudio_${RSTUDIO_VERSION}_amd64.deb"; }
+# RStudio dépend de libclang-dev (complétion C++) : ce qui installe ~1 Go de LLVM/Clang
+# (llvm-19-dev, libclang-19-dev...). On retire cette seule dépendance ; le reste du paquet
+# est celui d'origine (SHA256 vérifié). Sans libclang, seule la complétion de code C++
+# est dégradée ; « sudo apt install libclang-dev » la rétablit.
+build_rstudio() {
+    local file; file=$(fetch "$RSTUDIO_URL" "$RSTUDIO_SHA256" "rstudio_${RSTUDIO_VERSION}_amd64.deb")
+    local work="$BUILD_DIR/rstudio"
+    rm -rf "$work"; mkdir -p "$work"
+    dpkg-deb -R "$file" "$work"
+    sed -i '/^Depends:/ { s/libclang-dev, //; s/, libclang-dev//; s/libclang-dev//; }' "$work/DEBIAN/control"
+    sed -i 's/^Version: \(.*\)$/Version: \1+matos1/' "$work/DEBIAN/control"
+    ! grep -q 'libclang' "$work/DEBIAN/control" || die "RStudio : dépendance libclang toujours présente"
+    mkdir -p "$DEBS_DIR"
+    dpkg-deb --root-owner-group -Zzstd -z9 --build "$work" "$DEBS_DIR/rstudio_${RSTUDIO_VERSION}+matos1_amd64.deb" >&2
+    log "RStudio repaqueté sans libclang-dev"
+}
 
 # ── matos-vscodium-config : extensions intégrées ────────────────────────
 build_matos_vscodium_config() {
@@ -194,12 +209,44 @@ build_matos_sagemath() {
        && ! compgen -G "$prefix/conda-meta/_x86_64-microarch-level-1-*" >/dev/null; then
         die "environnement SageMath optimisé pour processeurs récents : relancer scripts/relock-sagemath.sh"
     fi
-    rm -rf "$prefix/pkgs" "$prefix/conda-meta/history"
+    rm -rf "$prefix/pkgs"
+
+    # ── Allègement : retire les extras (réinstallables avec matos-sage-extras) ──
+    local sage_dir="$dir/usr/share/matos/sagemath" avant apres nom desc noms
+    avant=$(du -sm "$prefix" | cut -f1)
+    while IFS='|' read -r nom desc noms; do
+        case "$nom" in ''|'#'*) continue ;; esac
+        # shellcheck disable=SC2086
+        MAMBA_ROOT_PREFIX="$BUILD_DIR/mamba" "$BUILD_DIR/micromamba" remove -y --force -p "$prefix" $noms
+        compgen -G "$prefix/conda-meta/${noms%% *}-[0-9]*.json" >/dev/null \
+            && die "l'extra « $nom » n'a pas été retiré"
+    done < "$sage_dir/groupes.conf"
+    # bibliothèques statiques : utiles seulement pour compiler des programmes en C
+    find "$prefix" -name '*.a' -delete
+    rm -rf "$prefix/conda-meta/history"
+    apres=$(du -sm "$prefix" | cut -f1)
+    log "SageMath allégé : $avant Mo -> $apres Mo"
+    install -D -m 0755 "$BUILD_DIR/micromamba" "$dir/opt/matos/bin/micromamba"
     chmod -R a+rX "$prefix"
 
     log "Test SageMath (utilisateur sans droits)"
     run_as_nobody "$prefix/bin/sage" -c 'f = factor(2^64+1); assert [(int(p), e) for p, e in f] == [(274177, 1), (67280421310721, 1)], f; assert f.value() == 2^64+1; print("sage OK", version())'
-    run_as_nobody "$prefix/bin/python" -c 'import numpy, scipy, sympy, matplotlib, pandas, sklearn, statsmodels, networkx, manim, jupyterlab; print("python OK")'
+    run_as_nobody "$prefix/bin/python" -c 'import numpy, scipy, sympy, matplotlib, pandas, networkx, jupyterlab, ipywidgets; print("python OK")'
+    # compilation d'une extension avec le gcc de Debian (le gcc de conda est un extra)
+    run_as_nobody sh "$dir/usr/bin/sage" -c 'f = cython_lambda("double x", "x*x"); assert f(3) == 9.0; print("cython OK")'
+    # un graphique 3D sans Java (threejs) et le calcul symbolique
+    run_as_nobody "$prefix/bin/sage" -c 'y = var("y"); p = plot3d(sin(x*y), (x, -2, 2), (y, -2, 2)); assert p is not None; assert (integrate(x*exp(x), x) - (x - 1)*exp(x)).simplify_full() == 0; print("3d+symbolique OK")'
+
+    log "Test des extras (installation puis retrait d'un extra)"
+    export MATOS_SAGE_PREFIX="$prefix" MATOS_SAGE_DIR="$sage_dir" MATOS_MM="$BUILD_DIR/micromamba" \
+           MAMBA_ROOT_PREFIX="$BUILD_DIR/mamba"
+    sh "$dir/usr/bin/matos-sage-extras" liste
+    sh "$dir/usr/bin/matos-sage-extras" installer pandoc
+    "$prefix/bin/pandoc" --version | head -1
+    MAMBA_ROOT_PREFIX="$BUILD_DIR/mamba" "$BUILD_DIR/micromamba" remove -y --force -p "$prefix" pandoc
+    rm -rf "$prefix/conda-meta/history"
+    unset MATOS_SAGE_PREFIX MATOS_SAGE_DIR MATOS_MM
+    sh "$dir/usr/bin/matos-sage-extras" liste >/dev/null || true
 
     mkdir -p "$dir/opt/matos"
     mv "$prefix" "$dir/opt/matos/sagemath"
