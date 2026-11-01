@@ -1,0 +1,11 @@
+[Unit]
+Description=matOS - statistiques anonymes quotidiennes
+
+[Timer]
+OnBootSec=15min
+OnCalendar=daily
+RandomizedDelaySec=2h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

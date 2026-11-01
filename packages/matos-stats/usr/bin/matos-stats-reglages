@@ -1,0 +1,20 @@
+#!/bin/sh
+# Fenêtre de réglage des statistiques anonymes matOS.
+set -eu
+etat=$(matos-stats --etat)
+corps=$(matos-stats --montrer)
+texte="matOS envoie au plus une fois par jour ces quatre informations, sans aucun identifiant :
+
+<tt>$corps</tt>
+
+Version de matOS, session live ou système installé, langue du système et pays
+déduit du fuseau horaire. Ni nom, ni fichier, ni matériel, ni position.
+
+Statistiques actuellement : <b>$etat</b>."
+if [ "$etat" = activé ]; then
+    zenity --question --title="Statistiques anonymes" --width=520 --text="$texte" \
+        --ok-label="Désactiver" --cancel-label="Garder" && pkexec matos-stats --desactiver
+else
+    zenity --question --title="Statistiques anonymes" --width=520 --text="$texte" \
+        --ok-label="Activer" --cancel-label="Garder désactivé" && pkexec matos-stats --activer
+fi

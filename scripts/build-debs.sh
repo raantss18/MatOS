@@ -24,6 +24,25 @@ build_matos_archive_keyring() {
     build_deb "$dir"
 }
 
+# ── matos-stats : point d'accès injecté depuis keys/stats.env (non versionné) ─
+build_matos_stats() {
+    local dir; dir=$(stage matos-stats)
+    local env="$MATOS_ROOT/keys/stats.env"
+    if [ -f "$env" ]; then
+        # shellcheck source=/dev/null
+        . "$env"
+    fi
+    if [ -n "${MATOS_STATS_URL:-}" ] && [ -n "${MATOS_STATS_ANON_KEY:-}" ]; then
+        case "$MATOS_STATS_URL" in https://*) ;; *) die "MATOS_STATS_URL doit commencer par https://" ;; esac
+        printf 'STATS_URL=%s\nSTATS_ANON_KEY=%s\n' "$MATOS_STATS_URL" "$MATOS_STATS_ANON_KEY" \
+            > "$dir/usr/lib/matos/stats-endpoint"
+        log "Statistiques anonymes : envoi vers $MATOS_STATS_URL"
+    else
+        log "Pas de keys/stats.env : statistiques désactivées dans cette image"
+    fi
+    build_deb "$dir"
+}
+
 # ── matos-desktop : + curseur Bibata ────────────────────────────────────
 build_matos_desktop() {
     local dir; dir=$(stage matos-desktop)
@@ -234,7 +253,7 @@ EOF
 }
 
 # ── Sélection ───────────────────────────────────────────────────────────
-ALL="matos-base matos-archive-keyring matos-desktop matos-math matos-installer matos-bibliotheque
+ALL="matos-base matos-archive-keyring matos-stats matos-desktop matos-math matos-installer matos-bibliotheque
      matos-geogebra codium rstudio matos-vscodium-config"
 HEAVY="matos-sagemath matos-lean"
 [ "${MATOS_SKIP_HEAVY:-0}" = 1 ] || ALL="$ALL $HEAVY"

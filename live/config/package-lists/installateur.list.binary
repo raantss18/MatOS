@@ -1,0 +1,11 @@
+# matOS — dépôt embarqué dans l'ISO (dossier pool/ de l'image).
+# Calamares installe le chargeur d'amorçage adapté (BIOS ou UEFI) et, en cas de
+# chiffrement, les outils LUKS, avec apt depuis ce dépôt : installation hors ligne.
+grub-pc
+grub-efi
+grub-efi-amd64
+grub-efi-amd64-signed
+shim-signed
+cryptsetup
+cryptsetup-initramfs
+keyutils

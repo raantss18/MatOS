@@ -91,7 +91,8 @@ scripts/
   container-build.sh     outils, paquets, configuration et lancement de live-build
   publish-repo.sh        dépôt APT matOS signé (release GitHub « depot »)
 packages/                sources des paquets matOS
-  matos-base             identité, zram, sysctl, NetworkManager
+  matos-base             identité, zram, sysctl, NetworkManager, GRUB
+  matos-stats            statistiques anonymes (désactivables)
   matos-desktop          XFCE, thème MatOS-Dark, LightDM, Plymouth, bienvenue
   matos-math             métapaquet des logiciels mathématiques de Debian
   matos-installer        Calamares (dérivé de calamares-settings-debian)
@@ -122,6 +123,20 @@ scripts/publish-repo.sh "matOS archive" --envoyer
 ```
 
 Sans clé dans `keys/`, aucun dépôt matOS n'est déclaré dans l'image.
+
+## Statistiques anonymes
+
+Même doctrine que Tontolo (projet Supabase partagé, table séparée `matos_pings`) :
+au plus **un envoi par jour**, annoncé sur la page de bienvenue et désactivable
+(*Paramètres › Statistiques anonymes*, ou `sudo matos-stats --desactiver`).
+Liste blanche exacte : version de matOS, `live` ou `installe`, langue du système,
+pays déduit du fuseau horaire. Aucun identifiant : on compte des envois, pas des
+utilisateurs. `matos-stats --montrer` affiche le corps exact de la requête.
+
+- Côté Supabase : exécuter une fois [`docs/stats/supabase-matos.sql`](docs/stats/supabase-matos.sql)
+  (insertion seule pour la clé `anon`, aucune lecture publique).
+- Côté build : `keys/stats.env` (non versionné) contient `MATOS_STATS_URL` et
+  `MATOS_STATS_ANON_KEY`. Sans ce fichier, l'image n'envoie rien.
 
 ---
 

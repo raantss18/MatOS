@@ -2,6 +2,7 @@
 # Les paquets matos-* sont construits par scripts/build-debs.sh.
 
 matos-base
+matos-stats
 matos-desktop
 matos-math
 matos-installer

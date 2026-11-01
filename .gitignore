@@ -3,3 +3,6 @@
 /out/
 *.iso
 *.iso.sha256
+
+# Point d’accès des statistiques (clé publique d’insertion, injectée au build)
+/keys/stats.env
