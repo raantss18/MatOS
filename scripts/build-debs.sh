@@ -233,7 +233,7 @@ build_matos_sagemath() {
     run_as_nobody "$prefix/bin/sage" -c 'f = factor(2^64+1); assert [(int(p), e) for p, e in f] == [(274177, 1), (67280421310721, 1)], f; assert f.value() == 2^64+1; print("sage OK", version())'
     run_as_nobody "$prefix/bin/python" -c 'import numpy, scipy, sympy, matplotlib, pandas, networkx, jupyterlab, ipywidgets; print("python OK")'
     # compilation d'une extension avec le gcc de Debian (le gcc de conda est un extra)
-    run_as_nobody sh "$dir/usr/bin/sage" -c 'f = cython_lambda("double x", "x*x"); assert f(3) == 9.0; print("cython OK")'
+    run_as_nobody sh "$dir/usr/bin/sage" -c 'import os; open("carre.pyx", "w").write("def carre(int n):\n    return n * n\n"); from sage.misc.cython import cython_import_all; cython_import_all(os.path.abspath("carre.pyx"), globals()); assert carre(12) == 144; print("cython OK")'
     # un graphique 3D sans Java (threejs) et le calcul symbolique
     run_as_nobody "$prefix/bin/sage" -c 'y = var("y"); p = plot3d(sin(x*y), (x, -2, 2), (y, -2, 2)); assert p is not None; assert (integrate(x*exp(x), x) - (x - 1)*exp(x)).simplify_full() == 0; print("3d+symbolique OK")'
 
