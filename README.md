@@ -23,7 +23,8 @@ dédiée à la mémoire du Professeur Ralambo (Université d'Antananarivo).
 | Statistiques | R + paquets recommandés, **RStudio** |
 | Python scientifique | NumPy, SciPy, SymPy, Matplotlib, pandas, scikit-learn, statsmodels, NetworkX, Manim, JupyterLab |
 | Rédaction | TeX Live (français, sciences, TikZ, beamer, XeTeX, LuaTeX), TeXstudio, **VSCodium** (Lean, LaTeX, Python, Jupyter), LibreOffice |
-| Bibliothèque | Livres libres : analyse, algèbre, géométrie, Python, SICP, LaTeX, *Mathematics in Lean* |
+| Bibliothèque | 23 livres libres (licence vérifiée) : Exo7, analyse, équations différentielles, mathématiques discrètes, logique, probabilités, algorithmique, SICP, Python, Git, LaTeX, *Mathematics in Lean*… voir [la liste](packages/matos-bibliotheque/usr/share/matos/bibliotheque/LISEZMOI.md) |
+| Documentation hors ligne | Python, SymPy, R, Maxima, Octave, Gnuplot, Coq, Singular, Git, LibreOffice (aide en français), pages de manuel en français, *Debian Reference* |
 
 ---
 
@@ -68,6 +69,27 @@ Mathlib y est partagée en lecture seule et figée à la version de matOS.
 
 ---
 
+## Machines modestes
+
+matOS vise les PC anciens : vieux Atom 64 bits, 4 Go de RAM.
+
+- **Mémoire** : swap compressé zram (zstd), `earlyoom` (termine le plus gros
+  consommateur avant que le système ne gèle, bureau protégé), journaux limités.
+- **Bureau** : XFCE. Au premier démarrage, `matos-adaptatif` coupe la composition
+  d'xfwm4 sur une machine à 4 Go ou sans accélération 3D.
+- **Processeur** : noyau et paquets Debian amd64 (x86-64 de base, sans AVX exigé).
+  GRUB UEFI 32 bits (`bootia32.efi`) pour les tablettes et mini-PC Atom à
+  micrologiciel UEFI 32 bits avec processeur 64 bits.
+- **Pas de 32 bits** : les Atom 32 bits (N270, N450…) ne sont pas pris en charge.
+
+Ce qui tient à 4 Go : bureau, navigateur, LaTeX, Python, Xcas, Maxima, GAP,
+PARI/GP, Singular, R, Octave. SageMath et LibreOffice demandent de la patience.
+**Lean + Mathlib, RStudio, VSCodium et GeoGebra 6 sont lourds** (Electron ou JVM) :
+fermez le reste avant de les lancer, ou préférez Xcas, wxMaxima et Mousepad.
+Les mesures sur matériel réel restent à faire (voir « Limites connues »).
+
+---
+
 ## Principes de conception
 
 1. **Le build échoue plutôt que de produire une image incomplète.** Pas de
@@ -109,6 +131,7 @@ scripts/
   build-debs.sh          construit les paquets matos-* (+ tests de fumée)
   container-build.sh     outils, paquets, configuration et lancement de live-build
   publish-repo.sh        dépôt APT matOS signé (release GitHub « depot »)
+  livre-verifier.sh      contrôle un livre candidat (PDF, licence libre, SHA256)
 packages/                sources des paquets matOS
   matos-base             identité, zram, sysctl, NetworkManager, GRUB
   matos-stats            statistiques anonymes (désactivables)
@@ -119,7 +142,8 @@ packages/                sources des paquets matOS
   matos-lean             Lean 4 + Mathlib précompilée
   matos-geogebra         GeoGebra Classic 6
   matos-vscodium-config  extensions et réglages VSCodium
-  matos-bibliotheque     livres libres
+  matos-bibliotheque     livres libres (licence vérifiée, SHA256)
+  matos-documentation    documentation hors ligne des logiciels (Debian)
   matos-archive-keyring  clé du dépôt APT matOS (si keys/ la contient)
 live/                    configuration live-build (listes, hooks, écran de boot)
 live/config/package-lists/installateur.list.binary   paquets d'amorçage embarqués
@@ -168,10 +192,13 @@ utilisateurs. `matos-stats --montrer` affiche le corps exact de la requête.
   L'installation occupe environ 25 Go, et l'installateur exige 32 Go libres.
 - RStudio ne publie pas de paquet propre à Debian 13 : c'est le paquet officiel
   « jammy », compatible et figé par SHA256.
+- Les besoins mémoire réels (SageMath, Lean + Mathlib) ne sont pas encore mesurés sur
+  un vieux PC ; ils seront contrôlés dans QEMU limité à 4 Go avec un processeur ancien.
 - Une release GitHub limite chaque fichier à 2 Gio ; les paquets SageMath et Lean
   peuvent dépasser cette taille et devront alors être hébergés ailleurs.
-- La licence de redistribution de *Apprenez à programmer en C* (M. Nebra), repris
-  de matOS 0.5, n'est pas vérifiée.
+- Seule l'architecture **64 bits** (amd64) est prise en charge. Debian 13 ne fournit
+  plus de noyau 32 bits ; une édition 32 bits devrait reposer sur Debian 12 et sans
+  SageMath récent, Lean ni Electron : voir « Machines modestes ».
 
 ---
 

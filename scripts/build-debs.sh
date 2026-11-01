@@ -53,15 +53,21 @@ build_matos_desktop() {
     build_deb "$dir"
 }
 
-# ── matos-bibliotheque : + livres libres figés ──────────────────────────
+# ── matos-bibliotheque : + livres libres figés (SHA256) et table des licences ─
 build_matos_bibliotheque() {
     local dir; dir=$(stage matos-bibliotheque)
-    local line rel url sha file
-    while IFS='|' read -r rel url sha; do
-        [ -n "$rel" ] || continue
-        file=$(fetch "$url" "$sha" "livre-$(basename "$rel")")
-        install -D -m 0644 "$file" "$dir/usr/share/matos/bibliotheque/$rel"
-    done <<< "$MATOS_BOOKS"
+    local lib="$dir/usr/share/matos/bibliotheque"
+    local rel url sha licence file
+    {
+        printf '\n## Livres téléchargés à la construction (version et SHA256 figés)\n\n'
+        printf '| Fichier | Licence |\n|---|---|\n'
+        while IFS='|' read -r rel url sha licence; do
+            [ -n "$rel" ] || continue
+            file=$(fetch "$url" "$sha" "livre-$(basename "$rel")")
+            install -D -m 0644 "$file" "$lib/$rel"
+            printf '| `%s` | %s |\n' "$rel" "$licence"
+        done <<< "$MATOS_BOOKS"
+    } >> "$lib/LISEZMOI.md"
     build_deb "$dir"
 }
 

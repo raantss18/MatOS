@@ -7,6 +7,7 @@ matos-desktop
 matos-math
 matos-installer
 matos-bibliotheque
+matos-documentation
 matos-geogebra
 matos-vscodium-config
 codium
@@ -30,11 +31,11 @@ intel-microcode
 xserver-xorg
 xserver-xorg-video-all
 xserver-xorg-input-all
-mesa-vulkan-drivers
 
 # Amorçage du système installé (BIOS et UEFI, Secure Boot)
 grub-pc-bin
 grub-efi-amd64-bin
+grub-efi-ia32-bin
 grub-efi-amd64-signed
 shim-signed
 efibootmgr
@@ -66,7 +67,6 @@ file-roller
 cups
 system-config-printer
 printer-driver-gutenprint
-hplip
 
 # Outils système
 gparted

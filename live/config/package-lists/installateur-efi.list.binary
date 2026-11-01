@@ -1,0 +1,6 @@
+# matOS — dépôt embarqué dans l'ISO (dossier pool/), partie UEFI et Secure Boot.
+# Voir installateur-bios.list.binary pour la raison de la séparation.
+grub-efi
+grub-efi-amd64
+grub-efi-amd64-signed
+shim-signed

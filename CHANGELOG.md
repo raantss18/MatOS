@@ -29,7 +29,13 @@ Les essais précédents de la 0.6 ne démarraient pas ou étaient incomplets :
 - **GeoGebra Classic 6** (Debian ne fournit que la 4.0), **VSCodium** avec
   extensions Lean, LaTeX, Python, Jupyter, **RStudio**.
 - Octave, Scilab, Kig, Xcas, Coq/CoqIDE, LibreOffice, TeXstudio.
-- **Bibliothèque** de livres libres sur le bureau.
+- **Bibliothèque** de 23 livres libres sur le bureau (Exo7, Lebl, Levin, Open Logic,
+  Grinstead & Snell, MIT *Mathematics for Computer Science*, Erickson, SICP, Pro Git,
+  *Mathematics in Lean*…). Chaque livre a une licence libre vérifiée dans son texte
+  (`scripts/livre-verifier.sh`) et un SHA256 figé.
+- **Documentation hors ligne** (Python, R, Maxima, Octave, Coq, Git, LibreOffice…).
+- **Machines modestes** : zram, earlyoom, composition coupée automatiquement à 4 Go,
+  démarrage UEFI 32 bits sur processeur 64 bits. 64 bits uniquement.
 - Page de **bienvenue** hors ligne, dédiée au Professeur Ralambo.
 - Thème **MatOS-Dark** (sur Greybird-dark), icônes Papirus, curseur Bibata,
   polices IBM Plex, fonds d'écran mathématiques, écrans de démarrage GRUB et

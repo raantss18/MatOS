@@ -11,7 +11,7 @@ Depends: matos-base,
  thunar-archive-plugin, thunar-volman, ristretto, mousepad, catfish,
  lightdm, lightdm-gtk-greeter, greybird-gtk-theme, papirus-icon-theme,
  fonts-ibm-plex, fonts-noto-core, fonts-noto-color-emoji, fonts-dejavu,
- fonts-liberation, plymouth, plymouth-label, xdg-user-dirs-gtk, xdg-utils
+ fonts-liberation, plymouth, plymouth-label, mesa-utils, xdg-user-dirs-gtk, xdg-utils
 Description: matOS - bureau XFCE
  Réglages par défaut du bureau XFCE de matOS : panneau, menu
  Mathématiques, thème MatOS-Dark, icônes Papirus, curseur Bibata,

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=matOS adaptation to hardware
+Name[fr]=Adaptation de matOS au matériel
+Exec=matos-adaptatif
+NoDisplay=true
+OnlyShowIn=XFCE;

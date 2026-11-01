@@ -49,8 +49,13 @@ fi
 # ── 2. Configuration live-build ─────────────────────────────────────────
 log "Étape 2/3 : configuration live-build"
 LB="$BUILD_DIR/live"
-if [ -d "$LB" ]; then (cd "$LB" && lb clean --purge); fi
+# Le cache de paquets de live-build survit d'un build à l'autre (gain de temps) ;
+# build/lb-cache se supprime à la main pour repartir de zéro.
+KEEP="$BUILD_DIR/lb-cache"
+if [ -d "$LB/cache" ]; then rm -rf "$KEEP"; mv "$LB/cache" "$KEEP"; fi
+if [ -d "$LB/chroot" ]; then umount -R "$LB/chroot/proc" "$LB/chroot/sys" "$LB/chroot/dev" 2>/dev/null || true; fi
 rm -rf "$LB"; mkdir -p "$LB"
+if [ -d "$KEEP" ]; then mv "$KEEP" "$LB/cache"; fi
 cp -a "$MATOS_ROOT/live/config" "$LB/config"
 mkdir -p "$LB/config/packages.chroot"
 cp "$DEBS_DIR"/*.deb "$LB/config/packages.chroot/"
@@ -71,7 +76,7 @@ fi
 cp -a /usr/share/live/build/bootloaders "$LB/config/bootloaders"
 cp "$MATOS_ROOT/live/bootloaders/splash.svg" "$LB/config/bootloaders/splash.svg"
 
-image="matos-$MATOS_VERSION-$MATOS_CODENAME-amd64"
+image="matos-$MATOS_VERSION-$MATOS_CODENAME"
 live_params="boot=live components quiet splash locales=fr_FR.UTF-8 keyboard-layouts=fr timezone=Indian/Antananarivo"
 
 cd "$LB"
@@ -110,10 +115,11 @@ log "Étape 3/3 : lb build (long : 1 à 3 h selon la machine et le réseau)"
 lb build 2>&1 | tee "$BUILD_DIR/lb-build.log"
 [ "${PIPESTATUS[0]}" = 0 ] || die "lb build a échoué (voir build/lb-build.log)"
 
-iso="$LB/$image.hybrid.iso"
+# live-build ajoute lui-même « -amd64 » au nom de l'image
+iso="$LB/$image-amd64.hybrid.iso"
 [ -f "$iso" ] || die "ISO absente après lb build"
 mkdir -p "$MATOS_ROOT/out"
 mv "$iso" "$MATOS_ROOT/out/"
-(cd "$MATOS_ROOT/out" && sha256sum "$image.hybrid.iso" > "$image.hybrid.iso.sha256")
-cp "$LB/chroot/usr/share/matos/paquets.txt" "$MATOS_ROOT/out/$image.paquets.txt"
-log "ISO prête : out/$image.hybrid.iso"
+(cd "$MATOS_ROOT/out" && sha256sum "$image-amd64.hybrid.iso" > "$image-amd64.hybrid.iso.sha256")
+cp "$LB/chroot/usr/share/matos/paquets.txt" "$MATOS_ROOT/out/$image-amd64.paquets.txt"
+log "ISO prête : out/$image-amd64.hybrid.iso"

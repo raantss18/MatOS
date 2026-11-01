@@ -28,7 +28,7 @@ for arg in "$@"; do
     esac
 done
 
-image="matos-$MATOS_VERSION-$MATOS_CODENAME-amd64"
+image="matos-$MATOS_VERSION-$MATOS_CODENAME-amd64"  # nom produit par live-build
 
 if [ "$mode" = test ]; then
     iso="out/$image.hybrid.iso"
