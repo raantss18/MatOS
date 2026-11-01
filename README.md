@@ -11,6 +11,19 @@ dédiée à la mémoire du Professeur Ralambo (Université d'Antananarivo).
 
 ---
 
+## Télécharger
+
+L'ISO (≈ 8 Go) est publiée dans les [releases GitHub](https://github.com/raantss18/MatOS/releases),
+découpée en parts de 1,9 Go (limite de 2 Go par fichier). Le script recompose l'ISO, **vérifie chaque
+part (SHA256)** et reprend après une coupure de connexion :
+
+```bash
+curl -fLO https://raw.githubusercontent.com/raantss18/MatOS/main/scripts/telecharger-matos.sh
+bash telecharger-matos.sh            # dernière version ; ou : bash telecharger-matos.sh v0.6
+```
+
+Prévoir ≈ 10 Go d'espace libre. Puis copier l'ISO sur une clé USB de 16 Go.
+
 ## Logiciels inclus
 
 | Domaine | Logiciels |
@@ -143,6 +156,8 @@ scripts/
   build-debs.sh          construit les paquets matos-* (+ tests de fumée)
   container-build.sh     outils, paquets, configuration et lancement de live-build
   publish-repo.sh        dépôt APT matOS signé (release GitHub « depot »)
+  publier-release.sh     découpe l'ISO en parts et crée la release GitHub
+  telecharger-matos.sh   pour les utilisateurs : télécharge, vérifie et recompose l'ISO
   livre-verifier.sh      contrôle un livre candidat (PDF, licence libre, SHA256)
 packages/                sources des paquets matOS
   matos-base             identité, zram, sysctl, NetworkManager, GRUB
@@ -163,6 +178,24 @@ docs/stats/               migration Supabase des statistiques
 keys/                    clés et points d'accès non versionnés (voir keys/README.md)
 CHANGELOG.md             historique des versions
 ```
+
+## Publier une nouvelle version
+
+L'ISO se construit en local (≈ 80 Go de disque, plusieurs heures : trop pour les exécuteurs gratuits
+de GitHub Actions) ; la release est liée au dépôt par la version de `versions.env`.
+
+```bash
+# 1. changer MATOS_VERSION dans versions.env, noter les changements dans CHANGELOG.md, committer
+./build.sh                           # 2. construire et tester l'ISO (./build.sh --test)
+# 3. fusionner la branche dans main (pull request)
+scripts/publier-release.sh --a-blanc # 4. vérifier le découpage et les notes (rien n'est envoyé)
+scripts/publier-release.sh           # 5. brouillon de release v<version> avec les parts et SHA256SUMS
+scripts/publier-release.sh --publier # 6. rendre la release publique (« dernière version »)
+```
+
+Le script refuse de publier si la version n'est pas dans `main`. Les machines déjà installées
+reçoivent les mises à jour des paquets Debian par `apt` ; celles des paquets `matos-*` passent par le
+dépôt APT matOS (voir plus bas).
 
 ## Mettre à jour un logiciel
 
