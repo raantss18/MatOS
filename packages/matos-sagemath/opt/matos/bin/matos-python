@@ -1,4 +1,6 @@
 #!/bin/sh
 # Python de l'environnement scientifique matOS (SageMath, NumPy, SymPy...)
 export CC="${CC:-gcc}" CXX="${CXX:-g++}"
+# pkg-config de conda : il connaît les bibliothèques (gmp, pari...) de l'environnement
+export PKG_CONFIG="${PKG_CONFIG:-/opt/matos/sagemath/bin/pkg-config}"
 exec /opt/matos/sagemath/bin/python "$@"
