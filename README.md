@@ -37,7 +37,7 @@ disque libre et une bonne connexion pour le premier build.
 ./build.sh            # ISO complète (~10 Go), plusieurs heures
 ./build.sh --rapide   # ISO de test sans SageMath ni Lean
 ./build.sh --paquets  # seulement les paquets matos-* (build/debs/)
-./build.sh --test     # démarre out/*.iso dans QEMU
+./build.sh --test     # démarre l'ISO dans QEMU (UEFI si OVMF est installé)
 ```
 
 Résultat : `out/matos-0.6-ralambo-amd64.hybrid.iso` (+ `.sha256` et la liste
@@ -48,6 +48,23 @@ UEFI, Secure Boot compris.
 Session live : utilisateur `matos`, mot de passe `live`. L'installation
 (icône **Installer matOS**) copie tout le système, sans réseau ; il n'y a pas
 de mot de passe root, l'utilisateur créé est administrateur via `sudo`.
+
+---
+
+## Utiliser matOS
+
+| Pour… | Commande ou menu |
+|---|---|
+| SageMath en terminal | `sage` |
+| Carnets Jupyter (noyaux SageMath et Python) | menu *Mathématiques › JupyterLab*, ou `matos-jupyterlab` |
+| Python scientifique complet (Manim, scikit-learn…) | `matos-python` (le `python3` du système reste celui de Debian) |
+| Nouveau projet Lean 4 + Mathlib | `matos-lean-projet MonProjet`, puis `codium MonProjet` |
+| GeoGebra Classic 6 | menu *Mathématiques*, ou `geogebra6` |
+| Livres libres | dossier **Bibliothèque** du bureau |
+| Statistiques anonymes | *Paramètres › Statistiques anonymes*, ou `matos-stats --montrer` |
+
+Dans un projet Lean créé par `matos-lean-projet`, ne lancez pas `lake update` :
+Mathlib y est partagée en lecture seule et figée à la version de matOS.
 
 ---
 
@@ -76,7 +93,9 @@ de mot de passe root, l'utilisateur créé est administrateur via `sudo`.
 4. **Hors ligne d'abord.** Mathlib est précompilée et partagée en lecture seule ;
    `matos-lean-projet MonProjet` crée un projet qui l'utilise sans réseau. Les
    tests de build lancent SageMath et Lean en utilisateur sans droits pour le
-   vérifier.
+   vérifier. L'installateur trouve sur l'ISO elle-même (dossier `pool/`) les
+   paquets GRUB (BIOS ou UEFI) et LUKS qu'il installe : l'installation ne
+   demande aucune connexion.
 
 ---
 
@@ -103,7 +122,10 @@ packages/                sources des paquets matOS
   matos-bibliotheque     livres libres
   matos-archive-keyring  clé du dépôt APT matOS (si keys/ la contient)
 live/                    configuration live-build (listes, hooks, écran de boot)
-keys/                    clé publique du dépôt APT matOS (voir keys/README.md)
+live/config/package-lists/installateur.list.binary   paquets d'amorçage embarqués
+docs/stats/               migration Supabase des statistiques
+keys/                    clés et points d'accès non versionnés (voir keys/README.md)
+CHANGELOG.md             historique des versions
 ```
 
 ## Mettre à jour un logiciel
@@ -137,6 +159,19 @@ utilisateurs. `matos-stats --montrer` affiche le corps exact de la requête.
   (insertion seule pour la clé `anon`, aucune lecture publique).
 - Côté build : `keys/stats.env` (non versionné) contient `MATOS_STATS_URL` et
   `MATOS_STATS_ANON_KEY`. Sans ce fichier, l'image n'envoie rien.
+
+---
+
+## Limites connues
+
+- L'ISO complète fait environ 10 Go : il faut une clé USB de 16 Go (pas de DVD).
+  L'installation occupe environ 25 Go, et l'installateur exige 32 Go libres.
+- RStudio ne publie pas de paquet propre à Debian 13 : c'est le paquet officiel
+  « jammy », compatible et figé par SHA256.
+- Une release GitHub limite chaque fichier à 2 Gio ; les paquets SageMath et Lean
+  peuvent dépasser cette taille et devront alors être hébergés ailleurs.
+- La licence de redistribution de *Apprenez à programmer en C* (M. Nebra), repris
+  de matOS 0.5, n'est pas vérifiée.
 
 ---
 
