@@ -198,7 +198,21 @@ utilisateurs. `matos-stats --montrer` affiche le corps exact de la requête.
 
 ---
 
+## Tests réalisés
+
+Sur l'ISO complète de 8,3 Go, dans QEMU (4 Go de RAM, processeur de génération Core 2) :
+démarrage **UEFI** et **BIOS** jusqu'au bureau ; installation avec Calamares sur un disque
+de 40 Go **sans réseau** (environ 5 minutes), puis démarrage du système installé depuis le
+disque (GRUB UEFI installé hors ligne, connexion automatique, bureau).
+Non testés : vrai matériel, UEFI 32 bits, Secure Boot, installation en BIOS, disque chiffré,
+double amorçage, consommation mémoire de SageMath et de Lean.
+
 ## Limites connues
+
+- **Fuseau horaire de l'installateur** : sans réseau, Calamares propose « New York » et fixe
+  les dates en anglais américain (le système est bien en français). Correction envisagée, non
+  testée : `etc/calamares/modules/locale.conf` avec `region: Indian` et `zone: Antananarivo`,
+  et `partition.conf` avec `initialPartitioningChoice: erase` pour présélectionner « Effacer le disque ».
 
 - L'ISO complète fait 8,3 Go : il faut une clé USB de 16 Go (pas de DVD, et la clé de 8 Go ne suffit pas).
   Descendre sous 5 Go impose de sortir Mathlib (1,7 Go compressé) ou SageMath (≈ 1 Go) de l'ISO.
