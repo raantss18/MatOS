@@ -270,7 +270,7 @@ EOF
 }
 
 # ── Sélection ───────────────────────────────────────────────────────────
-ALL="matos-base matos-archive-keyring matos-stats matos-desktop matos-math matos-installer matos-bibliotheque
+ALL="matos-base matos-archive-keyring matos-stats matos-desktop matos-math matos-documentation matos-installer matos-bibliotheque
      matos-geogebra codium rstudio matos-vscodium-config"
 HEAVY="matos-sagemath matos-lean"
 [ "${MATOS_SKIP_HEAVY:-0}" = 1 ] || ALL="$ALL $HEAVY"
