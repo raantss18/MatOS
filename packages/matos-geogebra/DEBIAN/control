@@ -1,0 +1,11 @@
+Package: matos-geogebra
+Version: @GEOGEBRA_VERSION@+matos@MATOS_VERSION@
+Architecture: amd64
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: math
+Priority: optional
+Depends: libgtk-3-0t64, libnss3, libgbm1, libasound2t64, libxss1, libsecret-1-0, xdg-utils
+Description: matOS - GeoGebra Classic 6 (version figée)
+ GeoGebra Classic @GEOGEBRA_VERSION@ (géométrie dynamique, grapheur,
+ calcul formel, tableur), installé dans /opt/matos/geogebra.
+ Fonctionne entièrement hors ligne. Commande : geogebra6.

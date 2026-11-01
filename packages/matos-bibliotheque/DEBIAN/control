@@ -1,0 +1,10 @@
+Package: matos-bibliotheque
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: doc
+Priority: optional
+Description: matOS - bibliothèque de livres libres
+ Manuels de mathématiques, d'informatique, de LaTeX et de Lean,
+ consultables hors ligne dans /usr/share/matos/bibliotheque
+ (raccourci « Bibliothèque » sur le bureau).

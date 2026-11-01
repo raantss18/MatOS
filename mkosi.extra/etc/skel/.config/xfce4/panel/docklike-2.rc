@@ -1,7 +1,0 @@
-[user]
-pinned=/usr/share/applications/thunar.desktop;/usr/share/applications/xfce4-terminal.desktop;/usr/share/applications/vivaldi-stable.desktop;/usr/share/applications/org.thonny.Thonny.desktop;/usr/share/applications/texstudio.desktop;/usr/share/applications/geogebra.desktop;/home/matos/.local/share/applications/menulibre.desktop;
-indicatorStyle=2
-inactiveIndicatorStyle=2
-indicatorOrientation=0
-indicatorColor=rgb(255,163,72)
-inactiveColor=rgb(76,166,230)

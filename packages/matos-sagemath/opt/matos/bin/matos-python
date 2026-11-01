@@ -1,0 +1,3 @@
+#!/bin/sh
+# Python de l'environnement scientifique matOS (SageMath, NumPy, Manim...)
+exec /opt/matos/sagemath/bin/python "$@"

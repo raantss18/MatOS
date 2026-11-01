@@ -1,0 +1,12 @@
+#!/bin/sh
+# Ouvre la page de bienvenue matOS. Avec --premier-lancement, ne l'ouvre
+# qu'une fois par utilisateur.
+set -e
+page=/usr/share/matos/bienvenue/index.html
+flag="${XDG_CONFIG_HOME:-$HOME/.config}/matos/bienvenue-vue"
+if [ "${1:-}" = "--premier-lancement" ]; then
+    [ -e "$flag" ] && exit 0
+    mkdir -p "$(dirname "$flag")"
+    touch "$flag"
+fi
+exec xdg-open "$page"

@@ -1,0 +1,13 @@
+PRETTY_NAME="matOS @MATOS_VERSION@ RALAMBO"
+NAME="matOS"
+VERSION_ID="@MATOS_VERSION@"
+VERSION="@MATOS_VERSION@ (RALAMBO)"
+VERSION_CODENAME=trixie
+MATOS_CODENAME=ralambo
+DEBIAN_VERSION_ID="13"
+ID=matos
+ID_LIKE=debian
+LOGO=matos
+HOME_URL="https://github.com/raantss18/MatOS"
+SUPPORT_URL="https://github.com/raantss18/MatOS/issues"
+BUG_REPORT_URL="https://github.com/raantss18/MatOS/issues"

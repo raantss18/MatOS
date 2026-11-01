@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+if [ "$1" = configure ]; then
+    mkdir -p /usr/share/icons/default /usr/share/images/desktop-base
+    update-alternatives --install /usr/share/icons/default/index.theme \
+        x-cursor-theme /usr/share/icons/Bibata-Modern-Classic/cursor.theme 90
+    update-alternatives --install /usr/share/images/desktop-base/desktop-background \
+        desktop-background /usr/share/backgrounds/matos/matos-ralambo.png 90
+    if [ ! -e /etc/plymouth/plymouthd.conf ] || ! grep -q '^Theme=' /etc/plymouth/plymouthd.conf; then
+        mkdir -p /etc/plymouth
+        printf '[Daemon]\nTheme=matos\n' > /etc/plymouth/plymouthd.conf
+    fi
+fi

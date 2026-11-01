@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue dans matOS</title>
+<style>
+  :root { --bg:#0d1b2a; --card:#14263b; --accent:#00c9a7; --text:#f0f4f8; --muted:#a9b8c8; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font: 16px/1.55 "IBM Plex Sans", "Noto Sans", sans-serif; }
+  main { max-width: 920px; margin: 0 auto; padding: 40px 20px 60px; }
+  header { display:flex; gap:20px; align-items:center; margin-bottom: 28px; }
+  header img { width: 96px; height:auto; }
+  h1 { margin:0; font-size: 2rem; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); margin: 4px 0 0; }
+  .dedicace { border-left: 3px solid var(--accent); padding: 4px 0 4px 16px;
+              color: var(--muted); font-style: italic; margin: 0 0 32px; }
+  h2 { font-size: 1.15rem; color: var(--accent); margin: 32px 0 12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .card { background: var(--card); border-radius: 8px; padding: 14px 16px; }
+  .card b { display:block; margin-bottom: 4px; }
+  .card small { color: var(--muted); }
+  code { background:#0a1522; padding: 1px 6px; border-radius: 4px; font-family: "IBM Plex Mono", monospace; }
+  a { color: var(--accent); }
+  footer { margin-top: 40px; color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="/usr/share/matos/logos/logo-white.png" alt="">
+    <div>
+      <h1>Bienvenue dans <span>matOS</span> RALAMBO</h1>
+      <p class="sub">La distribution des étudiants et enseignants en mathématiques — complète et hors ligne.</p>
+    </div>
+  </header>
+
+  <p class="dedicace">Cette distribution est dédiée à la mémoire du Professeur Ralambo,
+  enseignant à l'Université d'Antananarivo, dont l'engagement pour les mathématiques
+  et la transmission du savoir reste une source d'inspiration.</p>
+
+  <h2>Calcul formel et algèbre</h2>
+  <div class="grid">
+    <div class="card"><b>SageMath</b><small>Terminal : <code>sage</code> — carnets Jupyter : menu Mathématiques.</small></div>
+    <div class="card"><b>Maxima / wxMaxima</b><small>Calcul symbolique avec interface graphique.</small></div>
+    <div class="card"><b>Xcas / Giac</b><small>Calcul formel utilisé au lycée et à l'université.</small></div>
+    <div class="card"><b>PARI/GP, GAP, Singular</b><small>Théorie des nombres, groupes, algèbre commutative : <code>gp</code>, <code>gap</code>, <code>Singular</code>.</small></div>
+  </div>
+
+  <h2>Preuves formelles</h2>
+  <div class="grid">
+    <div class="card"><b>Lean 4 + Mathlib</b><small>Mathlib précompilée, hors ligne. Nouveau projet : <code>matos-lean-projet MonProjet</code>, puis ouvrez-le dans VSCodium.</small></div>
+    <div class="card"><b>Coq</b><small>Assistant de preuve, avec CoqIDE.</small></div>
+  </div>
+
+  <h2>Géométrie, analyse numérique, statistiques</h2>
+  <div class="grid">
+    <div class="card"><b>GeoGebra 6</b><small>Géométrie dynamique, grapheur, tableur.</small></div>
+    <div class="card"><b>GNU Octave, Scilab</b><small>Calcul numérique matriciel.</small></div>
+    <div class="card"><b>R + RStudio</b><small>Statistiques et science des données.</small></div>
+    <div class="card"><b>Python scientifique</b><small>NumPy, SciPy, SymPy, Matplotlib, pandas, scikit-learn, Manim dans JupyterLab.</small></div>
+  </div>
+
+  <h2>Rédaction</h2>
+  <div class="grid">
+    <div class="card"><b>LaTeX + TeXstudio</b><small>TeX Live (français, sciences, TikZ, beamer), <code>latexmk</code>, biber.</small></div>
+    <div class="card"><b>VSCodium</b><small>Préconfiguré pour LaTeX, Python, Jupyter et Lean.</small></div>
+    <div class="card"><b>LibreOffice</b><small>Traitement de texte, tableur, présentations.</small></div>
+  </div>
+
+  <h2>Bibliothèque</h2>
+  <p>Des livres libres (analyse, algèbre, géométrie, Python, LaTeX, Lean…) sont dans le dossier
+  <b>Bibliothèque</b> de votre bureau — <a href="file:///usr/share/matos/bibliotheque/">ouvrir la bibliothèque</a>.</p>
+
+  <h2>Installer matOS</h2>
+  <p>Depuis la session live, lancez <b>Installer matOS</b> sur le bureau ou dans le menu.
+  Tous les logiciels sont copiés, l'installation se fait entièrement hors ligne.</p>
+
+  <footer>matOS @MATOS_VERSION@ RALAMBO — basé sur Debian 13 « Trixie » —
+  <a href="https://github.com/raantss18/MatOS">github.com/raantss18/MatOS</a></footer>
+</main>
+</body>
+</html>

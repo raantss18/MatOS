@@ -1,7 +1,5 @@
-mkosi.tools/
-mkosi.tools.manifest
+# Produits de build
+/build/
+/out/
 *.iso
-*.raw
-*.raw.zst
-build/
-.buildinfo
+*.iso.sha256

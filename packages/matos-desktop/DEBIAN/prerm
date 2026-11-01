@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+if [ "$1" = remove ]; then
+    update-alternatives --remove x-cursor-theme /usr/share/icons/Bibata-Modern-Classic/cursor.theme
+    update-alternatives --remove desktop-background /usr/share/backgrounds/matos/matos-ralambo.png
+fi

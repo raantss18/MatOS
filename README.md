@@ -1,8 +1,13 @@
 # matOS RALAMBO
 
-Distribution Linux orientée mathématiques, construite avec [mkosi](https://github.com/systemd/mkosi) à partir de Debian Bookworm.
+Distribution Linux pour les étudiants et enseignants en mathématiques :
+légère (XFCE), complète et **utilisable entièrement hors ligne**.
+Basée sur **Debian 13 « Trixie »**, construite avec
+[live-build](https://live-team.pages.debian.net/live-manual/), l'outil officiel
+de Debian pour les images live.
 
-matOS RALAMBO (v0.6) est la version reproductible et open-source de matOS, une distribution conçue pour l'enseignement et la recherche en mathématiques. Elle succède à **matOS 0.5 Archimedes**.
+matOS 0.6 RALAMBO succède à matOS 0.5 Archimedes (MX Linux 23). Elle est
+dédiée à la mémoire du Professeur Ralambo (Université d'Antananarivo).
 
 ---
 
@@ -10,119 +15,117 @@ matOS RALAMBO (v0.6) est la version reproductible et open-source de matOS, une d
 
 | Domaine | Logiciels |
 |---|---|
-| Calcul formel | SageMath 9.5, Maxima/wxMaxima, ECL, Coq |
-| Théorie des groupes | GAP 4.12 (avec bibliothèques alnuth, polycyclic, primgrp…) |
-| Théorie des nombres | PARI/GP 2.15, gp2c |
-| Géométrie algébrique | Singular 4.3 |
-| Géométrie interactive | GeoGebra, Gfan |
-| Statistiques | R 4.2 + packages CRAN essentiels |
-| Python scientifique | NumPy, SciPy, SymPy, Matplotlib, Jupyter |
-| LaTeX | TeXLive 2022 (base + science + bibtex-extra + lang-greek) |
-| Optimisation | COIN-OR (CBC, CLP, CGL…) |
+| Calcul formel | **SageMath 10.9**, Maxima/wxMaxima, Xcas/Giac, SymPy |
+| Algèbre, nombres | PARI/GP, GAP (+ bibliothèques), Singular |
+| Preuves formelles | **Lean 4 + Mathlib précompilée**, Coq/CoqIDE |
+| Géométrie | **GeoGebra Classic 6**, Kig |
+| Calcul numérique | GNU Octave, Scilab, NumPy/SciPy |
+| Statistiques | R + paquets recommandés, **RStudio** |
+| Python scientifique | NumPy, SciPy, SymPy, Matplotlib, pandas, scikit-learn, statsmodels, NetworkX, Manim, JupyterLab |
+| Rédaction | TeX Live (français, sciences, TikZ, beamer, XeTeX, LuaTeX), TeXstudio, **VSCodium** (Lean, LaTeX, Python, Jupyter), LibreOffice |
+| Bibliothèque | Livres libres : analyse, algèbre, géométrie, Python, SICP, LaTeX, *Mathematics in Lean* |
 
 ---
 
-## Prérequis
+## Construire l'ISO
 
-- Système hôte : Debian 12 / Ubuntu 24.04 ou ultérieur
-- `mkosi` ≥ 20.0 : `sudo apt install mkosi`
-- `systemd-container` : `sudo apt install systemd-container`
-- Accès root (nécessaire pour la construction de l'image)
+Seul prérequis : **Docker** ou **Podman** (le build se fait dans un conteneur
+`debian:trixie`, sur n'importe quelle distribution hôte). Prévoir ~80 Go de
+disque libre et une bonne connexion pour le premier build.
+
+```bash
+./build.sh            # ISO complète (~10 Go), plusieurs heures
+./build.sh --rapide   # ISO de test sans SageMath ni Lean
+./build.sh --paquets  # seulement les paquets matos-* (build/debs/)
+./build.sh --test     # démarre out/*.iso dans QEMU
+```
+
+Résultat : `out/matos-0.6-ralambo-amd64.hybrid.iso` (+ `.sha256` et la liste
+des paquets). L'ISO est hybride : graver sur DVD ou copier sur une clé USB
+(16 Go) avec `dd`, Ventoy, Etcher ou GNOME Disques. Elle démarre en BIOS et en
+UEFI, Secure Boot compris.
+
+Session live : utilisateur `matos`, mot de passe `live`. L'installation
+(icône **Installer matOS**) copie tout le système, sans réseau ; il n'y a pas
+de mot de passe root, l'utilisateur créé est administrateur via `sudo`.
 
 ---
 
-## Construction
+## Principes de conception
 
-```bash
-git clone https://github.com/<votre-username>/matos.git
-cd matos
-sudo mkosi
-```
-
-L'image produite est `matos-ralambo.raw` (ou `matos-ralambo.raw.zst` si la compression est activée).
-
-### Options utiles
-
-```bash
-sudo mkosi --force          # Reconstruction complète (supprime le cache)
-sudo mkosi summary          # Affiche la configuration qui sera utilisée
-sudo mkosi genkey           # Génère les clés pour le Secure Boot
-```
-
----
-
-## Test local
-
-### Démarrage dans un conteneur systemd-nspawn
-
-```bash
-sudo systemd-nspawn -bi matos-ralambo.raw
-```
-
-Le système démarre en mode conteneur. Connexion : `matos` / `matos` (ou `root` / `matos`).
-
-### Test en machine virtuelle QEMU
-
-```bash
-sudo mkosi qemu
-```
+1. **Le build échoue plutôt que de produire une image incomplète.** Pas de
+   `|| true` sur les installations ; un hook final
+   (`live/config/hooks/normal/9900-matos-verification.hook.chroot`) vérifie
+   la présence de chaque logiciel. C'est ce qui manquait aux versions
+   précédentes : `sagemath` n'existe plus dans Trixie, ce qui annulait en
+   silence l'installation de *tous* les logiciels mathématiques.
+2. **Tout est figé.** Chaque ressource téléchargée (SageMath via conda-forge,
+   Lean, Mathlib, GeoGebra, VSCodium et ses extensions, RStudio, curseur, livres)
+   a une version et un SHA256 dans [`versions.env`](versions.env). L'environnement
+   SageMath est figé paquet par paquet dans
+   [`environment.lock`](packages/matos-sagemath/usr/share/matos/sagemath/environment.lock).
+3. **Les personnalisations résistent aux mises à jour.** Tout est livré sous
+   forme de paquets `.deb` matOS, jamais par modification des fichiers d'autres
+   paquets :
+   - réglages XFCE dans `/etc/xdg/matos`, placé en tête de `XDG_CONFIG_DIRS` ;
+   - identité système (`/usr/lib/os-release`) détournée par `dpkg-divert` ;
+   - réglages système en fichiers *drop-in* (`sysctl.d`, `zram-generator.conf.d`,
+     `NetworkManager/conf.d`, `lightdm.conf.d`) ;
+   - applications tierces autonomes dans `/opt/matos`, sans dépôt amont ajouté :
+     une mise à jour Debian ne peut ni les casser ni les remplacer.
+4. **Hors ligne d'abord.** Mathlib est précompilée et partagée en lecture seule ;
+   `matos-lean-projet MonProjet` crée un projet qui l'utilise sans réseau. Les
+   tests de build lancent SageMath et Lean en utilisateur sans droits pour le
+   vérifier.
 
 ---
 
 ## Structure du dépôt
 
 ```
-matos/
-├── mkosi.conf          ← Configuration principale (distribution, format, paquets de base)
-├── mkosi.packages      ← Paquets supplémentaires (mathématiques, LaTeX, Python…)
-├── mkosi.postinst      ← Script post-installation (utilisateur, autologin, locale)
-├── mkosi.extra/        ← Arborescence superposée sur l'image finale
-│   └── etc/
-│       ├── skel/       ← Configuration utilisateur par défaut (XFCE, menus, ressources PDF)
-│       └── xfce4/      ← Paramètres XFCE système
-└── .github/
-    └── workflows/
-        └── build-iso.yml   ← CI/CD GitHub Actions
+build.sh                 point d'entrée (lance le conteneur de build)
+versions.env             versions et SHA256 de tout ce qui est téléchargé
+scripts/
+  lib.sh                 téléchargement vérifié, construction des .deb
+  build-debs.sh          construit les paquets matos-* (+ tests de fumée)
+  container-build.sh     outils, paquets, configuration et lancement de live-build
+  publish-repo.sh        dépôt APT matOS signé (release GitHub « depot »)
+packages/                sources des paquets matOS
+  matos-base             identité, zram, sysctl, NetworkManager
+  matos-desktop          XFCE, thème MatOS-Dark, LightDM, Plymouth, bienvenue
+  matos-math             métapaquet des logiciels mathématiques de Debian
+  matos-installer        Calamares (dérivé de calamares-settings-debian)
+  matos-sagemath         SageMath + Python scientifique (conda-forge figé)
+  matos-lean             Lean 4 + Mathlib précompilée
+  matos-geogebra         GeoGebra Classic 6
+  matos-vscodium-config  extensions et réglages VSCodium
+  matos-bibliotheque     livres libres
+  matos-archive-keyring  clé du dépôt APT matOS (si keys/ la contient)
+live/                    configuration live-build (listes, hooks, écran de boot)
+keys/                    clé publique du dépôt APT matOS (voir keys/README.md)
 ```
 
----
+## Mettre à jour un logiciel
 
-## Personnalisation
+Modifier la version, l'URL et le SHA256 dans `versions.env`, puis reconstruire.
+Pour SageMath : modifier la résolution dans `environment.lock` (une ligne
+`nom=version=build` par paquet conda-forge).
 
-### Ajouter des paquets
+## Dépôt APT en ligne (optionnel)
 
-Éditez `mkosi.packages` : un paquet par ligne, commentaires avec `#`.
-
-### Modifier la configuration par défaut
-
-Les fichiers dans `mkosi.extra/` sont copiés tels quels dans l'image. Pour modifier le bureau XFCE par défaut, éditez les fichiers dans `mkosi.extra/etc/skel/.config/xfce4/`.
-
-### Changer le mot de passe par défaut
-
-Éditez `mkosi.postinst` et modifiez la ligne `echo "matos:matos" | chpasswd`.
-
----
-
-## GitHub Actions
-
-Le workflow `.github/workflows/build-iso.yml` construit automatiquement l'image à chaque push sur `main`.
-
-Pour déclencher manuellement :
+Pour distribuer des mises à jour des paquets `matos-*` aux machines installées :
+créer une clé (voir [`keys/README.md`](keys/README.md)), reconstruire, puis
+publier depuis un système Debian (ou le conteneur de build) :
 
 ```bash
-gh workflow run build-iso.yml
+scripts/publish-repo.sh "matOS archive" --envoyer
 ```
 
-Ou depuis l'interface GitHub : **Actions → Build matOS → Run workflow**.
-
----
-
-## Origine
-
-matOS RALAMBO est la suite directe de matOS 0.5 Archimedes, lui-même basé sur MX Linux 23 (antiX + Debian Bookworm + Xfce).
+Sans clé dans `keys/`, aucun dépôt matOS n'est déclaré dans l'image.
 
 ---
 
 ## Licence
 
-[GPL-3.0](LICENSE) — Antsa Malala RANIRIAMANJAKA
+[GPL-3.0](LICENSE) — Antsa Malala RANIRIAMANJAKA. Les logiciels et livres inclus
+gardent leurs licences respectives.

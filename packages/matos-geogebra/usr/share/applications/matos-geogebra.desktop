@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=GeoGebra Classic 6
+Comment=Dynamic mathematics
+Comment[fr]=Géométrie dynamique, grapheur et calcul formel
+Exec=geogebra6 %F
+Icon=geogebra
+Terminal=false
+MimeType=application/vnd.geogebra.file;application/vnd.geogebra.tool;
+Categories=Education;Science;Math;Geometry;
+Keywords=geogebra;géométrie;fonction;graphique;

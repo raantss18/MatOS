@@ -1,0 +1,32 @@
+/* MatOS-Dark : Greybird-dark + accents matOS.
+ * Palette : marine #0D1B2A, turquoise #00C9A7, texte #F0F4F8.
+ * Seules des surcharges légères sont faites ici : si Greybird évolue,
+ * le thème reste utilisable. */
+@import url("../../Greybird-dark/gtk-3.0/gtk.css");
+
+@define-color theme_selected_bg_color #00a88b;
+@define-color theme_selected_fg_color #ffffff;
+@define-color selected_bg_color #00a88b;
+
+*:selected,
+*:selected:focus {
+    background-color: #00a88b;
+    color: #ffffff;
+}
+
+headerbar,
+.titlebar {
+    border-bottom: 1px solid #00C9A7;
+}
+
+progressbar progress,
+scale highlight,
+switch:checked {
+    background-color: #00C9A7;
+    border-color: #00a88b;
+}
+
+.xfce4-panel {
+    background-color: rgba(13, 27, 42, 0.92);
+    color: #F0F4F8;
+}

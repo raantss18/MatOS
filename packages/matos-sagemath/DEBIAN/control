@@ -1,0 +1,15 @@
+Package: matos-sagemath
+Version: @SAGE_VERSION@+matos@MATOS_VERSION@
+Architecture: amd64
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: math
+Priority: optional
+Depends: matos-base, xdg-utils
+Description: matOS - SageMath et Python scientifique (environnement figé)
+ SageMath @SAGE_VERSION@ et une pile Python scientifique (NumPy, SciPy,
+ SymPy, Matplotlib, pandas, scikit-learn, statsmodels, NetworkX, Manim,
+ JupyterLab) installés dans /opt/matos/sagemath depuis conda-forge.
+ .
+ La liste exacte des paquets est figée (environment.lock) : le contenu
+ ne change qu'avec une nouvelle version de ce paquet, jamais avec les
+ mises à jour Debian. Le Python du système n'est pas modifié.

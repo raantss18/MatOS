@@ -1,0 +1,5 @@
+# Dépôt matOS : paquets matos-* figés (SageMath, Lean, GeoGebra, réglages)
+Types: deb
+URIs: @MATOS_APT_URL@/
+Suites: ./
+Signed-By: /usr/share/keyrings/matos-archive-keyring.gpg

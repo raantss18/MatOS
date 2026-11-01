@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=matOS
+Description=Écran de démarrage matOS
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/matos
+ScriptFile=/usr/share/plymouth/themes/matos/matos.script

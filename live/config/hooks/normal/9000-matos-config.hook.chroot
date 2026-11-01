@@ -1,0 +1,16 @@
+#!/bin/sh
+# matOS : réglages finaux de l'image et vérification de son contenu.
+set -e
+
+# Langue par défaut du système installé (live : paramètres de boot)
+sed -i 's/^# *\(fr_FR.UTF-8 UTF-8\)/\1/; s/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+locale-gen
+update-locale LANG=fr_FR.UTF-8
+
+# GRUB du système installé
+sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=5/' /etc/default/grub
+grep -q '^GRUB_DISABLE_OS_PROBER=' /etc/default/grub \
+    || echo 'GRUB_DISABLE_OS_PROBER=false' >> /etc/default/grub
+
+# Thème Plymouth matOS dans l'initramfs
+plymouth-set-default-theme matos

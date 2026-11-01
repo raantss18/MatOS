@@ -1,0 +1,4 @@
+#!/bin/sh
+# Lance JupyterLab (noyaux Python 3 et SageMath) dans le dossier personnel.
+cd "$HOME"
+exec /opt/matos/sagemath/bin/jupyter-lab "$@"

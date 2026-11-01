@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Welcome to matOS
+Name[fr]=Bienvenue dans matOS
+Comment[fr]=Présentation de matOS et de ses logiciels
+Exec=matos-bienvenue
+Icon=matos
+Categories=System;X-matOS-Math;

@@ -1,0 +1,12 @@
+favorites=matos-sagemath.desktop,matos-jupyterlab.desktop,matos-geogebra.desktop,io.github.wxmaxima_developers.wxMaxima.desktop,texstudio.desktop,codium.desktop,rstudio.desktop,firefox-esr.desktop,thunar.desktop,xfce4-terminal.desktop
+button-title=matOS
+button-icon=matos
+show-button-title=false
+show-button-icon=true
+launcher-show-name=true
+launcher-show-description=true
+category-show-name=true
+position-search-alternate=true
+position-commands-alternate=false
+menu-width=520
+menu-height=560

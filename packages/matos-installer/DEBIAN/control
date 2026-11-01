@@ -1,0 +1,15 @@
+Package: matos-installer
+Version: @MATOS_VERSION@+csd@CSD_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: admin
+Priority: optional
+Depends: @CSD_DEPENDS@
+Provides: calamares-settings-debian
+Conflicts: calamares-settings-debian
+Replaces: calamares-settings-debian
+Description: matOS - installateur Calamares
+ Configuration Calamares de matOS, dérivée de calamares-settings-debian
+ @CSD_VERSION@ (mêmes étapes et scripts d'aide), avec la marque matOS,
+ un utilisateur administrateur via sudo (pas de mot de passe root) et
+ la suppression des outils live après installation.
