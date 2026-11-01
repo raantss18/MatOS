@@ -198,7 +198,7 @@ build_matos_sagemath() {
     chmod -R a+rX "$prefix"
 
     log "Test SageMath (utilisateur sans droits)"
-    run_as_nobody "$prefix/bin/sage" -c 'assert factor(2^64+1) == 274177 * 67280421310721; print("sage OK", version())'
+    run_as_nobody "$prefix/bin/sage" -c 'f = factor(2^64+1); assert [(int(p), e) for p, e in f] == [(274177, 1), (67280421310721, 1)], f; assert f.value() == 2^64+1; print("sage OK", version())'
     run_as_nobody "$prefix/bin/python" -c 'import numpy, scipy, sympy, matplotlib, pandas, sklearn, statsmodels, networkx, manim, jupyterlab; print("python OK")'
 
     mkdir -p "$dir/opt/matos"
