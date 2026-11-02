@@ -1,0 +1,32 @@
+name: Signaler un problème
+description: Quelque chose ne marche pas comme prévu dans matOS.
+labels: ["bogue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de signaler un problème. Cherchez d'abord dans les [questions fréquentes](https://raantss18.github.io/MatOS/documentation/faq.html).
+        Ne publiez **jamais** de mot de passe ni de donnée personnelle.
+  - type: input
+    id: version
+    attributes:
+      label: Version de matOS
+      description: Par exemple 0.6 (menu des applications → À propos, ou `cat /usr/lib/os-release`).
+    validations: {required: true}
+  - type: dropdown
+    id: contexte
+    attributes:
+      label: Où le problème survient-il ?
+      options: [Session live (clé USB), Pendant l'installation, Système installé, Autre]
+    validations: {required: true}
+  - type: textarea
+    id: arrivee
+    attributes:
+      label: Que s'est-il passé ?
+      description: Ce que vous avez fait, ce que vous attendiez, ce qui est arrivé (message d'erreur exact si possible).
+    validations: {required: true}
+  - type: textarea
+    id: machine
+    attributes:
+      label: Votre machine
+      description: Modèle, processeur, mémoire, BIOS ou UEFI. Facultatif mais très utile.

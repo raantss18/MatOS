@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Poser une question ou proposer une idée
+    url: https://github.com/raantss18/MatOS/discussions
+    about: Les questions, idées et retours d'expérience se discutent dans les Discussions, pas dans les signalements.
+  - name: Documentation de matOS
+    url: https://raantss18.github.io/MatOS/documentation/
+    about: Installation, premiers pas, questions fréquentes.

@@ -1,0 +1,22 @@
+<!-- titre: Machines modestes -->
+<!-- description: Utiliser matOS sur un vieux PC : 4 Go de RAM, vieux Atom 64 bits, ce qui est pris en charge et ce qui ne l'est pas. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Machines modestes</p>
+    <h1>Machines modestes</h1>
+    <p>matOS vise les PC anciens : <strong>64 bits uniquement</strong>, 4 Go de RAM.</p>
+    <div class="note attention"><p class="note-titre">Les processeurs 32 bits ne sont pas pris en charge</p><p>Debian 13 n'a plus de noyau 32 bits. Les Atom les plus anciens (N270, N450…) sont en 32 bits : matOS ne démarrera pas dessus.</p></div>
+    <h2>Ce qui est prévu</h2>
+    <ul>
+      <li><strong>Mémoire</strong> : swap compressé en mémoire (zram), <code>earlyoom</code> (termine le programme le plus gourmand avant que le système ne se bloque, le bureau étant protégé), journaux limités.</li>
+      <li><strong>Bureau</strong> : XFCE. Au premier démarrage, les effets visuels (composition d'xfwm4) sont coupés sur une machine à 4 Go ou sans accélération 3D.</li>
+      <li><strong>Processeur</strong> : paquets Debian amd64 de base (sans AVX exigé) ; l'environnement SageMath est figé au niveau x86-64 de base pour fonctionner sur de vieux processeurs.</li>
+      <li><strong>UEFI 32 bits</strong> : un chargeur <code>bootia32.efi</code> est inclus pour les tablettes et mini-PC dont le micrologiciel UEFI est en 32 bits avec un processeur 64 bits (non testé sur du vrai matériel).</li>
+    </ul>
+    <h2>Ce qui tient à 4 Go</h2>
+    <p>Testé dans une machine virtuelle avec 4 Go de RAM et un processeur de génération Core 2 : le démarrage, le bureau et l'installation. Le bureau, le navigateur, LaTeX, Python, Xcas, Maxima, GAP, PARI/GP, Singular, R et Octave sont des usages normaux pour cette taille.</p>
+    <p><strong>Gourmands</strong> : SageMath, Lean avec Mathlib, RStudio, VSCodium et GeoGebra 6 (Electron ou Java). Lancez-les un par un, fermez le reste avant, ou préférez Xcas, wxMaxima, Mousepad et TeXstudio, bien plus légers. La consommation mémoire réelle de SageMath et de Lean <strong>n'a pas encore été mesurée</strong> : vos retours sont les bienvenus (<a href="compatibilite.html">Compatibilité</a>).</p>
+  </div>
+</div>

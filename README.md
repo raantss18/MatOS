@@ -11,6 +11,13 @@ dédiée à la mémoire du Professeur Ralambo (Université d'Antananarivo).
 
 ---
 
+## Site web
+
+**https://raantss18.github.io/MatOS/** — téléchargement, documentation et espace d'échange des utilisateurs.
+Les sources sont dans `site/src/` (charte : `site/DESIGN.md`) ; `python3 scripts/generer-site.py --verifier`
+génère et contrôle le site, qui est publié automatiquement à chaque fusion dans `main`.
+Questions et idées : [Discussions](https://github.com/raantss18/MatOS/discussions) ; voir aussi [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Télécharger
 
 L'ISO (≈ 8 Go) est publiée dans les [releases GitHub](https://github.com/raantss18/MatOS/releases),

@@ -1,0 +1,44 @@
+name: Site web
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'site/**', 'scripts/generer-site.py', 'versions.env', '.github/workflows/site.yml' ]
+  pull_request:
+    paths: [ 'site/**', 'scripts/generer-site.py', 'versions.env', '.github/workflows/site.yml' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois, sans interrompre celui en cours
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construire:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Générer et vérifier le site (liens, ancres, textes alternatifs)
+        run: python3 scripts/generer-site.py --verifier
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: site/public
+
+  deployer:
+    if: github.event_name != 'pull_request'
+    needs: construire
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v4

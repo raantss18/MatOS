@@ -1,0 +1,42 @@
+<!-- titre: Questions fréquentes -->
+<!-- description: Réponses aux questions fréquentes sur matOS : clé qui ne démarre pas, mot de passe de la session live, dates, 32 bits, double amorçage. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Questions fréquentes</p>
+    <h1>Questions fréquentes</h1>
+
+    <details><summary>La clé USB ne démarre pas</summary>
+      <p>Vérifiez d'abord l'empreinte de l'ISO (<a href="{{racine}}telecharger.html">Télécharger</a>) : une ISO abîmée ne démarre pas. Ouvrez le menu de démarrage du PC (<kbd>F12</kbd>, <kbd>Échap</kbd>, <kbd>F2</kbd>, <kbd>F9</kbd>…) et essayez les deux entrées de la clé (« UEFI » puis l'autre). Si rien ne marche, désactivez Secure Boot dans le BIOS (non testé avec matOS), puis réessayez. Si le PC est en 32 bits, matOS ne peut pas y démarrer.</p></details>
+
+    <details><summary>Quel est le mot de passe de la session live ?</summary>
+      <p>L'utilisateur est <code>matos</code> et le mot de passe <code>live</code>. Il sert si l'écran se verrouille après quelques minutes d'inactivité (limite connue de cette version). Après l'installation, vous utilisez le mot de passe que vous avez choisi.</p></details>
+
+    <details><summary>Pourquoi l'ISO fait-elle plus de 8 Go ?</summary>
+      <p>Parce qu'elle contient tout, pour fonctionner sans Internet : SageMath, Lean avec Mathlib précompilée (la seule Mathlib fait plusieurs Go), GeoGebra, RStudio, TeX Live, LibreOffice, 23 livres et la documentation. Une clé USB de 16 Go est nécessaire.</p></details>
+
+    <details><summary>matOS fonctionne-t-elle sur un PC 32 bits ?</summary>
+      <p>Non. Debian 13, sur laquelle matOS est construite, n'a plus de noyau 32 bits. Un PC 64 bits, même très ancien (Atom 64 bits, Core 2), convient.</p></details>
+
+    <details><summary>Pourquoi les dates s'affichent-elles en malgache ?</summary>
+      <p>L'installateur règle les nombres et les dates d'après le pays du fuseau choisi (Madagascar par défaut), alors que la langue du système reste le français. Pendant l'installation, la page « Emplacement » a un bouton « Modification… » pour choisir « français (France) ». C'est une limite connue de la version 0.6.</p></details>
+
+    <details><summary>Puis-je installer matOS à côté de Windows ?</summary>
+      <p>Ce n'est pas testé. L'installateur propose « Effacer le disque » ou « Partitionnement manuel ». Sauvegardez vos données avant toute tentative et préférez un disque dédié.</p></details>
+
+    <details><summary>Où est le compte « root » ?</summary>
+      <p>Il n'y en a pas : matOS n'a plus de mot de passe root. L'utilisateur que vous créez est administrateur avec <code>sudo</code> (par exemple <code>sudo apt update</code>).</p></details>
+
+    <details><summary>Comment installer scikit-learn, manim ou les compilateurs de SageMath ?</summary>
+      <p>Ils sont retirés de l'ISO pour l'alléger et se réinstallent à l'identique : <code>matos-sage-extras liste</code> puis <code>sudo matos-sage-extras installer python</code> (réseau nécessaire). Voir <a href="premiers-pas.html">Premiers pas</a>.</p></details>
+
+    <details><summary>Puis-je copier ou redistribuer matOS ?</summary>
+      <p>Oui : matOS est sous licence GPL-3.0. Attention, les <strong>livres</strong> de la bibliothèque gardent leurs licences propres, et beaucoup interdisent l'usage commercial (« NC ») : vous pouvez les partager gratuitement, mais pas les vendre. Le détail est dans le fichier LISEZMOI de la bibliothèque.</p></details>
+
+    <details><summary>matOS envoie-t-elle des données ?</summary>
+      <p>Au plus une fois par jour, quatre informations anonymes, que vous pouvez voir et couper. Voir <a href="confidentialite.html">Confidentialité</a>.</p></details>
+
+    <p>Votre question n'est pas là ? <a href="{{racine}}communaute.html">Demandez à la communauté</a>.</p>
+  </div>
+</div>

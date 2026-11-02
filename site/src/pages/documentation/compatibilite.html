@@ -1,0 +1,23 @@
+<!-- titre: Compatibilité matérielle -->
+<!-- description: Les machines sur lesquelles matOS a été testée, et comment ajouter la vôtre pour aider les autres utilisateurs. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Compatibilité matérielle</p>
+    <h1>Compatibilité matérielle</h1>
+    <p>Cette page dit franchement ce qui a été vérifié. Pour l'instant, <strong>tous les tests ont été faits dans des machines virtuelles</strong> ; aucun PC réel n'est encore référencé.</p>
+    <div class="defile"><table><caption>Configurations testées (version 0.6)</caption><thead><tr><th scope="col">Configuration</th><th scope="col">Session live</th><th scope="col">Installation</th><th scope="col">Système installé</th></tr></thead><tbody>
+      <tr><th scope="row">QEMU/KVM, UEFI (OVMF), processeur Core 2, 2 cœurs, 4 Go</th><td>Fonctionne</td><td>Fonctionne (sans réseau)</td><td>Fonctionne</td></tr>
+      <tr><th scope="row">QEMU/KVM, BIOS, processeur Core 2, 2 cœurs, 4 Go</th><td>Fonctionne</td><td>Non testé</td><td>Non testé</td></tr>
+      <tr><th scope="row">PC réel (tout modèle)</th><td colspan="3">Aucun rapport pour l'instant — <a href="#ajouter">ajoutez le vôtre</a></td></tr>
+    </tbody></table></div>
+    <p>Non testés : Secure Boot, UEFI 32 bits, disque chiffré, double amorçage avec Windows, Wi-Fi et Bluetooth, cartes graphiques réelles, accélération 3D.</p>
+
+    <h2 id="ajouter">Ajouter votre machine</h2>
+    <p>Un rapport prend deux minutes : le modèle du PC, le processeur, la mémoire, le mode de démarrage (BIOS ou UEFI), et ce qui marche ou non. Vos rapports apparaissent dans <a href="https://github.com/raantss18/MatOS/issues?q=label%3Acompatibilit%C3%A9">la liste des rapports de compatibilité</a>.</p>
+    <p><a class="btn" href="https://github.com/raantss18/MatOS/issues/new?template=compatibilite.yml">Envoyer un rapport de compatibilité</a></p>
+    <p>Pour connaître les caractéristiques de votre machine, dans une session matOS :</p>
+    <pre class="code">lscpu | grep "Model name"; free -h; [ -d /sys/firmware/efi ] &amp;&amp; echo UEFI || echo BIOS</pre>
+  </div>
+</div>

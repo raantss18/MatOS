@@ -1,0 +1,45 @@
+<!-- titre: Installer matOS -->
+<!-- description: Installer matOS pas à pas : démarrer sur la clé USB, lancer l'installateur Calamares, répondre aux questions, redémarrer. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Installer matOS</p>
+    <h1>Installer matOS</h1>
+    <p>Une installation complète prend <strong>6 à 11 minutes</strong> et ne demande <strong>aucune connexion</strong> (testé sans réseau).</p>
+
+    <div class="note attention"><p class="note-titre">Avant de commencer</p>
+      <p>« Effacer le disque » supprime <strong>tout</strong> ce que contient le disque choisi. Sauvegardez vos fichiers. L'installation à côté de Windows (double amorçage) n'a pas été testée.</p></div>
+
+    <h2>Ce qu'il faut</h2>
+    <ul>
+      <li>Un PC 64 bits avec au moins 4 Go de RAM et <strong>32 Go libres</strong> sur le disque.</li>
+      <li>Une clé USB de 16 Go avec l'ISO (voir <a href="{{racine}}telecharger.html#cle">Télécharger matOS</a>).</li>
+    </ul>
+
+    <ol class="etapes">
+      <li><h3>Démarrer sur la clé</h3>
+        <p>Branchez la clé, redémarrez et ouvrez le menu de démarrage (souvent <kbd>F12</kbd>, <kbd>Échap</kbd>, <kbd>F2</kbd> ou <kbd>F9</kbd> selon le constructeur). Choisissez la clé : si elle apparaît deux fois, essayez d'abord l'entrée « UEFI ».</p>
+        <p>Le menu matOS s'affiche : validez <strong>Live system (amd64)</strong> avec <kbd>Entrée</kbd>. Le bureau apparaît en une à deux minutes sur une machine à 4 Go.</p>
+        <p class="discret">Les deux modes, BIOS et UEFI, ont été testés. Secure Boot n'a pas été testé : si la clé ne démarre pas, désactivez-le dans le BIOS.</p></li>
+      <li><h3>Découvrir avant d'installer (facultatif)</h3>
+        <p>La session « live » fonctionne depuis la clé sans rien modifier sur le disque. Si l'écran se verrouille après quelques minutes, le mot de passe est <code>live</code>.</p></li>
+      <li><h3>Lancer l'installateur</h3>
+        <p>Cherchez <strong>Installer matOS</strong> dans le menu des applications. Raccourci qui fonctionne toujours : appuyez sur <kbd>Alt</kbd>+<kbd>F2</kbd> et tapez :</p>
+        <pre class="code">calamares-install-debian</pre></li>
+      <li><h3>Répondre aux questions</h3>
+        <figure class="capture"><img src="{{racine}}assets/img/partitions.webp" width="1100" height="688" loading="lazy" alt="Installateur matOS, page Partitions : l'option « Effacer le disque » est cochée et l'aperçu montre une partition système EFI de 300 Mio et une partition matOS ext4 occupant le reste du disque."><figcaption>Page « Partitions » : « Effacer le disque » prépare une partition EFI et une partition système.</figcaption></figure>
+        <table><caption>Les pages de l'assistant</caption><thead><tr><th scope="col">Page</th><th scope="col">À savoir</th></tr></thead><tbody>
+          <tr><th scope="row">Bienvenue</th><td>Choisissez la langue du système.</td></tr>
+          <tr><th scope="row">Emplacement</th><td>Le fuseau par défaut est Madagascar (Indian/Antananarivo). Les nombres et dates suivent le pays choisi, donc en malgache ; le bouton « Modification… » permet de choisir le français.</td></tr>
+          <tr><th scope="row">Clavier</th><td>Français par défaut.</td></tr>
+          <tr><th scope="row">Partitions</th><td>Choisissez le disque, puis « Effacer le disque ». « Partitionnement manuel » est pour les utilisateurs avertis. La case « Chiffrer le système » n'a pas été testée.</td></tr>
+          <tr><th scope="row">Utilisateurs</th><td>Nom, identifiant, nom de l'ordinateur, mot de passe. Il n'y a pas de compte « root » : votre utilisateur est administrateur avec <code>sudo</code>.</td></tr>
+          <tr><th scope="row">Résumé</th><td>Relisez, puis « Installer ».</td></tr>
+        </tbody></table></li>
+      <li><h3>Redémarrer</h3>
+        <p>À la fin, laissez « Redémarrer maintenant » coché, retirez la clé quand l'ordinateur s'éteint. Le premier démarrage prend moins de deux minutes sur une machine à 4 Go (mesuré dans une machine virtuelle).</p></li>
+    </ol>
+    <p>Étape suivante : <a href="premiers-pas.html">Premiers pas</a>. Un problème ? <a href="faq.html">Questions fréquentes</a>.</p>
+  </div>
+</div>

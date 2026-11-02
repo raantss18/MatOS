@@ -1,0 +1,41 @@
+<!-- titre: Construire et contribuer -->
+<!-- description: Reconstruire l'ISO matOS, publier une version, ajouter un livre ou un logiciel, modifier ce site. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Construire et contribuer</p>
+    <h1>Construire et contribuer</h1>
+    <p>matOS est un logiciel libre : tout ce qui sert à fabriquer l'ISO est dans <a href="https://github.com/raantss18/MatOS">le dépôt GitHub</a>.</p>
+
+    <h2>Reconstruire l'ISO</h2>
+    <p>Seul prérequis : <strong>Docker</strong> ou <strong>Podman</strong>. Le build se fait dans un conteneur Debian 13, sur n'importe quelle distribution. Prévoir environ 80 Go de disque libre et plusieurs heures la première fois.</p>
+    <pre class="code">git clone https://github.com/raantss18/MatOS.git &amp;&amp; cd MatOS</pre>
+    <pre class="code">./build.sh --rapide   # ISO de test sans SageMath ni Lean</pre>
+    <pre class="code">./build.sh            # ISO complète (≈ 8,3 Go)</pre>
+    <pre class="code">./build.sh --test     # démarre l'ISO dans QEMU</pre>
+    <p>Principes : le build <strong>échoue plutôt que de produire une image incomplète</strong> ; tout ce qui est téléchargé a une version et une empreinte SHA256 (<code>versions.env</code>) ; les personnalisations sont des paquets <code>matos-*</code> qui ne modifient jamais les fichiers d'autres paquets.</p>
+
+    <h2>Publier une version</h2>
+    <ol>
+      <li>Changer <code>MATOS_VERSION</code> dans <code>versions.env</code> et noter les changements dans <code>CHANGELOG.md</code>.</li>
+      <li>Construire et tester l'ISO, puis fusionner dans <code>main</code> (pull request).</li>
+      <li>Vérifier le découpage sans rien envoyer : <code>scripts/publier-release.sh --a-blanc</code>.</li>
+      <li>Créer la version en brouillon : <code>scripts/publier-release.sh</code>, puis la rendre publique : <code>scripts/publier-release.sh --publier</code>.</li>
+    </ol>
+    <p>La page <a href="{{racine}}telecharger.html">Télécharger</a> lit automatiquement la dernière version publiée.</p>
+
+    <h2>Ajouter un livre libre</h2>
+    <p>Un livre n'entre dans la bibliothèque que si sa <strong>licence libre est constatée dans le texte du PDF</strong>.</p>
+    <pre class="code">scripts/livre-verifier.sh Mathematiques/mon-livre.pdf https://exemple.org/livre.pdf</pre>
+    <p>Le script vérifie que c'est un PDF, cherche la licence et affiche la ligne à copier dans <code>MATOS_BOOKS</code> (<code>versions.env</code>).</p>
+
+    <h2>Modifier ce site</h2>
+    <p>Les sources sont dans <code>site/src/</code> (pages en fragments HTML, une feuille de style, un petit JavaScript facultatif). La charte est dans <code>site/DESIGN.md</code>. Pour prévisualiser :</p>
+    <pre class="code">python3 scripts/generer-site.py --verifier &amp;&amp; python3 -m http.server -d site/public 8000</pre>
+    <p>Puis ouvrez <code>http://localhost:8000</code>. Le script ne demande aucune installation (Python seulement) et vérifie les liens, les ancres et les textes alternatifs. Le site est publié automatiquement après chaque fusion dans <code>main</code>.</p>
+
+    <h2>Proposer une modification</h2>
+    <p>Ouvrez une <em>pull request</em> décrivant ce que vous avez changé et comment vous l'avez testé. Lisez d'abord le <a href="https://github.com/raantss18/MatOS/blob/main/CONTRIBUTING.md">guide de contribution</a> et le <a href="https://github.com/raantss18/MatOS/blob/main/CODE_OF_CONDUCT.md">code de conduite</a>.</p>
+  </div>
+</div>
