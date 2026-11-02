@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{titre}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="#0D1B2A">
+<meta property="og:title" content="{{titre}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:type" content="website">
+<link rel="icon" href="{{racine}}assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="{{racine}}style.css">
+<script>try{var t=localStorage.getItem("matos-theme");if(t==="clair"||t==="sombre")document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<a class="evitement" href="#contenu">Aller au contenu</a>
+<header class="entete">
+  <div class="conteneur entete-ligne">
+    <a class="marque" href="{{racine}}"><img src="{{racine}}assets/logo.svg" alt="" width="32" height="32"><span>matOS</span></a>
+    <nav aria-label="Navigation principale"><ul class="menu">{{menu}}<li><a href="https://github.com/raantss18/MatOS">Code source</a></li></ul></nav>
+    <button type="button" class="theme js-seulement" id="theme" hidden>Thème</button>
+  </div>
+</header>
+<main id="contenu" tabindex="-1">
+{{contenu}}
+</main>
+<footer class="pied">
+  <div class="conteneur pied-grille">
+    <div>
+      <p class="pied-titre"><strong>matOS RALAMBO {{version}}</strong></p>
+      <p>Distribution Linux pour les mathématiques, basée sur Debian 13. Logiciel libre sous licence GPL-3.0.</p>
+      <p class="discret">Dédiée à la mémoire du Professeur Ralambo, Université d'Antananarivo.</p>
+    </div>
+    <nav aria-label="Liens utiles">
+      <ul class="liste-nue">
+        <li><a href="{{racine}}telecharger.html">Télécharger</a></li>
+        <li><a href="{{racine}}documentation/">Documentation</a></li>
+        <li><a href="{{racine}}documentation/confidentialite.html">Confidentialité</a></li>
+        <li><a href="https://github.com/raantss18/MatOS/releases">Toutes les versions</a></li>
+        <li><a href="https://github.com/raantss18/MatOS/blob/main/CHANGELOG.md">Historique des changements</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+<script src="{{racine}}app.js" defer></script>
+</body>
+</html>

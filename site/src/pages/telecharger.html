@@ -1,0 +1,84 @@
+<!-- titre: Télécharger matOS -->
+<!-- description: Télécharger l'ISO de matOS (8,3 Go, découpée en parts vérifiées), créer la clé USB et démarrer. -->
+<!-- section: telecharger -->
+<div class="conteneur">
+  <h1>Télécharger matOS</h1>
+  <p class="lecture">Version <strong id="rel-version">{{version}}</strong> — ISO hybride pour PC 64 bits (BIOS et UEFI). Elle pèse environ 8,3 Go et tient sur une <strong>clé USB de 16 Go</strong>.</p>
+
+  <div class="note lecture">
+    <p class="note-titre">Pourquoi plusieurs parts ?</p>
+    <p>GitHub limite chaque fichier à 2 Go. L'ISO est donc découpée en 5 parts d'environ 2 Go. Le script ci-dessous les télécharge, <strong>vérifie chacune</strong>, reprend après une coupure de connexion et recompose l'ISO.</p>
+  </div>
+
+  <h2>En quatre étapes</h2>
+  <ol class="etapes">
+    <li>
+      <h3>Télécharger l'ISO</h3>
+      <p><strong>Linux, macOS</strong>, ou Windows avec Git Bash (installé avec Git pour Windows). Prévoir 10 Go d'espace libre.</p>
+      <pre class="code">curl -fLO https://raw.githubusercontent.com/raantss18/MatOS/main/scripts/telecharger-matos.sh</pre>
+      <pre class="code">bash telecharger-matos.sh</pre>
+      <p class="discret">Pour une version précise : <code id="rel-cmd-version">bash telecharger-matos.sh v{{version}}</code>. Le script n'a été testé que sous Linux.</p>
+      <details>
+        <summary>Sans le script (Windows ou téléchargement manuel)</summary>
+        <p>Téléchargez toutes les parts du tableau ci-dessous dans un même dossier, puis recomposez-les :</p>
+        <p><strong>Windows</strong> (Invite de commandes, dans le dossier des parts) :</p>
+        <pre class="code">copy /b matos-{{version}}-ralambo-amd64.hybrid.iso.part-00+matos-{{version}}-ralambo-amd64.hybrid.iso.part-01+matos-{{version}}-ralambo-amd64.hybrid.iso.part-02+matos-{{version}}-ralambo-amd64.hybrid.iso.part-03+matos-{{version}}-ralambo-amd64.hybrid.iso.part-04 matos-{{version}}-ralambo-amd64.hybrid.iso</pre>
+        <p><strong>Linux, macOS</strong> :</p>
+        <pre class="code">cat matos-{{version}}-ralambo-amd64.hybrid.iso.part-* &gt; matos-{{version}}-ralambo-amd64.hybrid.iso</pre>
+      </details>
+    </li>
+    <li>
+      <h3>Vérifier l'empreinte</h3>
+      <p>Le script l'a déjà fait. Pour contrôler vous-même une ISO recomposée, comparez son empreinte SHA256 à celle de la version :</p>
+      <pre class="code">sha256sum matos-{{version}}-ralambo-amd64.hybrid.iso</pre>
+      <p>Windows : <code>certutil -hashfile matos-{{version}}-ralambo-amd64.hybrid.iso SHA256</code></p>
+    </li>
+    <li id="cle">
+      <h3>Créer la clé USB de démarrage</h3>
+      <p>Utilisez un outil qui écrit l'image <em>telle quelle</em> sur la clé :</p>
+      <ul>
+        <li><strong>Ventoy</strong> ou <strong>balenaEtcher</strong> (Windows, macOS, Linux) : choisissez l'ISO, choisissez la clé, lancez.</li>
+        <li><strong>GNOME Disques</strong> (Linux) : « Restaurer l'image disque ».</li>
+        <li><strong>En ligne de commande</strong> (Linux) :
+          <pre class="code">sudo dd if=matos-{{version}}-ralambo-amd64.hybrid.iso of=/dev/sdX bs=4M status=progress conv=fsync</pre>
+        </li>
+      </ul>
+      <div class="note attention"><p class="note-titre">Attention</p><p>Tout le contenu de la clé est effacé. Avec <code>dd</code>, remplacez <code>/dev/sdX</code> par la clé (vérifiez avec <code>lsblk</code>) : une erreur efface un autre disque.</p></div>
+    </li>
+    <li>
+      <h3>Démarrer sur la clé</h3>
+      <p>Redémarrez le PC et ouvrez le menu de démarrage (souvent <kbd>F12</kbd>, <kbd>Échap</kbd>, <kbd>F2</kbd> ou <kbd>F9</kbd>). Puis suivez le guide : <a href="{{racine}}documentation/installer.html">Installer matOS</a>.</p>
+    </li>
+  </ol>
+
+  <h2>Cette version</h2>
+  <p id="release-etat" class="discret" role="status">Chargement des informations de la dernière version…</p>
+  <div id="release" hidden>
+    <div class="carte">
+      <p><strong>Version :</strong> <span id="rel-tag"></span> (publiée le <span id="rel-date"></span>)</p>
+      <p><strong>Taille de l'ISO :</strong> <span id="rel-taille"></span></p>
+      <p><strong>SHA256 de l'ISO :</strong> <code id="rel-sha" style="word-break:break-all"></code></p>
+    </div>
+    <div class="defile">
+      <table>
+        <caption>Parts de l'ISO (liens de téléchargement direct)</caption>
+        <thead><tr><th scope="col">Fichier</th><th scope="col">Taille</th><th scope="col">SHA256</th></tr></thead>
+        <tbody id="rel-parts"></tbody>
+      </table>
+    </div>
+  </div>
+  <p>Toutes les versions, avec leurs notes : <a href="https://github.com/raantss18/MatOS/releases">page des versions sur GitHub</a>. Historique : <a href="https://github.com/raantss18/MatOS/blob/main/CHANGELOG.md">CHANGELOG</a>.</p>
+
+  <h2>Avant de télécharger</h2>
+  <div class="defile">
+    <table>
+      <caption>Configuration</caption>
+      <tbody>
+        <tr><th scope="row">Processeur</th><td>64 bits (x86-64) uniquement. Les processeurs 32 bits ne sont pas pris en charge.</td></tr>
+        <tr><th scope="row">Mémoire</th><td>4 Go de RAM suffisent pour le bureau et la plupart des logiciels ; SageMath, Lean avec Mathlib, RStudio et GeoGebra sont gourmands.</td></tr>
+        <tr><th scope="row">Disque</th><td>32 Go libres pour l'installation (l'installateur l'exige).</td></tr>
+        <tr><th scope="row">Clé USB</th><td>16 Go (pas de DVD : l'ISO dépasse 4,7 Go).</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

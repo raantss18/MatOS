@@ -1,0 +1,31 @@
+<!-- titre: Les logiciels de matOS -->
+<!-- description: La liste des logiciels de matOS par domaine, avec leur rôle et la façon de les lancer. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Les logiciels</p>
+    <h1>Les logiciels</h1>
+    <p>Tous sont installés et fonctionnent sans réseau. Les versions sont figées dans <a href="https://github.com/raantss18/MatOS/blob/main/versions.env">versions.env</a>.</p>
+    <div class="defile"><table><caption>Logiciels par domaine</caption><thead><tr><th scope="col">Domaine</th><th scope="col">Logiciels</th><th scope="col">Lancer</th></tr></thead><tbody>
+      <tr><th scope="row">Calcul formel</th><td>SageMath 10.9, Maxima et wxMaxima, Xcas / Giac, SymPy</td><td><code>sage</code>, <code>wxmaxima</code>, <code>xcas</code></td></tr>
+      <tr><th scope="row">Algèbre et nombres</th><td>PARI/GP, GAP (avec ses bibliothèques), Singular</td><td><code>gp</code>, <code>gap</code>, <code>Singular</code></td></tr>
+      <tr><th scope="row">Preuves formelles</th><td>Lean 4 avec Mathlib précompilée, Coq et CoqIDE</td><td><code>matos-lean-projet</code>, <code>coqide</code></td></tr>
+      <tr><th scope="row">Géométrie</th><td>GeoGebra Classic 6, Kig</td><td><code>geogebra6</code>, <code>kig</code></td></tr>
+      <tr><th scope="row">Calcul numérique</th><td>GNU Octave, Scilab, NumPy, SciPy</td><td><code>octave</code>, <code>scilab</code></td></tr>
+      <tr><th scope="row">Statistiques</th><td>R et ses paquets recommandés, RStudio</td><td><code>R</code>, <code>rstudio</code></td></tr>
+      <tr><th scope="row">Python scientifique</th><td>JupyterLab, SymPy, Matplotlib, pandas, NetworkX</td><td><code>matos-jupyterlab</code></td></tr>
+      <tr><th scope="row">Rédaction</th><td>TeX Live (français, sciences, TikZ, beamer, XeTeX, LuaTeX), TeXstudio, VSCodium, LibreOffice</td><td><code>texstudio</code>, <code>codium</code></td></tr>
+      <tr><th scope="row">Internet et bureautique</th><td>Firefox ESR, LibreOffice, VLC</td><td>menu des applications</td></tr>
+    </tbody></table></div>
+
+    <h2>VSCodium préconfiguré</h2>
+    <p>VSCodium (VS Code sans suivi) est livré avec les extensions Lean 4, LaTeX Workshop, Python, Jupyter et un thème d'icônes, <strong>figées à une version précise</strong> et sans mise à jour automatique : l'éditeur ne change pas sous vos pieds.</p>
+
+    <h2>Ce que matOS ne contient pas</h2>
+    <ul>
+      <li>Les composants facultatifs de SageMath (voir <a href="premiers-pas.html">Premiers pas</a>), pour alléger l'ISO.</li>
+      <li>Les complétions C++ de RStudio : le paquet libclang n'est pas installé (<code>sudo apt install libclang-dev</code> les rétablit).</li>
+    </ul>
+  </div>
+</div>

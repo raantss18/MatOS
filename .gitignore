@@ -6,3 +6,6 @@
 
 # Point d’accès des statistiques (clé publique d’insertion, injectée au build)
 /keys/stats.env
+
+# Site web généré (voir scripts/generer-site.py)
+/site/public/

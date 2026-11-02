@@ -1,0 +1,43 @@
+<!-- titre: Premiers pas avec matOS -->
+<!-- description: Le bureau matOS, les commandes pour lancer SageMath, Lean, GeoGebra et JupyterLab, la bibliothèque et les mises à jour. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Premiers pas</p>
+    <h1>Premiers pas</h1>
+
+    <h2>Le bureau</h2>
+    <p>matOS utilise XFCE, un bureau léger. Le menu <strong>matOS</strong> (en bas à gauche) classe les logiciels ; la catégorie <strong>Mathématiques</strong> regroupe ceux des cours. Le dossier <strong>Bibliothèque</strong> du bureau contient les livres libres (en lecture seule : copiez un livre dans votre dossier personnel pour l'annoter).</p>
+    <p>La page <strong>Bienvenue dans matOS</strong> s'ouvre au premier démarrage ; vous la retrouvez dans le menu des applications.</p>
+
+    <h2>Lancer les logiciels en une commande</h2>
+    <p>Ouvrez un terminal (menu des applications, « Terminal »).</p>
+    <div class="defile"><table><caption>Commandes utiles</caption><thead><tr><th scope="col">Pour</th><th scope="col">Commande</th></tr></thead><tbody>
+      <tr><td>SageMath en terminal</td><td><code>sage</code></td></tr>
+      <tr><td>Carnets Jupyter (SageMath et Python)</td><td><code>matos-jupyterlab</code></td></tr>
+      <tr><td>Python scientifique de matOS</td><td><code>matos-python</code></td></tr>
+      <tr><td>Nouveau projet Lean 4 avec Mathlib</td><td><code>matos-lean-projet MonProjet</code></td></tr>
+      <tr><td>GeoGebra Classic 6</td><td><code>geogebra6</code></td></tr>
+      <tr><td>PARI/GP, GAP, Singular, Maxima</td><td><code>gp</code>, <code>gap</code>, <code>Singular</code>, <code>maxima</code></td></tr>
+      <tr><td>Voir ce que matOS envoie comme statistiques</td><td><code>matos-stats --montrer</code></td></tr>
+    </tbody></table></div>
+
+    <h2>Un premier projet Lean</h2>
+    <pre class="code">matos-lean-projet MonProjet</pre>
+    <pre class="code">codium MonProjet</pre>
+    <p>Ouvrez <code>Projet/Basic.lean</code>. Mathlib est déjà compilée : aucun téléchargement. Pour compiler en terminal : <code>cd MonProjet &amp;&amp; lake build</code>. N'utilisez pas <code>lake update</code> : Mathlib est partagée en lecture seule et figée à la version de matOS.</p>
+
+    <h2>Ajouter des composants de SageMath</h2>
+    <p>Pour alléger l'ISO, certains composants de SageMath ne sont pas installés (compilateurs conda, Java et Jmol, giac, pandoc, et des paquets Python comme scikit-learn ou manim). Ils s'ajoutent <strong>à l'identique</strong> (mêmes versions) quand vous avez une connexion :</p>
+    <pre class="code">matos-sage-extras liste</pre>
+    <pre class="code">sudo matos-sage-extras installer python</pre>
+
+    <h2>Mises à jour</h2>
+    <pre class="code">sudo apt update &amp;&amp; sudo apt upgrade</pre>
+    <p>Cela met à jour les paquets Debian. Les applications de <code>/opt/matos</code> (SageMath, Lean, GeoGebra) sont figées : une mise à jour Debian ne peut ni les casser ni les remplacer ; elles évoluent avec les nouvelles versions de matOS.</p>
+
+    <h2>Documentation hors ligne</h2>
+    <p>La documentation de Python, SymPy, R, Maxima, Octave, Gnuplot, Coq, Singular, Git et LibreOffice (aide en français) est installée, ainsi que les pages de manuel en français (<code>man</code>) et la <em>Debian Reference</em>.</p>
+  </div>
+</div>

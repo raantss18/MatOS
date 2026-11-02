@@ -1,0 +1,30 @@
+<!-- titre: Confidentialité -->
+<!-- description: Les statistiques anonymes de matOS (quatre informations, au plus une fois par jour, désactivables) et ce que ce site collecte. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Confidentialité</p>
+    <h1>Confidentialité</h1>
+
+    <h2>Les statistiques anonymes de matOS</h2>
+    <p>Pour savoir combien de machines utilisent matOS, le système envoie <strong>au plus une fois par jour</strong>, quand il y a du réseau, <strong>quatre informations</strong> et rien d'autre :</p>
+    <div class="defile"><table><caption>Contenu exact de l'envoi</caption><thead><tr><th scope="col">Champ</th><th scope="col">Exemple</th></tr></thead><tbody>
+      <tr><th scope="row">Version de matOS</th><td><code>0.6</code></td></tr>
+      <tr><th scope="row">Mode : session live ou système installé</th><td><code>installe</code></td></tr>
+      <tr><th scope="row">Langue du système</th><td><code>fr</code></td></tr>
+      <tr><th scope="row">Pays du fuseau horaire</th><td><code>MG</code></td></tr>
+    </tbody></table></div>
+    <p>Il n'y a <strong>aucun identifiant</strong> : on compte des envois, pas des personnes. Ni nom, ni fichier, ni matériel, ni position. Comme pour tout accès à Internet, le serveur reçoit l'adresse IP de la connexion ; matOS ne l'ajoute pas aux statistiques. Les données sont stockées chez Supabase, dans une table où le système ne peut qu'<em>ajouter</em> des lignes (personne d'autre ne peut les lire publiquement).</p>
+
+    <h3>Voir ce qui est envoyé</h3>
+    <pre class="code">matos-stats --montrer</pre>
+    <h3>Désactiver les statistiques</h3>
+    <p>Menu des applications → « Statistiques anonymes », ou :</p>
+    <pre class="code">sudo matos-stats --desactiver</pre>
+    <p>Pour réactiver : <code>sudo matos-stats --activer</code>. L'état : <code>matos-stats --etat</code>.</p>
+
+    <h2>Ce site</h2>
+    <p>Aucun cookie, aucun suivi, aucune police ni bibliothèque externe. Votre thème (clair ou sombre) est mémorisé dans votre navigateur seulement, s'il l'autorise. La page « Télécharger » interroge l'API publique de GitHub pour afficher la dernière version : GitHub reçoit alors votre adresse IP, comme pour toute visite de ses pages. Sans JavaScript, le site reste lisible.</p>
+  </div>
+</div>

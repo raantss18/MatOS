@@ -1,0 +1,42 @@
+name: Rapport de compatibilité
+description: Dites sur quelle machine vous avez essayé matOS, que ça marche ou non.
+labels: ["compatibilité"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Chaque rapport aide les prochains utilisateurs. Pour connaître les caractéristiques de votre machine, dans matOS :
+        `lscpu | grep "Model name"; free -h; [ -d /sys/firmware/efi ] && echo UEFI || echo BIOS`
+  - type: input
+    id: version
+    attributes: {label: Version de matOS, placeholder: "0.6"}
+    validations: {required: true}
+  - type: input
+    id: modele
+    attributes: {label: Modèle de l'ordinateur, placeholder: "Ex. Dell Latitude E5440, ou « fait maison »"}
+    validations: {required: true}
+  - type: input
+    id: processeur
+    attributes: {label: Processeur, placeholder: "Ex. Intel Atom N2800, Core i3-4010U"}
+    validations: {required: true}
+  - type: input
+    id: memoire
+    attributes: {label: Mémoire (RAM), placeholder: "Ex. 4 Go"}
+    validations: {required: true}
+  - type: dropdown
+    id: demarrage
+    attributes:
+      label: Mode de démarrage
+      options: [UEFI, BIOS (legacy), Je ne sais pas]
+    validations: {required: true}
+  - type: dropdown
+    id: resultat
+    attributes:
+      label: Résultat
+      options: [Tout fonctionne, Fonctionne avec des défauts, Ne démarre pas, Ne s'installe pas]
+    validations: {required: true}
+  - type: textarea
+    id: details
+    attributes:
+      label: Détails
+      description: Ce qui marche (Wi-Fi, son, écran, logiciels) et ce qui ne marche pas.
