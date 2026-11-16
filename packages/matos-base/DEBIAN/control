@@ -4,7 +4,7 @@ Architecture: all
 Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
 Section: misc
 Priority: optional
-Depends: base-files, systemd-zram-generator, earlyoom, sudo, locales
+Depends: base-files, systemd-zram-generator, earlyoom, sudo, locales, fdisk, e2fsprogs, util-linux
 Description: matOS - identité et réglages système
  Identité matOS (os-release, logos), réglages zram, sysctl et
  NetworkManager. Les fichiers Debian remplacés sont détournés avec

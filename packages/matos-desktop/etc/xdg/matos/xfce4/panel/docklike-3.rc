@@ -1,4 +1,4 @@
 [user]
-pinned=/usr/share/applications/firefox-esr.desktop;/usr/share/applications/thunar.desktop;/usr/share/applications/xfce4-terminal.desktop;/usr/share/applications/matos-sagemath.desktop;/usr/share/applications/matos-geogebra.desktop;/usr/share/applications/texstudio.desktop;/usr/share/applications/codium.desktop;
+pinned=/usr/share/applications/firefox-esr.desktop;/usr/share/applications/thunar.desktop;/usr/share/applications/xfce4-terminal.desktop;/usr/share/applications/matos-sagemath.desktop;/usr/share/applications/matos-geogebra.desktop;/usr/share/applications/texstudio.desktop;/usr/share/applications/geany.desktop;
 onlyDisplayVisible=false
 showPreviews=true

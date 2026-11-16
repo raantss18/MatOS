@@ -1,0 +1,52 @@
+#!/bin/sh
+# Fenêtre « Modules matOS » : choisir un fichier .matmod et l'installer, ou retirer un module.
+set -eu
+admin() { if sudo -n true 2>/dev/null; then sudo "$@"; else pkexec "$@"; fi; }
+
+choix=$(zenity --list --title="Modules matOS" --width=640 --height=360 \
+    --text="$(matos-modules liste)" --column="Action" --hide-header \
+    "Ajouter un module (fichier .matmod)" "Retirer un module") || exit 0
+
+case "$choix" in
+Ajouter*)
+    f=$(zenity --file-selection --title="Choisir un module matOS" \
+        --file-filter="Modules matOS | *.matmod") || exit 0
+    details=$(matos-modules info "$f" 2>&1) || { zenity --error --width=420 --text="$details"; exit 1; }
+    options=""
+    if verdict=$(matos-modules verifier "$f" 2>&1); then
+        zenity --question --width=480 --title="Installer ce module ?" --text="$details
+
+$verdict" || exit 0
+    else
+        zenity --question --width=520 --icon-name=dialog-warning --title="Module non reconnu" \
+            --ok-label="Installer quand même" --cancel-label="Annuler" --text="$details
+
+$verdict
+
+Ce fichier n'est pas un module de cette version de matOS, ou il a été modifié
+ou abîmé pendant la copie. Installez-le seulement s'il vient d'une source sûre." || exit 0
+        options=--oui
+    fi
+    journal=$(mktemp)
+    # shellcheck disable=SC2086
+    if admin matos-modules installer "$f" $options > "$journal" 2>&1; then
+        zenity --info --width=640 --title="Modules matOS" --text="$(tail -n 1 "$journal")
+
+$(matos-modules liste)"
+    else
+        zenity --error --width=560 --title="Modules matOS" --text="$(tail -n 8 "$journal")"
+    fi
+    unlink "$journal"
+    ;;
+Retirer*)
+    noms=$(find /var/lib/matos/modules -maxdepth 1 -name '*.conf' -printf '%f\n' 2>/dev/null | sed 's/\.conf$//')
+    [ -n "$noms" ] || { zenity --info --text="Aucun module installé."; exit 0; }
+    # shellcheck disable=SC2086
+    n=$(zenity --list --title="Retirer un module" --column="Module" $noms) || exit 0
+    if sortie=$(admin matos-modules retirer "$n" 2>&1); then
+        zenity --info --width=420 --text="$(echo "$sortie" | tail -n 1)"
+    else
+        zenity --error --width=420 --text="$(echo "$sortie" | tail -n 8)"
+    fi
+    ;;
+esac

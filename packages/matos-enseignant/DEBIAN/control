@@ -1,0 +1,12 @@
+Package: matos-enseignant
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: education
+Priority: optional
+Depends: matos-base, python3, zenity, iproute2, texlive-latex-extra, texlive-lang-french, texlive-science
+Description: matOS - outils pour enseigner
+ Modèles LaTeX en français prêts à compiler (cours, feuille de TD, sujet
+ d'examen avec barème, diaporama), proposés par le clic droit « Créer un
+ document » du gestionnaire de fichiers, et « Partage en salle » : mettre un
+ dossier à disposition des autres ordinateurs du même réseau, sans Internet.

@@ -11,19 +11,25 @@
       <p>Vérifiez d'abord l'empreinte de l'ISO (<a href="{{racine}}telecharger.html">Télécharger</a>) : une ISO abîmée ne démarre pas. Ouvrez le menu de démarrage du PC (<kbd>F12</kbd>, <kbd>Échap</kbd>, <kbd>F2</kbd>, <kbd>F9</kbd>…) et essayez les deux entrées de la clé (« UEFI » puis l'autre). Si rien ne marche, désactivez Secure Boot dans le BIOS (non testé avec matOS), puis réessayez. Si le PC est en 32 bits, matOS ne peut pas y démarrer.</p></details>
 
     <details><summary>Quel est le mot de passe de la session live ?</summary>
-      <p>L'utilisateur est <code>matos</code> et le mot de passe <code>live</code>. Il sert si l'écran se verrouille après quelques minutes d'inactivité (limite connue de cette version). Après l'installation, vous utilisez le mot de passe que vous avez choisi.</p></details>
+      <p>L'utilisateur est <code>matos</code> et le mot de passe <code>live</code>. L'écran ne se verrouille plus en session live ; le mot de passe sert pour les commandes d'administration. Après l'installation, vous utilisez le mot de passe que vous avez choisi.</p></details>
 
-    <details><summary>Pourquoi l'ISO fait-elle plus de 8 Go ?</summary>
-      <p>Parce qu'elle contient tout, pour fonctionner sans Internet : SageMath, Lean avec Mathlib précompilée (la seule Mathlib fait plusieurs Go), GeoGebra, RStudio, TeX Live, LibreOffice, 23 livres et la documentation. Une clé USB de 16 Go est nécessaire.</p></details>
+    <details><summary>Où sont passés Lean, Coq, Scilab et RStudio ?</summary>
+      <p>Dans des <a href="modules.html">modules hors ligne</a>, pour que l'ISO tienne sur une clé de 8 Go (3,9 Go au lieu de 8,3 Go). Un module est un fichier à copier sur une clé et à installer sans connexion par le menu <strong>Modules matOS</strong>.</p></details>
+
+    <details><summary>Je n'installe pas matOS : comment garder mes fichiers ?</summary>
+      <p>Menu <strong>Conserver mes fichiers sur la clé</strong> : matOS utilise la place libre de la clé pour garder vos fichiers, vos réglages et les modules installés. Voir <a href="modules.html#persistance">Persistance</a>.</p></details>
+
+    <details><summary>Un module refuse de s'installer « faute de place »</summary>
+      <p>Les modules <code>lean</code> et <code>preuve-calcul</code> installent des logiciels. En session live sans persistance, tout se décompresserait dans la mémoire vive : matOS refuse plutôt que d'échouer à moitié. Activez la persistance sur la clé, ou installez matOS sur le disque.</p></details>
 
     <details><summary>matOS fonctionne-t-elle sur un PC 32 bits ?</summary>
       <p>Non. Debian 13, sur laquelle matOS est construite, n'a plus de noyau 32 bits. Un PC 64 bits, même très ancien (Atom 64 bits, Core 2), convient.</p></details>
 
     <details><summary>Pourquoi les dates s'affichent-elles en malgache ?</summary>
-      <p>L'installateur règle les nombres et les dates d'après le pays du fuseau choisi (Madagascar par défaut), alors que la langue du système reste le français. Pendant l'installation, la page « Emplacement » a un bouton « Modification… » pour choisir « français (France) ». C'est une limite connue de la version 0.6.</p></details>
+      <p>C'était le cas en version 0.6. Depuis la 0.7, les dates sont en français par défaut. Pour des dates en malgache sur un système installé : <code>sudo dpkg-reconfigure locales</code>, cochez <code>mg_MG.UTF-8</code>, puis <code>sudo update-locale LC_TIME=mg_MG.UTF-8</code>.</p></details>
 
     <details><summary>Puis-je installer matOS à côté de Windows ?</summary>
-      <p>Ce n'est pas testé. L'installateur propose « Effacer le disque » ou « Partitionnement manuel ». Sauvegardez vos données avant toute tentative et préférez un disque dédié.</p></details>
+      <p>Ce n'est pas testé. L'installateur propose « Effacer le disque » (présélectionné) ou « Partitionnement manuel ». Sauvegardez vos données avant toute tentative et préférez un disque dédié.</p></details>
 
     <details><summary>Où est le compte « root » ?</summary>
       <p>Il n'y en a pas : matOS n'a plus de mot de passe root. L'utilisateur que vous créez est administrateur avec <code>sudo</code> (par exemple <code>sudo apt update</code>).</p></details>

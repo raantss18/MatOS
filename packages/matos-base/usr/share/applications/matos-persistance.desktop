@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Keep my files on the USB key
+Name[fr]=Conserver mes fichiers sur la clé
+Comment[fr]=Session live : garder fichiers, réglages et modules d'un démarrage à l'autre
+Exec=matos-persistance-gui
+Icon=drive-removable-media
+Categories=Settings;System;

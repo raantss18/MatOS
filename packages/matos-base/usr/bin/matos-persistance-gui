@@ -1,0 +1,25 @@
+#!/bin/sh
+# Fenêtre « Conserver mes fichiers sur la clé » (session live).
+set -eu
+admin() { if sudo -n true 2>/dev/null; then sudo "$@"; else pkexec "$@"; fi; }
+if ! etat=$(matos-persistance etat 2>&1); then
+    zenity --info --width=460 --title="Persistance matOS" --text="${etat#matos-persistance : }"
+    exit 0
+fi
+case "$etat" in
+"Persistance possible"*)
+    zenity --question --width=520 --title="Conserver mes fichiers sur la clé" \
+        --ok-label="Créer" --cancel-label="Annuler" --text="Sans persistance, tout ce que vous enregistrez dans la session live est perdu à l'extinction.
+
+matOS peut utiliser la place libre de cette clé USB pour conserver vos fichiers, vos réglages et les modules installés. L'image matOS de la clé n'est pas modifiée.
+
+$etat
+
+Ne retirez pas la clé pendant l'opération." || exit 0
+    if sortie=$(admin matos-persistance creer 2>&1); then
+        zenity --info --width=520 --title="Persistance matOS" --text="$sortie"
+    else
+        zenity --error --width=520 --title="Persistance matOS" --text="$sortie"
+    fi ;;
+*)  zenity --info --width=460 --title="Persistance matOS" --text="$etat" ;;
+esac

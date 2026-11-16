@@ -1,0 +1,82 @@
+#!/bin/bash
+# matos-persistance : garde les fichiers et les réglages de la session live d'un démarrage
+# à l'autre, en utilisant la place libre de la clé USB après l'image matOS.
+#
+#   matos-persistance etat      dit si la persistance est active, possible ou impossible
+#   matos-persistance creer     crée la partition « persistence » sur la clé (root)
+#
+# La clé doit avoir été écrite directement (dd, balenaEtcher, GNOME Disques). Avec Ventoy,
+# utiliser la persistance propre à Ventoy : l'image est alors un fichier, pas une partition.
+set -euo pipefail
+
+err() { echo "matos-persistance : $*" >&2; exit 1; }
+MINI=$((1024 * 1024 * 1024))    # 1 Gio de place libre au minimum
+
+support=""; disque=""; libre=0; etat=""
+# analyser : renseigne etat (active, possible, impossible), disque et libre
+analyser() {
+    [ -d /run/live/medium ] || err "ce n'est pas une session live (matOS est installé : vos fichiers sont déjà conservés)."
+    if compgen -G '/run/live/persistence/*/*' >/dev/null; then
+        etat=active; return 0
+    fi
+    support=$(findmnt -no SOURCE /run/live/medium)
+    case "$support" in
+        /dev/sr*)   err "matOS a démarré d'un DVD ou d'un lecteur virtuel : pas de persistance possible." ;;
+        /dev/loop*|/dev/mapper/*|/dev/dm-*) err "matOS a démarré d'un fichier image (Ventoy ?) : utilisez la persistance de Ventoy." ;;
+    esac
+    disque=$(lsblk -no PKNAME "$support" | head -n 1)
+    if [ -n "$disque" ]; then disque="/dev/$disque"; else disque="$support"; fi
+    [ -b "$disque" ] || err "support de démarrage introuvable ($support)."
+    # lsblk et /sys se lisent sans droits : « etat » doit marcher pour un utilisateur ordinaire
+    [ "$(lsblk -dno PTTYPE "$disque" 2>/dev/null)" = dos ] \
+        || err "table de partitions inattendue sur $disque : la clé n'a pas été écrite directement."
+    local nom taille fin=0 p debut long
+    nom=$(basename "$disque")
+    taille=$(( $(cat "/sys/block/$nom/size") * 512 ))
+    for p in "/sys/block/$nom/$nom"*; do
+        [ -r "$p/start" ] || continue
+        debut=$(cat "$p/start"); long=$(cat "$p/size")
+        [ $(( (debut + long) * 512 )) -le "$fin" ] || fin=$(( (debut + long) * 512 ))
+    done
+    libre=$((taille - fin))
+    if [ "$libre" -lt "$MINI" ]; then
+        etat=impossible; return 0
+    fi
+    etat=possible
+}
+
+case "${1:-}" in
+etat)
+    analyser
+    case "$etat" in
+        active)     echo "Persistance active : vos fichiers et réglages sont conservés sur la clé." ;;
+        possible)   echo "Persistance possible : $((libre / 1048576)) Mio libres sur $disque." ;;
+        impossible) echo "Persistance impossible : il reste $((libre / 1048576)) Mio sur $disque (1024 Mio au minimum). Utilisez une clé plus grande." ;;
+    esac
+    ;;
+creer)
+    [ "$(id -u)" = 0 ] || err "cette commande demande les droits d'administrateur (sudo)."
+    analyser
+    [ "$etat" != active ] || { echo "La persistance est déjà active."; exit 0; }
+    [ "$etat" = possible ] || err "pas assez de place libre sur la clé ($((libre / 1048576)) Mio, 1024 au minimum)."
+    avant=$(lsblk -lno NAME "$disque" | sort)
+    # nouvelle partition Linux dans toute la place libre ; la clé est montée, donc pas de relecture
+    journal=$(mktemp)
+    echo ',,L' | sfdisk --append --no-reread --force "$disque" >"$journal" 2>&1 \
+        || { cat "$journal" >&2; unlink "$journal"; err "la partition n'a pas pu être créée sur $disque."; }
+    unlink "$journal"
+    partx -a "$disque" 2>/dev/null || partprobe "$disque" 2>/dev/null || true
+    udevadm settle
+    part=$(lsblk -lno NAME "$disque" | sort | comm -13 <(echo "$avant") - | head -n 1)
+    [ -n "$part" ] && [ -b "/dev/$part" ] || err "la nouvelle partition n'apparaît pas : redémarrez puis relancez la commande."
+    mkfs.ext4 -q -F -L persistence "/dev/$part"
+    m=$(mktemp -d)
+    mount "/dev/$part" "$m"
+    echo '/ union' > "$m/persistence.conf"
+    umount "$m"; rmdir "$m"
+    echo "Persistance créée sur /dev/$part ($((libre / 1048576)) Mio). Redémarrez matOS depuis la clé :"
+    echo "vos fichiers, vos réglages et les modules installés seront alors conservés."
+    ;;
+*)
+    sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
+esac

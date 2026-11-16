@@ -1,9 +1,20 @@
 #!/bin/sh
-# matOS : adapte la session à la machine, une seule fois par utilisateur.
+# matOS : adapte la session à la machine (une seule fois par utilisateur) et à la session live.
 # Sur une machine modeste (≤ 4 Go de RAM, ou rendu graphique logiciel), coupe la
 # composition d'xfwm4 (ombres, transparences) qui consomme mémoire et processeur.
 # Les réglages faits ensuite par l'utilisateur sont respectés.
 set -eu
+
+# Session live : pas de verrouillage d'écran (personne ne connaît le mot de passe « live »).
+# À chaque ouverture de session : les réglages ne survivent pas à l'extinction.
+if [ -d /run/live/medium ]; then
+    xfconf-query -c xfce4-screensaver -p /lock/enabled -n -t bool -s false 2>/dev/null || true
+    xfconf-query -c xfce4-screensaver -p /saver/enabled -n -t bool -s false 2>/dev/null || true
+    xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/lock-screen-suspend-hibernate \
+        -n -t bool -s false 2>/dev/null || true
+    xfconf-query -c xfce4-session -p /shutdown/LockScreen -n -t bool -s false 2>/dev/null || true
+fi
+
 flag="${XDG_CONFIG_HOME:-$HOME/.config}/matos/adaptatif-fait"
 [ -e "$flag" ] && exit 0
 

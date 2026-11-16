@@ -1,0 +1,68 @@
+#!/bin/sh
+# Écrit sur le port série un rapport de l'état du système une fois le bureau ouvert.
+# Ne fait rien sans « matos.test » sur la ligne de commande du noyau (scripts/test-iso.sh).
+grep -qw 'matos\.test' /proc/cmdline || exit 0
+sleep "${1:-25}"
+
+# « matos.test.modules » : installe et essaie les modules partagés par l'hôte (9p)
+modules_test=""
+if grep -qw 'matos\.test\.modules' /proc/cmdline; then
+    modules_test=ok
+    journal=/tmp/matos-modules-test.log
+    sudo -n mkdir -p /mnt/modules
+    sudo -n mount -t 9p -o trans=virtio,ro modules /mnt/modules >"$journal" 2>&1 || modules_test=ECHEC
+    for m in /mnt/modules/*.matmod; do
+        [ -e "$m" ] || continue
+        echo "== $m" >>"$journal"
+        if ! sudo -n matos-modules installer "$m" >>"$journal" 2>&1; then
+            # refus annoncé faute de place en mémoire vive : comportement voulu, pas un échec
+            tail -n 1 "$journal" | grep -q "la session live n'a que" || modules_test=ECHEC
+        fi
+    done
+    essai() { echo "== essai : $*" >>"$journal"; "$@" >>"$journal" 2>&1 || modules_test=ECHEC; }
+    if [ -e /var/lib/matos/modules/lean.conf ]; then
+        essai lean --version
+        essai sh -c 'command -v codium'
+        essai sh -c 'cd /tmp && matos-lean-projet essai-lean && cd essai-lean && lake build'
+    fi
+    if [ -e /var/lib/matos/modules/preuve-calcul.conf ]; then
+        essai coqc --version
+        essai sh -c 'command -v scilab && command -v rstudio'
+    fi
+    if [ -e /var/lib/matos/modules/bibliotheque.conf ]; then
+        essai sh -c 'ls /opt/matos/bibliotheque-plus/*/*.pdf | head -n 3'
+    fi
+    if [ -e /var/lib/matos/modules/encyclopedie.conf ]; then
+        essai sh -c 'ls /opt/matos/encyclopedie/*.zim && kiwix-serve --version'
+    fi
+fi
+{
+    echo "MATOS-RAPPORT-DEBUT"
+    echo "version=$(sed -n 's/^PRETTY_NAME=//p' /etc/os-release)"
+    echo "demarrage=$(systemd-analyze 2>/dev/null | head -n 1)"
+    echo "identite=$(sed -n 's/^ID=//p' /etc/os-release)"
+    echo "memoire_totale_mio=$(LC_ALL=C free -m | awk '/^Mem:/{print $2}')"
+    echo "memoire_utilisee_mio=$(LC_ALL=C free -m | awk '/^Mem:/{print $3}')"
+    echo "memoire_partagee_mio=$(LC_ALL=C free -m | awk '/^Mem:/{print $5}')"
+    echo "memoire_disponible_mio=$(LC_ALL=C free -m | awk '/^Mem:/{print $7}')"
+    echo "swap_total_mio=$(LC_ALL=C free -m | awk '/^Swap:/{print $2}')"
+    echo "swap_utilise_mio=$(LC_ALL=C free -m | awk '/^Swap:/{print $3}')"
+    echo "gros_processus=$(ps -eo rss,comm --sort=-rss | head -n 7 | tail -n 6 | awk '{printf "%s:%dMio ", $2, $1/1024}')"
+    echo "services_en_echec=$(systemctl --failed --no-legend --plain | awk '{print $1}' | tr '\n' ' ')"
+    echo "session=$(pgrep -x xfce4-session >/dev/null && echo xfce || echo absente)"
+    echo "ecran_verrouillable=$(xfconf-query -c xfce4-screensaver -p /lock/enabled 2>/dev/null || echo inconnu)"
+    echo "ordonnanceurs=$(cat /sys/block/[sv]d?/queue/scheduler 2>/dev/null | tr '\n' ' ')"
+    echo "epinglages=$(grep -rls 'Pin-Priority: -1' /etc/apt/preferences /etc/apt/preferences.d 2>/dev/null | wc -l)"
+    echo "modules=$(matos-modules liste 2>&1 | tr '\n' ';')"
+    for cmd in sage octave maxima gp gap R pdflatex geogebra6 geany; do
+        command -v "$cmd" >/dev/null 2>&1 && echo "commande_$cmd=oui" || echo "commande_$cmd=NON"
+    done
+    echo "lents=$(systemd-analyze blame 2>/dev/null | head -n 8 | tr -s ' ' | tr '\n' ';')"
+    if [ -n "$modules_test" ]; then
+        echo "modules_test=$modules_test"
+        [ "$modules_test" = ok ] || { echo "--- journal des modules"; tail -n 40 /tmp/matos-modules-test.log; }
+    fi
+    echo "MATOS-RAPPORT-FIN"
+} > /tmp/matos-rapport.txt 2>&1
+sudo -n sh -c 'cat /tmp/matos-rapport.txt > /dev/ttyS0' 2>/dev/null || true
+grep -qw 'matos\.test=arret' /proc/cmdline && sudo -n poweroff

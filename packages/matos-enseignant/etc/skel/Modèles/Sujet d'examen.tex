@@ -1,0 +1,53 @@
+% Modèle matOS : sujet d'examen avec barème. Compiler DEUX fois avec pdflatex
+% (le total des points est calculé à la seconde compilation).
+% Corrigé : remplacer [addpoints] par [addpoints,answers].
+\documentclass[11pt,a4paper,addpoints]{exam}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,mathtools}
+
+\pointname{ pt}
+\pointsinrightmargin
+\renewcommand{\solutiontitle}{\noindent\textbf{Corrigé.}\enspace}
+\newcommand{\R}{\mathbb{R}}
+
+\pagestyle{headandfoot}
+\firstpageheader{Université d'Antananarivo\\Mention Mathématiques}{}{L1 --- Analyse 1\\Session de janvier 2027}
+\runningheader{Analyse 1}{}{Session de janvier 2027}
+\footer{}{Page \thepage\ sur \numpages}{}
+
+\begin{document}
+\begin{center}
+  {\Large\bfseries Examen d'analyse 1}\\[4pt]
+  Durée : 2 heures. Documents et calculatrices interdits.\\
+  Le sujet comporte \numquestions\ exercices, notés sur \numpoints\ points.
+\end{center}
+\bigskip
+
+\begin{questions}
+
+\question[6] Questions de cours.
+\begin{parts}
+  \part[2] Énoncer le théorème des valeurs intermédiaires.
+  \part[4] Démontrer qu'une suite convergente est bornée.
+  \begin{solution}
+  Si $u_n \to \ell$, il existe $N$ tel que $|u_n - \ell| \leq 1$ pour $n \geq N$ ;
+  alors $|u_n| \leq \max(|u_0|, \dots, |u_{N-1}|, |\ell| + 1)$.
+  \end{solution}
+\end{parts}
+
+\question[8] Soit $f : \R \to \R$ définie par $f(x) = x^3 - 3x + 1$.
+\begin{parts}
+  \part[3] Dresser le tableau de variations de $f$.
+  \part[5] Montrer que l'équation $f(x) = 0$ admet exactement trois solutions réelles.
+\end{parts}
+
+\question[6] Calculer $\displaystyle \int_0^1 x\,e^{x}\,dx$.
+\begin{solution}
+Par parties : $\bigl[x e^x\bigr]_0^1 - \int_0^1 e^x\,dx = e - (e - 1) = 1$.
+\end{solution}
+
+\end{questions}
+\end{document}

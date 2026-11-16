@@ -10,9 +10,26 @@ update-locale LANG=fr_FR.UTF-8
 # GRUB du système installé : voir /etc/default/grub.d/90-matos.cfg (matos-base).
 # grub-pc / grub-efi sont installés par Calamares depuis le dépôt de l'ISO.
 
-# Firmwares de matériel de serveur (cartes SmartNIC, commutateurs, GPU de datacenter) :
-# 260 Mo inutiles sur un PC. Tous les firmwares de PC (Wi-Fi, Bluetooth, graphique, son) restent.
-apt-get purge -y firmware-netronome firmware-nvidia-tesla-535-gsp firmware-marvell-prestera
+# Les paquets lourds seulement « recommandés » sont écartés par épinglage
+# (live/config/archives/matos.pref.chroot) et les firmwares sont listés un par un. On vérifie
+# ici qu'aucun indésirable n'est entré, et que les firmwares de PC sont bien là.
+for p in llvm-19-dev python3-numba yelp nodejs firmware-netronome firmware-bnx2x firmware-qlogic; do
+    if dpkg-query -W -f='${Status}' "$p" 2>/dev/null | grep -q 'ok installed'; then
+        echo "matOS : paquet écarté mais installé : $p" >&2; exit 1
+    fi
+done
+for p in firmware-iwlwifi firmware-realtek firmware-atheros firmware-amd-graphics \
+         firmware-misc-nonfree firmware-linux-nonfree firmware-intel-graphics firmware-sof-signed \
+         firmware-brcm80211 firmware-mediatek; do
+    dpkg-query -W -f='${Status}' "$p" 2>/dev/null | grep -q 'ok installed' \
+        || { echo "matOS : firmware manquant : $p" >&2; exit 1; }
+done
+
+# Identité : /etc/os-release doit être le lien de Debian vers /usr/lib/os-release (détourné par
+# matos-base). La construction en laisse une copie « Debian » : le système se présentait alors
+# comme Debian, et matos-modules ne reconnaissait pas la version de matOS.
+ln -sfn ../usr/lib/os-release /etc/os-release
+grep -q '^ID=matos$' /etc/os-release || { echo "matOS : /etc/os-release n'est pas celui de matOS" >&2; exit 1; }
 
 # Thème Plymouth matOS dans l'initramfs
 plymouth-set-default-theme matos

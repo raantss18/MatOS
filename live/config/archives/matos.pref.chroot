@@ -1,0 +1,49 @@
+# matOS : paquets seulement « recommandés » par d'autres, lourds et inutiles sur un poste
+# d'étudiant. Épinglés à -1 : apt ne les installe jamais. Si l'un d'eux devenait une
+# dépendance stricte, le build échouerait au lieu de grossir en silence.
+# Ces épinglages ne valent que pendant la construction : le système installé n'en garde
+# aucun, pour que « apt install » et les modules puissent installer ces paquets.
+
+# python3-pandas recommande numba, qui installe 610 Mo de LLVM
+Package: python3-numba numba-doc llvm-19-dev
+Pin: release *
+Pin-Priority: -1
+
+# aide GNOME (WebKit), reconnaissance vocale de VLC, Node.js tiré par des documentations
+Package: yelp pocketsphinx-en-us nodejs
+Pin: release *
+Pin-Priority: -1
+
+# Java : recommandé par Octave et TeX Live pour des fonctions marginales (190 Mo).
+# Scilab, qui en a vraiment besoin, l'apporte dans le module « preuve-calcul ».
+Package: default-jre default-jre-headless openjdk-21-jre openjdk-21-jre-headless
+Pin: release *
+Pin-Priority: -1
+
+# outils de développement R (module « preuve-calcul »), mupdf
+Package: r-base-dev mupdf-tools
+Pin: release *
+Pin-Priority: -1
+
+# Java : recommandé par Octave et TeX Live pour des fonctions marginales (190 Mo).
+# Scilab, qui en a vraiment besoin, l'apporte dans le module « preuve-calcul ».
+Package: default-jre default-jre-headless openjdk-21-jre openjdk-21-jre-headless
+Pin: release *
+Pin-Priority: -1
+
+# outils de développement R (module « preuve-calcul »), mupdf
+Package: r-base-dev mupdf-tools
+Pin: release *
+Pin-Priority: -1
+
+# Codecs « bad » de GStreamer : recommandés par LibreOffice et WebKit pour lire des vidéos
+# dans les documents ; ils tirent OpenCV, ONNX Runtime et GDAL (≈ 250 Mo). VLC lit tout sans eux.
+Package: gstreamer1.0-plugins-bad
+Pin: release *
+Pin-Priority: -1
+
+# Firmware des cartes NVIDIA récentes pour le pilote libre (machines hors cible ; « sudo apt
+# install firmware-nvidia-graphics » le rétablit). Les cartes anciennes n'en ont pas besoin.
+Package: firmware-nvidia-graphics
+Pin: release *
+Pin-Priority: -1

@@ -6,10 +6,14 @@
 # rien d'autre. Résultat : out/matos-<version>-ralambo-amd64.hybrid.iso
 #
 # Usage :
-#   ./build.sh            ISO complète (~10 Go, plusieurs heures)
-#   ./build.sh --rapide   ISO de test sans SageMath ni Lean (bien plus rapide)
-#   ./build.sh --paquets  construit seulement les paquets matos-* (build/debs)
-#   ./build.sh --test     démarre l'ISO produite dans QEMU (UEFI si OVMF présent)
+#   ./build.sh                 ISO de base et tous les modules (plusieurs heures)
+#   ./build.sh --rapide        ISO de test sans SageMath ni module (bien plus rapide)
+#   ./build.sh --modules=LISTE ne construire que ces modules ("lean bibliotheque", "" = aucun)
+#   ./build.sh --reprise       garde le système de base du build précédent : ne refait que les
+#                              modules demandés et l'image (après l'échec d'un module)
+#   ./build.sh --paquets       construit seulement les paquets matos-* (build/debs)
+#   ./build.sh --test          démarre l'ISO produite dans QEMU (UEFI si OVMF présent)
+# Résultat : out/matos-<version>-ralambo-amd64.hybrid.iso et out/modules/*.matmod
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -18,12 +22,16 @@ MATOS_ROOT=$PWD
 
 mode=iso
 skip_heavy=0
+modules=tous
+reprise=0
 for arg in "$@"; do
     case "$arg" in
-        --rapide)  skip_heavy=1 ;;
+        --rapide)  skip_heavy=1; modules="" ;;
+        --modules=*) modules=${arg#--modules=} ;;
+        --reprise) reprise=1 ;;
         --paquets) mode=paquets ;;
         --test)    mode=test ;;
-        -h|--help) sed -n '2,13p' "$0"; exit 0 ;;
+        -h|--help) sed -n '2,17p' "$0"; exit 0 ;;
         *) echo "Option inconnue : $arg" >&2; exit 2 ;;
     esac
 done
@@ -34,7 +42,8 @@ if [ "$mode" = test ]; then
     iso="out/$image.hybrid.iso"
     [ -f "$iso" ] || { echo "Pas d'ISO : lancez d'abord ./build.sh" >&2; exit 1; }
     firmware=()
-    for ovmf in /usr/share/edk2/x64/OVMF.4m.fd /usr/share/OVMF/OVMF_CODE.fd /usr/share/ovmf/OVMF.fd; do
+    for ovmf in /usr/share/edk2/x64/OVMF.4m.fd /usr/share/edk2/x64/OVMF_CODE.4m.fd \
+                /usr/share/OVMF/OVMF_CODE_4M.fd /usr/share/OVMF/OVMF_CODE.fd /usr/share/ovmf/OVMF.fd; do
         if [ -f "$ovmf" ]; then firmware=(-bios "$ovmf"); break; fi
     done
     exec qemu-system-x86_64 -enable-kvm -cpu host -smp 4 -m 6G \
@@ -58,6 +67,8 @@ script=/matos/scripts/container-build.sh
 "$engine" run --rm --privileged \
     -v "$MATOS_ROOT:/matos" \
     -e MATOS_SKIP_HEAVY="$skip_heavy" \
+    -e MATOS_MODULES="$modules" \
+    -e MATOS_REPRISE="$reprise" \
     -e MATOS_ROOT=/matos \
     "docker.io/library/debian:$DEBIAN_SUITE" \
     bash -c "$script; status=\$?; mkdir -p /matos/out /matos/build/debs; \

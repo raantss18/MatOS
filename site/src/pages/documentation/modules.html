@@ -1,0 +1,51 @@
+<!-- titre: Modules, persistance et outils pour enseigner -->
+<!-- description: Compléter matOS sans connexion avec les modules hors ligne (Lean, Coq, livres, Wikipédia), garder ses fichiers sur la clé USB, partager un dossier en salle de cours. -->
+<!-- section: documentation -->
+<div class="conteneur doc">
+  {{menu-doc}}
+  <div class="doc-corps">
+    <p class="fil"><a href="./">Documentation</a> › Modules, persistance, enseignants</p>
+    <h1>Modules, persistance et outils pour enseigner</h1>
+
+    <h2 id="modules">Les modules hors ligne</h2>
+    <p>L'ISO de matOS contient ce dont presque tout le monde a besoin et tient sur une clé de 8 Go. Le reste est rangé dans des <strong>modules</strong> : un fichier <code>.matmod</code> par module, que l'on copie sur une clé USB et que l'on se passe de main en main. Aucune connexion n'est nécessaire pour les installer.</p>
+    <div class="defile"><table><caption>Modules de matOS {{version}}</caption><thead><tr><th scope="col">Module</th><th scope="col">Taille</th><th scope="col">Contenu</th><th scope="col">Session live sans persistance</th></tr></thead><tbody>
+      <tr><th scope="row"><code>bibliotheque</code></th><td>0,44 Go</td><td>13 livres de L3 à M2 ; documentation de Python, SymPy, R, Singular, Git et des extensions LaTeX</td><td>Livres : oui. Documentation : selon la mémoire</td></tr>
+      <tr><th scope="row"><code>encyclopedie</code></th><td>0,80 Go</td><td>Wikipédia en français : mathématiques, informatique, physique (lecteur Kiwix)</td><td>Oui</td></tr>
+      <tr><th scope="row"><code>preuve-calcul</code></th><td>0,96 Go</td><td>Coq et CoqIDE, Scilab, RStudio, outils de développement R</td><td>Non avec 4 Go de RAM</td></tr>
+      <tr><th scope="row"><code>lean</code></th><td>2,8 Go</td><td>Lean 4, Mathlib précompilée, VSCodium et ses extensions</td><td>Non avec 4 Go de RAM</td></tr>
+    </tbody></table></div>
+
+    <h3>Installer un module</h3>
+    <ol>
+      <li>Récupérez le fichier <code>.matmod</code> : sur la clé d'un camarade ou d'un enseignant, ou sur la page <a href="{{racine}}telecharger.html#modules">Télécharger</a>.</li>
+      <li>Ouvrez le menu <strong>Modules matOS</strong>, choisissez le fichier, validez.</li>
+    </ol>
+    <p>Ou dans un terminal :</p>
+    <pre class="code">sudo matos-modules installer matos-encyclopedie-2026.10.matmod</pre>
+    <pre class="code">matos-modules liste</pre>
+    <p>matOS compare l'empreinte SHA256 du fichier à la liste des modules de sa version : un fichier abîmé ou modifié est refusé. Pour retirer un module : <code>sudo matos-modules retirer NOM</code>.</p>
+    <div class="note"><p class="note-titre">Pourquoi certains modules demandent un système installé</p><p><code>lean</code> et <code>preuve-calcul</code> installent des logiciels. Dans une session live simple, tout ce qui est installé va dans la mémoire vive : avec 4 Go, il n'y a pas la place. matOS le vérifie avant de commencer et vous le dit. Deux solutions : la <a href="#persistance">persistance</a> sur la clé, ou <a href="installer.html">installer matOS</a>.</p></div>
+    <p>Sur le disque, <code>lean</code> et <code>preuve-calcul</code> occupent environ 3 Go chacun une fois installés.</p>
+    <p class="discret">Testé dans une machine virtuelle à 4 Go de RAM, sur un système installé : <code>lean</code> et <code>preuve-calcul</code> s'installent sans réseau en une minute chacun, un premier projet Lean se compile en 45 secondes, Coq, Scilab et RStudio sont présents. Non testé sur du vrai matériel.</p>
+
+    <h2 id="persistance">Garder ses fichiers sur la clé (persistance)</h2>
+    <p>Sans persistance, tout ce que vous enregistrez dans la session live disparaît à l'extinction. matOS peut utiliser la <strong>place libre de la clé</strong> pour conserver vos fichiers, vos réglages et les modules installés, sans rien installer sur l'ordinateur.</p>
+    <ol>
+      <li>Démarrez sur la clé.</li>
+      <li>Ouvrez le menu <strong>Conserver mes fichiers sur la clé</strong> et validez (ou <code>sudo matos-persistance creer</code>).</li>
+      <li>Redémarrez sur la clé : la persistance est active. Ce que vous avez enregistré <em>avant</em> ce redémarrage n'est pas conservé.</li>
+    </ol>
+    <p>Conditions : la clé a été écrite directement (balenaEtcher, GNOME Disques, <code>dd</code>) et il lui reste au moins 1 Go libre. Sur une clé de 8 Go, il reste environ 3,8 Go ; une clé de 16 Go ou plus est préférable pour les modules <code>lean</code> ou <code>preuve-calcul</code>. Avec <strong>Ventoy</strong>, l'image est un fichier et non une partition : utilisez la persistance propre à Ventoy.</p>
+    <p class="discret">Testé dans une machine virtuelle, sur une clé simulée de 7,4 Go : création de la partition, puis fichiers et réglages retrouvés aux démarrages suivants. Non testé sur de vraies clés.</p>
+
+    <h2 id="enseignants">Pour les enseignants</h2>
+    <h3>Modèles LaTeX</h3>
+    <p>Le dossier <strong>Modèles</strong> de votre dossier personnel contient quatre documents prêts à compiler : <em>Cours</em>, <em>Feuille de TD</em>, <em>Sujet d'examen</em> et <em>Diaporama</em> (Beamer). Dans le gestionnaire de fichiers : clic droit, « Créer un document », puis ouvrez le fichier dans TeXstudio.</p>
+    <h3>Partage en salle</h3>
+    <p>Pour distribuer un dossier (sujets, polycopiés, modules) aux ordinateurs d'une salle <strong>sans Internet</strong> : menu <strong>Partage en salle</strong>, choisissez le dossier. matOS affiche une adresse du type <code>http://192.168.1.20:8080/</code> que les autres ouvrent dans leur navigateur. Les ordinateurs doivent être sur le même réseau : celui de la salle, ou un point d'accès Wi-Fi créé depuis l'icône réseau de votre portable. Le partage est en lecture seule et s'arrête quand vous fermez la fenêtre.</p>
+    <p class="discret">Le partage en salle n'a pas encore été testé entre plusieurs machines réelles.</p>
+    <h3>Vos cours dans matOS</h3>
+    <p>Les polycopiés sous licence libre peuvent entrer dans la bibliothèque : voir <a href="construire.html">Construire et contribuer</a>. Le classement L1 à M2 suit un parcours de licence classique ; il sera calé sur les unités d'enseignement de l'Université d'Antananarivo quand nous en aurons la liste.</p>
+  </div>
+</div>

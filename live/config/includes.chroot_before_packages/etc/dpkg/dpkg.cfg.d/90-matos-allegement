@@ -1,0 +1,29 @@
+# matOS : fichiers que dpkg n'installe pas, pour alléger l'image et le système installé.
+# Ce réglage reste actif après l'installation : les paquets ajoutés plus tard le suivent.
+# Pour tout rétablir : supprimer ce fichier, puis « sudo apt install --reinstall PAQUET ».
+
+# Traductions : on garde le français, l'anglais et le malgache (≈ 400 Mo pour les autres).
+path-exclude=/usr/share/locale/*
+path-include=/usr/share/locale/fr/*
+path-include=/usr/share/locale/fr_*/*
+path-include=/usr/share/locale/en/*
+path-include=/usr/share/locale/en_*/*
+path-include=/usr/share/locale/en@*/*
+path-include=/usr/share/locale/mg/*
+path-include=/usr/share/locale/locale.alias
+path-include=/usr/share/locale/all_languages
+path-include=/usr/share/locale/currency/*
+path-include=/usr/share/locale/l10n/*
+path-include=/usr/share/locale/languages
+path-exclude=/usr/share/man/*
+path-include=/usr/share/man/man[1-9]/*
+path-include=/usr/share/man/fr/*
+path-include=/usr/share/man/fr.*/*
+path-exclude=/usr/share/help/*
+path-include=/usr/share/help/C/*
+path-include=/usr/share/help/fr/*
+
+# Documentation PDF de chaque extension LaTeX (≈ 400 Mo, presque incompressible).
+# Elle est fournie par le module hors ligne « bibliotheque » (dossier Documentation LaTeX) ;
+# la bibliothèque de base contient l'introduction à LaTeX et les guides Beamer et TikZ.
+path-exclude=/usr/share/doc/texlive-doc/*

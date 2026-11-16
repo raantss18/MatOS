@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Offline encyclopedia
+Name[fr]=Encyclopédie hors ligne
+Comment[fr]=Wikipédia en français sans connexion : mathématiques, informatique, physique
+Exec=matos-encyclopedie
+Icon=accessories-dictionary
+Categories=Education;X-matOS-Math;

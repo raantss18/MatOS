@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       iso:
-        description: "Construire une ISO de test (sans SageMath ni Lean)"
+        description: "Construire une ISO de test (sans SageMath ni module)"
         type: boolean
         default: false
 
@@ -20,9 +20,23 @@ jobs:
 
       - name: Syntaxe des scripts
         run: |
-          for f in build.sh scripts/*.sh packages/*/DEBIAN/p* packages/*/usr/bin/* \
+          for f in build.sh scripts/*.sh packages/*/DEBIAN/p* packages/*/usr/bin/* modules/*/bin/* \
                    live/config/hooks/normal/*.hook.chroot; do
-            bash -n "$f" && echo "ok $f"
+            case "$(head -n 1 "$f")" in
+              *python*) python3 -m py_compile "$f" ;;
+              *) bash -n "$f" ;;
+            esac && echo "ok $f"
+          done
+
+      - name: Modules hors ligne (module.conf)
+        run: |
+          for c in modules/*/module.conf; do
+            for cle in NOM VERSION DESCRIPTION MATOS; do
+              grep -q "^$cle=." "$c" || { echo "$c : $cle manquant"; exit 1; }
+            done
+            [ "$(sed -n 's/^NOM=//p' "$c")" = "$(basename "$(dirname "$c")")" ] \
+              || { echo "$c : NOM différent du nom du dossier"; exit 1; }
+            echo "ok $c"
           done
 
       - name: XML des réglages XFCE
@@ -43,8 +57,8 @@ jobs:
           docker run --rm -v "$PWD:/matos" -e MATOS_ROOT=/matos debian:trixie bash -c '
             apt-get update -qq &&
             apt-get install -y -qq --no-install-recommends ca-certificates curl unzip dpkg-dev xz-utils zstd >/dev/null &&
-            /matos/scripts/build-debs.sh matos-base matos-desktop matos-math matos-installer \
-                matos-bibliotheque matos-geogebra matos-vscodium-config &&
+            /matos/scripts/build-debs.sh matos-base matos-modules matos-desktop matos-math matos-installer \
+                matos-bibliotheque matos-enseignant matos-geogebra matos-vscodium-config &&
             for d in /matos/build/debs/*.deb; do dpkg-deb -I "$d" >/dev/null && echo "ok $d"; done'
 
   iso-rapide:

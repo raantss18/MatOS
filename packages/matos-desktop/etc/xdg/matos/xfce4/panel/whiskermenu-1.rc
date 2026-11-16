@@ -1,4 +1,4 @@
-favorites=matos-sagemath.desktop,matos-jupyterlab.desktop,matos-geogebra.desktop,io.github.wxmaxima_developers.wxMaxima.desktop,texstudio.desktop,codium.desktop,rstudio.desktop,firefox-esr.desktop,thunar.desktop,xfce4-terminal.desktop
+favorites=matos-sagemath.desktop,matos-jupyterlab.desktop,matos-geogebra.desktop,io.github.wxmaxima_developers.wxMaxima.desktop,texstudio.desktop,geany.desktop,matos-modules.desktop,firefox-esr.desktop,thunar.desktop,xfce4-terminal.desktop
 button-title=matOS
 button-icon=matos
 show-button-title=false

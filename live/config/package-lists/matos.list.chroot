@@ -3,29 +3,40 @@
 
 matos-base
 matos-stats
+matos-modules
 matos-desktop
 matos-math
 matos-installer
 matos-bibliotheque
+matos-enseignant
 matos-documentation
 matos-geogebra
-matos-vscodium-config
-codium
-rstudio
 
 # Système live
 live-boot
 live-config
 live-config-systemd
 
-# Matériel
+# Matériel. Les firmwares sont listés un par un : laisser live-build les installer tous
+# (--firmware-chroot) ajoutait ceux de cartes de serveurs et de commutateurs (≈ 400 Mo).
 firmware-linux
+firmware-linux-free
 firmware-linux-nonfree
 firmware-misc-nonfree
+firmware-amd-graphics
+firmware-intel-graphics
+firmware-intel-misc
+firmware-sof-signed
+firmware-cirrus
 firmware-iwlwifi
 firmware-realtek
 firmware-atheros
-firmware-amd-graphics
+firmware-ath9k-htc
+firmware-carl9170
+firmware-brcm80211
+firmware-mediatek
+firmware-libertas
+firmware-zd1211
 amd64-microcode
 intel-microcode
 xserver-xorg
@@ -67,6 +78,9 @@ file-roller
 cups
 system-config-printer
 printer-driver-gutenprint
+
+# Éditeur de code léger (VSCodium, plus lourd, vient avec le module « lean »)
+geany
 
 # Outils système
 gparted

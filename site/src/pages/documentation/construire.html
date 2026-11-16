@@ -11,9 +11,10 @@
     <h2>Reconstruire l'ISO</h2>
     <p>Seul prérequis : <strong>Docker</strong> ou <strong>Podman</strong>. Le build se fait dans un conteneur Debian 13, sur n'importe quelle distribution. Prévoir environ 80 Go de disque libre et plusieurs heures la première fois.</p>
     <pre class="code">git clone https://github.com/raantss18/MatOS.git &amp;&amp; cd MatOS</pre>
-    <pre class="code">./build.sh --rapide   # ISO de test sans SageMath ni Lean</pre>
-    <pre class="code">./build.sh            # ISO complète (≈ 8,3 Go)</pre>
-    <pre class="code">./build.sh --test     # démarre l'ISO dans QEMU</pre>
+    <pre class="code">./build.sh --rapide   # ISO de test sans SageMath ni module</pre>
+    <pre class="code">./build.sh            # ISO (3,9 Go) et les quatre modules</pre>
+    <pre class="code">scripts/test-iso.sh   # démarre l'ISO dans QEMU sans écran et contrôle son rapport</pre>
+    <pre class="code">./build.sh --test     # démarre l'ISO dans QEMU, avec écran</pre>
     <p>Principes : le build <strong>échoue plutôt que de produire une image incomplète</strong> ; tout ce qui est téléchargé a une version et une empreinte SHA256 (<code>versions.env</code>) ; les personnalisations sont des paquets <code>matos-*</code> qui ne modifient jamais les fichiers d'autres paquets.</p>
 
     <h2>Publier une version</h2>
@@ -27,8 +28,8 @@
 
     <h2>Ajouter un livre libre</h2>
     <p>Un livre n'entre dans la bibliothèque que si sa <strong>licence libre est constatée dans le texte du PDF</strong>.</p>
-    <pre class="code">scripts/livre-verifier.sh Mathematiques/mon-livre.pdf https://exemple.org/livre.pdf</pre>
-    <p>Le script vérifie que c'est un PDF, cherche la licence et affiche la ligne à copier dans <code>MATOS_BOOKS</code> (<code>versions.env</code>).</p>
+    <pre class="code">scripts/livre-verifier.sh L2/mon-livre.pdf https://exemple.org/livre.pdf</pre>
+    <p>Le script vérifie que c'est un PDF, cherche la licence et affiche la ligne à copier dans <code>MATOS_BOOKS</code> (L1, L2, Outils : dans l'ISO) ou <code>MATOS_BOOKS_PLUS</code> (L3, M1-M2 : module <code>bibliotheque</code>) de <code>versions.env</code>.</p>
 
     <h2>Modifier ce site</h2>
     <p>Les sources sont dans <code>site/src/</code> (pages en fragments HTML, une feuille de style, un petit JavaScript facultatif). La charte est dans <code>site/DESIGN.md</code>. Pour prévisualiser :</p>

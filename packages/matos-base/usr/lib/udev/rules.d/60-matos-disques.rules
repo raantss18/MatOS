@@ -1,0 +1,6 @@
+# matOS : ordonnanceur d'entrées-sorties selon le disque.
+# Disque dur à plateaux ou clé USB : BFQ garde le bureau réactif pendant qu'un logiciel
+# lit ou écrit beaucoup. SSD et NVMe : mq-deadline ou aucun, plus légers.
+ACTION=="add|change", KERNEL=="sd[a-z]*|mmcblk[0-9]*", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
+ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/rotational}=="0", ATTR{removable}=="1", ATTR{queue/scheduler}="bfq"
+ACTION=="add|change", KERNEL=="sd[a-z]*|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{removable}=="0", ATTR{queue/scheduler}="mq-deadline"

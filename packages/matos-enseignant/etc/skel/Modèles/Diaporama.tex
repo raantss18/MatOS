@@ -1,0 +1,54 @@
+% Modèle matOS : diaporama Beamer. Compiler avec pdflatex.
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,mathtools}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\newcommand{\R}{\mathbb{R}}
+
+\title{Titre de l'exposé}
+\subtitle{Séminaire de la mention Mathématiques}
+\author{Prénom Nom}
+\institute{Université d'Antananarivo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Plan}
+  \tableofcontents
+\end{frame}
+
+\section{Énoncé}
+
+\begin{frame}{Théorème des accroissements finis}
+  \begin{theorem}
+    Soit $f : [a,b] \to \R$ continue sur $[a,b]$ et dérivable sur $]a,b[$.
+    Il existe $c \in \,]a,b[$ tel que
+    \[ f(b) - f(a) = f'(c)\,(b - a). \]
+  \end{theorem}
+  \pause
+  \begin{block}{Idée de la preuve}
+    Appliquer le théorème de Rolle à
+    $g(x) = f(x) - \dfrac{f(b) - f(a)}{b - a}\,(x - a)$.
+  \end{block}
+\end{frame}
+
+\section{Conséquences}
+
+\begin{frame}{Conséquences}
+  \begin{itemize}
+    \item<1-> Une fonction de dérivée nulle sur un intervalle est constante.
+    \item<2-> Si $|f'| \leq M$, alors $f$ est $M$-lipschitzienne.
+  \end{itemize}
+\end{frame}
+
+\end{document}

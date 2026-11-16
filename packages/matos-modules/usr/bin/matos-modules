@@ -1,0 +1,256 @@
+#!/bin/bash
+# matos-modules : modules hors ligne de matOS (fichiers .matmod).
+#
+#   matos-modules liste                 modules installés et modules du catalogue
+#   matos-modules info FICHIER          contenu déclaré d'un fichier .matmod
+#   matos-modules verifier FICHIER      compare son SHA256 au catalogue de matOS
+#   matos-modules installer FICHIER     vérifie, installe et active (root)
+#   matos-modules retirer NOM           désactive et supprime (root)
+#   matos-modules activer NOM|--tout    monte un module déjà installé (au démarrage)
+#
+# Un .matmod est une image squashfs contenant :
+#   module.conf     NOM, VERSION, DESCRIPTION, MATOS, et au choix MONTAGE, PAQUETS, INSTALLE_MIO
+#   arbre/          monté en lecture seule sur MONTAGE (toujours sous /opt/matos/)
+#   bin/            commandes, liées dans /usr/local/bin
+#   applications/   lanceurs, liés dans /usr/local/share/applications
+#   depot/          dépôt APT hors ligne d'où sont installés les PAQUETS
+set -euo pipefail
+
+ETAT=${MATOS_MODULES_ETAT:-/var/lib/matos/modules}
+RUN=${MATOS_MODULES_RUN:-/run/matos/modules}
+CATALOGUE=${MATOS_MODULES_CATALOGUE:-/usr/share/matos/modules/catalogue}
+CATALOGUES_LOCAUX=/etc/matos/modules/catalogue.d
+
+err()  { echo "matos-modules : $*" >&2; exit 1; }
+info() { echo "matos-modules : $*"; }
+besoin_root() { [ "$(id -u)" = 0 ] || err "cette commande demande les droits d'administrateur (sudo)."; }
+
+catalogues() {
+    cat "$CATALOGUE" 2>/dev/null || true
+    if [ -d "$CATALOGUES_LOCAUX" ]; then cat "$CATALOGUES_LOCAUX"/* 2>/dev/null || true; fi
+}
+
+# conf FICHIER CLE : valeur d'une clé de module.conf (une ligne CLE=valeur, jamais exécutée)
+conf() {
+    unsquashfs -cat "$1" module.conf 2>/dev/null | sed -n "s/^$2=//p" | head -n 1
+}
+conf_installe() { sed -n "s/^$2=//p" "$ETAT/$1.conf" 2>/dev/null | head -n 1; }
+
+nom_valide() { [[ "$1" =~ ^[a-z][a-z0-9-]{1,30}$ ]]; }
+
+# session live sans persistance : tout ce qui est écrit part dans la mémoire vive
+live_volatil() {
+    [ -d /run/live/medium ] || return 1
+    ! compgen -G '/run/live/persistence/*/*' >/dev/null
+}
+
+cmd_info() {
+    local f=$1 nom p m
+    [ -f "$f" ] || err "fichier introuvable : $f"
+    nom=$(conf "$f" NOM)
+    [ -n "$nom" ] || err "« $f » n'est pas un module matOS (module.conf absent)."
+    echo "Nom          : $nom"
+    echo "Version      : $(conf "$f" VERSION)"
+    echo "Description  : $(conf "$f" DESCRIPTION)"
+    echo "Pour matOS   : $(conf "$f" MATOS)"
+    echo "Taille       : $(( $(stat -c %s "$f") / 1048576 )) Mio"
+    p=$(conf "$f" PAQUETS); [ -z "$p" ] || echo "Paquets      : $p (≈ $(conf "$f" INSTALLE_MIO) Mio une fois installés)"
+    m=$(conf "$f" MONTAGE); [ -z "$m" ] || echo "Monté sur    : $m"
+}
+
+# verifier FICHIER : 0 si l'empreinte est au catalogue, 3 sinon
+cmd_verifier() {
+    local f=$1 sha
+    [ -f "$f" ] || err "fichier introuvable : $f"
+    sha=$(sha256sum "$f" | cut -d' ' -f1)
+    if catalogues | grep -q "^$sha|"; then
+        echo "Empreinte reconnue : $(catalogues | grep "^$sha|" | head -n 1 | cut -d'|' -f2,3 | tr '|' ' ')"
+        return 0
+    fi
+    echo "Empreinte inconnue de cette version de matOS : $sha"
+    return 3
+}
+
+cmd_liste() {
+    local c n vu=" "
+    echo "Modules installés :"
+    if compgen -G "$ETAT/*.conf" >/dev/null; then
+        for c in "$ETAT"/*.conf; do
+            n=$(basename "$c" .conf); vu="$vu$n "
+            printf '  %-16s %-12s %s  [%s]\n' "$n" "$(conf_installe "$n" VERSION)" \
+                "$(conf_installe "$n" DESCRIPTION)" \
+                "$(mountpoint -q "$RUN/$n" && echo actif || echo inactif)"
+        done
+    else
+        echo "  (aucun)"
+    fi
+    echo "Modules de cette version de matOS (fichiers .matmod à récupérer) :"
+    catalogues | grep -v '^#' | while IFS='|' read -r _ n version taille desc; do
+        [ -n "$n" ] || continue
+        case "$vu" in *" $n "*) continue ;; esac
+        printf '  %-16s %-12s %s (%s Mio)\n' "$n" "$version" "$desc" "$(( taille / 1048576 ))"
+    done
+}
+
+activer_un() {
+    local n=$1 f="$ETAT/$1.matmod" m lien cible
+    if [ ! -e "$f" ]; then
+        echo "matos-modules : module « $n » : fichier absent ($(readlink -m "$f"))" >&2
+        return 1
+    fi
+    mkdir -p "$RUN/$n"
+    mountpoint -q "$RUN/$n" || mount -t squashfs -o loop,ro,nodev,nosuid "$f" "$RUN/$n"
+    m=$(conf_installe "$n" MONTAGE)
+    if [ -n "$m" ] && [ -d "$RUN/$n/arbre" ]; then
+        mkdir -p "$m"
+        mountpoint -q "$m" || mount --bind "$RUN/$n/arbre" "$m"
+    fi
+    : > "$ETAT/$n.liens"
+    for cible in "$RUN/$n"/bin/* "$RUN/$n"/applications/*.desktop; do
+        [ -e "$cible" ] || continue
+        case "$cible" in
+            */bin/*) lien="/usr/local/bin/$(basename "$cible")" ;;
+            *)       lien="/usr/local/share/applications/$(basename "$cible")" ;;
+        esac
+        mkdir -p "$(dirname "$lien")"
+        # ne jamais remplacer un fichier qui n'est pas un lien
+        if [ -e "$lien" ] && [ ! -L "$lien" ]; then continue; fi
+        ln -sfn "$cible" "$lien"
+        echo "$lien" >> "$ETAT/$n.liens"
+    done
+}
+
+desactiver_un() {
+    local n=$1 m lien
+    if [ -f "$ETAT/$n.liens" ]; then
+        while read -r lien; do
+            case "$lien" in
+                /usr/local/bin/*|/usr/local/share/applications/*) [ ! -L "$lien" ] || unlink "$lien" ;;
+            esac
+        done < "$ETAT/$n.liens"
+    fi
+    m=$(conf_installe "$n" MONTAGE)
+    if [ -n "$m" ] && mountpoint -q "$m"; then
+        umount "$m" || err "« $m » est utilisé : fermez les logiciels du module."
+    fi
+    if mountpoint -q "$RUN/$n"; then
+        umount "$RUN/$n" || err "le module « $n » est utilisé : fermez ses logiciels."
+    fi
+}
+
+cmd_activer() {
+    besoin_root
+    local c echec=0
+    if [ "$1" = --tout ]; then
+        compgen -G "$ETAT/*.conf" >/dev/null || return 0
+        for c in "$ETAT"/*.conf; do activer_un "$(basename "$c" .conf)" || echec=1; done
+    else
+        nom_valide "$1" || err "nom de module invalide."
+        activer_un "$1" || echec=1
+    fi
+    return $echec
+}
+
+# installe les PAQUETS depuis le dépôt du module, sans réseau, et note ceux qui sont nouveaux
+installer_paquets() {
+    local n=$1 paquets=$2 depot="$RUN/$1/depot" src avant
+    [ -f "$depot/Packages.gz" ] || err "le module « $n » déclare des paquets mais n'a pas de dépôt."
+    src=$(mktemp); avant=$(mktemp)
+    echo "deb [trusted=yes] file:$depot ./" > "$src"
+    dpkg-query -W -f='${Package}\n' | sort > "$avant"
+    local opts=(-o "Dir::Etc::sourcelist=$src" -o Dir::Etc::sourceparts=- -o APT::Get::List-Cleanup=0)
+    apt-get "${opts[@]}" update -q
+    # shellcheck disable=SC2086
+    DEBIAN_FRONTEND=noninteractive apt-get "${opts[@]}" install -y --no-install-recommends $paquets \
+        || err "l'installation des paquets du module « $n » a échoué (voir ci-dessus)."
+    dpkg-query -W -f='${Package}\n' | sort | comm -13 "$avant" - > "$ETAT/$n.paquets"
+    unlink "$src"; unlink "$avant"
+}
+
+cmd_installer() {
+    besoin_root
+    local f="" oui=0 a
+    for a in "$@"; do case "$a" in --oui) oui=1 ;; *) f=$a ;; esac; done
+    [ -f "$f" ] || err "fichier introuvable : $f"
+    local n version matos montage paquets ici
+    n=$(conf "$f" NOM); version=$(conf "$f" VERSION); matos=$(conf "$f" MATOS)
+    montage=$(conf "$f" MONTAGE); paquets=$(conf "$f" PAQUETS)
+    nom_valide "$n" || err "« $f » n'est pas un module matOS valide."
+    if [ -n "$montage" ] && ! [[ "$montage" =~ ^/opt/matos/[a-z0-9-]+$ ]]; then
+        err "point de montage refusé : $montage"
+    fi
+    if [ -n "$paquets" ] && ! [[ "$paquets" =~ ^[a-z0-9.+\ -]+$ ]]; then err "liste de paquets refusée."; fi
+
+    ici=$(sed -n 's/^VERSION_ID="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' /etc/os-release)
+    if [ "$matos" != "$ici" ] && [ "$oui" != 1 ]; then
+        err "ce module est prévu pour matOS $matos, ce système est matOS $ici (forcer : --oui)."
+    fi
+    if ! cmd_verifier "$f"; then
+        [ "$oui" = 1 ] || err "module non reconnu : installez-le seulement s'il vient d'une source sûre (forcer : --oui)."
+        info "empreinte non reconnue, installation forcée."
+    fi
+
+    # Les paquets du module se décompressent sur le disque (ou en mémoire vive en session live
+    # sans persistance) : refuser avant d'avoir commencé plutôt qu'échouer à moitié.
+    if [ -n "$paquets" ]; then
+        local besoin dispo
+        besoin=$(conf "$f" INSTALLE_MIO); [[ "$besoin" =~ ^[0-9]+$ ]] || besoin=0
+        dispo=$(df --output=avail -BM /usr | tail -n 1 | tr -dc '0-9')
+        if [ "$dispo" -lt $(( besoin + 300 )) ]; then
+            if live_volatil; then
+                err "ce module demande $besoin Mio et la session live n'a que $dispo Mio en mémoire vive : activez d'abord « Conserver mes fichiers sur la clé », ou installez matOS."
+            fi
+            err "espace disque insuffisant : ce module demande $besoin Mio, il reste $dispo Mio."
+        fi
+    fi
+
+    if [ -e "$ETAT/$n.conf" ]; then
+        info "remplacement du module « $n » déjà installé."
+        cmd_retirer "$n"
+    fi
+    mkdir -p "$ETAT"
+    if live_volatil; then
+        # rien à copier en mémoire vive : le module reste sur son support, pour cette session
+        ln -sfn "$(readlink -f "$f")" "$ETAT/$n.matmod"
+        info "session live sans persistance : le module est utilisé depuis son support, gardez-le branché."
+        [ -z "$paquets" ] || info "attention : ses paquets seront installés en mémoire vive et perdus à l'extinction."
+    else
+        local libre taille
+        taille=$(stat -c %s "$f"); libre=$(df --output=avail -B1 "$ETAT" | tail -n 1)
+        [ "$libre" -gt $(( taille + 268435456 )) ] \
+            || err "espace disque insuffisant pour ce module ($(( taille / 1048576 )) Mio)."
+        cp --reflink=auto "$f" "$ETAT/$n.matmod.part"
+        mv "$ETAT/$n.matmod.part" "$ETAT/$n.matmod"
+    fi
+    unsquashfs -cat "$f" module.conf > "$ETAT/$n.conf"
+    activer_un "$n"
+    [ -z "$paquets" ] || installer_paquets "$n" "$paquets"
+    info "module « $n » $version installé."
+}
+
+cmd_retirer() {
+    besoin_root
+    local n=$1 ext
+    nom_valide "$n" || err "nom de module invalide."
+    [ -e "$ETAT/$n.conf" ] || err "module non installé : $n"
+    if [ -s "$ETAT/$n.paquets" ]; then
+        # shellcheck disable=SC2046
+        DEBIAN_FRONTEND=noninteractive apt-get purge -y $(cat "$ETAT/$n.paquets")
+    fi
+    desactiver_un "$n"
+    for ext in matmod conf liens paquets; do
+        if [ -e "$ETAT/$n.$ext" ] || [ -L "$ETAT/$n.$ext" ]; then unlink "$ETAT/$n.$ext"; fi
+    done
+    rmdir "$RUN/$n" 2>/dev/null || true
+    info "module « $n » retiré."
+}
+
+case "${1:-}" in
+    liste)      cmd_liste ;;
+    info)       [ $# -eq 2 ] || err "usage : matos-modules info FICHIER"; cmd_info "$2" ;;
+    verifier)   [ $# -eq 2 ] || err "usage : matos-modules verifier FICHIER"; cmd_verifier "$2" ;;
+    installer)  [ $# -ge 2 ] || err "usage : matos-modules installer FICHIER [--oui]"; shift; cmd_installer "$@" ;;
+    retirer)    [ $# -eq 2 ] || err "usage : matos-modules retirer NOM"; cmd_retirer "$2" ;;
+    activer)    [ $# -eq 2 ] || err "usage : matos-modules activer NOM|--tout"; cmd_activer "$2" ;;
+    *)          sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
+esac

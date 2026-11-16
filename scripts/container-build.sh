@@ -38,7 +38,23 @@ apt-get install -y --no-install-recommends \
     zstd git util-linux build-essential polkitd pkexec
 
 # ── 1. Paquets matOS ────────────────────────────────────────────────────
-log "Étape 1/3 : paquets matOS"
+LB="$BUILD_DIR/live"
+image="matos-$MATOS_VERSION-$MATOS_CODENAME"
+lb_etape() {
+    lb "$1" 2>&1 | tee -a "$BUILD_DIR/lb-build.log"
+    [ "${PIPESTATUS[0]}" = 0 ] || die "lb $1 a échoué (voir build/lb-build.log)"
+}
+# Reprise (./build.sh --reprise) : le système de base d'un build précédent est gardé tel quel,
+# seuls les modules demandés et l'image sont refaits. Sert quand un module ou « lb binary »
+# a échoué : à ne pas utiliser après une modification des paquets ou de live/config.
+if [ "${MATOS_REPRISE:-0}" = 1 ]; then
+    [ -f "$LB/.build/chroot_hooks" ] && [ -f "$LB/chroot/usr/share/matos/modules/catalogue" ] \
+        || die "reprise impossible : pas de système de base complet dans build/live (relancer sans --reprise)"
+    log "Reprise : étapes 1 à 3 gardées du build précédent"
+    cd "$LB"
+else
+
+log "Étape 1/5 : paquets matOS"
 rm -rf "$DEBS_DIR"
 "$MATOS_ROOT/scripts/build-debs.sh"
 if [ "${1:-}" = --paquets ]; then
@@ -47,8 +63,7 @@ if [ "${1:-}" = --paquets ]; then
 fi
 
 # ── 2. Configuration live-build ─────────────────────────────────────────
-log "Étape 2/3 : configuration live-build"
-LB="$BUILD_DIR/live"
+log "Étape 2/5 : configuration live-build"
 # Le cache de paquets de live-build survit d'un build à l'autre (gain de temps) ;
 # build/lb-cache se supprime à la main pour repartir de zéro.
 KEEP="$BUILD_DIR/lb-cache"
@@ -66,22 +81,25 @@ fi
 attendus="$LB/config/includes.chroot_after_packages/usr/share/matos/paquets-attendus"
 mkdir -p "$(dirname "$attendus")"
 if [ "${MATOS_SKIP_HEAVY:-0}" = 1 ]; then
-    rm "$LB/config/package-lists/matos-lourds.list.chroot"
+    rm "$LB/config/package-lists/matos-sagemath.list.chroot"
     : > "$attendus"
 else
-    grep -v '^#' "$MATOS_ROOT/live/config/package-lists/matos-lourds.list.chroot" | grep . > "$attendus"
+    grep -v '^#' "$MATOS_ROOT/live/config/package-lists/matos-sagemath.list.chroot" | grep . > "$attendus"
 fi
 
 # Chargeurs d'amorçage : modèles de live-build + écran matOS
 cp -a /usr/share/live/build/bootloaders "$LB/config/bootloaders"
 cp "$MATOS_ROOT/live/bootloaders/splash.svg" "$LB/config/bootloaders/splash.svg"
 
-image="matos-$MATOS_VERSION-$MATOS_CODENAME"
-live_params="boot=live components quiet splash locales=fr_FR.UTF-8 keyboard-layouts=fr timezone=Indian/Antananarivo"
+# « persistence » : sans effet tant que la clé n'a pas de partition de ce nom (matos-persistance)
+live_params="boot=live components persistence quiet splash locales=fr_FR.UTF-8 keyboard-layouts=fr timezone=Indian/Antananarivo"
 
 cd "$LB"
-# Squashfs : zstd niveau 22, blocs de 1 Mio = -6 % par rapport à (19, 128 Kio) pour la même
-# vitesse de lecture (mesuré sur les vraies données) ; le « type » est passé tel quel à mksquashfs.
+# Squashfs : zstd niveau 22. Blocs de 256 Kio pour le système : lancer un logiciel lit de
+# petits morceaux un peu partout, et chaque lecture décompresse un bloc entier ; avec 1 Mio,
+# un disque dur ou une clé USB lente et 4 Go de RAM le paient à chaque démarrage d'application.
+# Les modules, lus en grands morceaux, gardent 1 Mio (scripts/build-modules.sh).
+# Le « type » est passé tel quel à mksquashfs.
 lb config noauto \
     --mode debian \
     --distribution "$DEBIAN_SUITE" \
@@ -99,8 +117,8 @@ lb config noauto \
     --binary-images iso-hybrid \
     --bootloaders "syslinux grub-efi" \
     --uefi-secure-boot enable \
-    --firmware-chroot true --firmware-binary true \
-    --chroot-squashfs-compression-type "zstd -b 1M" \
+    --firmware-chroot false --firmware-binary false \
+    --chroot-squashfs-compression-type "zstd -b ${MATOS_SQUASHFS_BLOCK:-256K}" \
     --chroot-squashfs-compression-level 22 \
     --checksums sha256 \
     --memtest none \
@@ -112,10 +130,40 @@ lb config noauto \
     --bootappend-live "$live_params" \
     --bootappend-live-failsafe "boot=live components noapic noapm nodma nomce nosmp nosplash vga=788 nomodeset"
 
-# ── 3. Construction ─────────────────────────────────────────────────────
-log "Étape 3/3 : lb build (long : 1 à 3 h selon la machine et le réseau)"
-lb build 2>&1 | tee "$BUILD_DIR/lb-build.log"
-[ "${PIPESTATUS[0]}" = 0 ] || die "lb build a échoué (voir build/lb-build.log)"
+# ── 3. Système de base (chroot) ─────────────────────────────────────────
+log "Étape 3/5 : système de base (lb bootstrap, lb chroot)"
+: > "$BUILD_DIR/lb-build.log"
+lb_etape bootstrap
+lb_etape chroot
+# Les épinglages de construction ne doivent pas rester dans le système installé
+if grep -rqs 'Pin-Priority: -1' "$LB/chroot/etc/apt/preferences" "$LB/chroot/etc/apt/preferences.d"; then
+    die "des épinglages de construction sont restés dans l'image (/etc/apt/preferences.d)"
+fi
+: > "$BUILD_DIR/catalogue"
+
+fi  # fin des étapes sautées par la reprise
+
+# ── 4. Modules hors ligne ───────────────────────────────────────────────
+# Construits ici : leurs dépôts se calculent par rapport aux paquets du chroot, et leurs
+# empreintes entrent dans le catalogue de l'image avant sa compression.
+log "Étape 4/5 : modules hors ligne (${MATOS_MODULES-tous})"
+if [ "${MATOS_MODULES-tous}" = tous ]; then
+    "$MATOS_ROOT/scripts/build-modules.sh"
+elif [ -n "$MATOS_MODULES" ]; then
+    # shellcheck disable=SC2086
+    "$MATOS_ROOT/scripts/build-modules.sh" $MATOS_MODULES
+fi
+catalogue="$LB/chroot/usr/share/matos/modules/catalogue"
+[ -f "$catalogue" ] || die "catalogue des modules absent du chroot (paquet matos-modules ?)"
+# réécrit (et non complété) : une reprise ne doit pas doubler les lignes
+{ grep '^#' "$catalogue" || true; cat "$BUILD_DIR/catalogue"; } > "$catalogue.nouveau"
+mv "$catalogue.nouveau" "$catalogue"
+mkdir -p "$MATOS_ROOT/out/modules"
+cp "$catalogue" "$MATOS_ROOT/out/modules/catalogue"
+
+# ── 5. Image ISO ────────────────────────────────────────────────────────
+log "Étape 5/5 : lb binary (compression de l'image : long)"
+lb_etape binary
 
 # live-build ajoute lui-même « -amd64 » au nom de l'image
 iso="$LB/$image-amd64.hybrid.iso"

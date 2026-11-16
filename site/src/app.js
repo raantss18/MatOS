@@ -44,7 +44,7 @@
   fetch("https://api.github.com/repos/raantss18/MatOS/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function (rel) {
-      var parts = rel.assets.filter(function (a) { return /\.part-\d+$/.test(a.name); })
+      var parts = rel.assets.filter(function (a) { return /\.iso\.part-\d+$/.test(a.name); })
         .sort(function (a, b) { return a.name < b.name ? -1 : 1; });
       var total = parts.reduce(function (s, a) { return s + a.size; }, 0);
       var m = /SHA256 de l'ISO\s*:\s*`([0-9a-f]{64})`/.exec(rel.body || "");

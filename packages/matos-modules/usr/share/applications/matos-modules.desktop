@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=matOS modules
+Name[fr]=Modules matOS
+Comment[fr]=Ajouter ou retirer des modules hors ligne (Lean, Coq, bibliothèque, encyclopédie)
+Exec=matos-modules-gui
+Icon=package-x-generic
+Categories=Settings;System;PackageManager;

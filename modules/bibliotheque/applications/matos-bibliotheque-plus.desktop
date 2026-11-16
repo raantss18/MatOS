@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Library L3-M2
+Name[fr]=Bibliothèque L3 à M2
+Comment[fr]=Cours et livres libres de licence 3 et de master (module hors ligne)
+Exec=xdg-open /opt/matos/bibliotheque-plus
+Icon=accessories-dictionary
+Categories=Education;X-matOS-Math;

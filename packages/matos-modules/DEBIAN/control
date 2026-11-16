@@ -1,0 +1,15 @@
+Package: matos-modules
+Version: @MATOS_VERSION@
+Architecture: all
+Maintainer: Antsa Malala RANIRIAMANJAKA <raantss@gmail.com>
+Section: admin
+Priority: optional
+Depends: matos-base, squashfs-tools, zenity, pkexec, apt
+Description: matOS - modules hors ligne
+ Ajoute à matOS des modules distribués en un seul fichier « .matmod » (Lean 4 et
+ Mathlib, Coq et Scilab, bibliothèque L3-M2, encyclopédie...), copiés d'une clé
+ USB ou d'un poste voisin, sans connexion Internet.
+ .
+ Un module est une image compressée en lecture seule : elle est montée telle
+ quelle, sans être décompressée sur le disque. Son empreinte SHA256 est comparée
+ au catalogue de cette version de matOS avant toute installation.

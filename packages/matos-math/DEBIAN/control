@@ -8,20 +8,19 @@ Depends: matos-base,
  maxima, wxmaxima, xcas, pari-gp, pari-gp2c, pari-doc, pari-elldata,
  pari-galdata, pari-seadata, gap, gap-alnuth, gap-atlasrep, gap-autpgrp,
  gap-polycyclic, gap-primgrp, gap-smallgrp, gap-table-of-marks,
- gap-transgrp, gap-utils, singular, coq, coqide,
- octave, octave-statistics, octave-symbolic, scilab, kig,
- gnuplot-qt, r-base, r-recommended, r-base-dev,
- python3-numpy, python3-scipy, python3-matplotlib, python3-sympy,
- python3-pandas, python3-pip, python3-venv, idle,
+ gap-transgrp, gap-utils, singular,
+ octave, octave-statistics, octave-symbolic, kig,
+ gnuplot-qt, r-base, r-recommended,
+ python3-sympy, python3-pip, python3-venv,
  texlive-latex-extra, texlive-science, texlive-pictures, texlive-lang-french,
- texlive-lang-greek, texlive-bibtex-extra, texlive-fonts-recommended,
+ texlive-bibtex-extra, texlive-fonts-recommended,
  texlive-xetex, texlive-luatex, latexmk, biber, texstudio,
- build-essential, gfortran, git, default-jre
+ build-essential, gfortran, git
 Description: matOS - logiciels mathématiques de Debian
  Métapaquet regroupant les logiciels mathématiques fournis par Debian :
- calcul formel (Maxima, Xcas, PARI/GP, GAP, Singular), preuve (Coq),
- calcul numérique (Octave, Scilab), géométrie (Kig), statistiques (R),
- Python scientifique et LaTeX.
+ calcul formel (Maxima, Xcas, PARI/GP, GAP, Singular), calcul numérique
+ (Octave), géométrie (Kig), statistiques (R) et LaTeX.
  .
- SageMath, Lean 4, GeoGebra 6, VSCodium et RStudio sont fournis par
- des paquets matOS séparés, figés en version.
+ SageMath (avec le Python scientifique), GeoGebra 6 et VSCodium sont fournis
+ par des paquets matOS séparés, figés en version. Lean 4, Coq, Scilab et
+ RStudio sont des modules hors ligne : voir « matos-modules ».

@@ -4,19 +4,14 @@
 set -e
 manque=""
 for cmd in startxfce4 lightdm calamares maxima wxmaxima xcas gp gap Singular \
-           coqc octave scilab R rstudio codium geogebra6 latexmk pdflatex \
-           texstudio python3 firefox-esr libreoffice; do
+           octave R geany geogebra6 latexmk pdflatex texstudio python3 \
+           firefox-esr libreoffice matos-modules unsquashfs matos-persistance matos-partage; do
     command -v "$cmd" >/dev/null 2>&1 || manque="$manque $cmd"
 done
-# SageMath et Lean sont absents des builds de test rapides (build.sh --rapide)
+# SageMath est absent des builds de test rapides (build.sh --rapide)
 if grep -qx matos-sagemath /usr/share/matos/paquets-attendus 2>/dev/null; then
     for cmd in sage matos-python matos-jupyterlab; do
         command -v "$cmd" >/dev/null 2>&1 || [ -x "/opt/matos/bin/$cmd" ] || manque="$manque $cmd"
-    done
-fi
-if grep -qx matos-lean /usr/share/matos/paquets-attendus 2>/dev/null; then
-    for cmd in lean lake matos-lean-projet; do
-        command -v "$cmd" >/dev/null 2>&1 || manque="$manque $cmd"
     done
 fi
 for f in /usr/share/plymouth/themes/matos/matos.plymouth \
@@ -26,6 +21,15 @@ for f in /usr/share/plymouth/themes/matos/matos.plymouth \
          /usr/share/themes/Greybird-dark/gtk-3.0/gtk.css; do
     [ -e "$f" ] || manque="$manque $f"
 done
+# Les modèles LaTeX pour enseignants doivent compiler avec le TeX Live de l'image
+t=$(mktemp -d)
+for modele in /etc/skel/Modèles/*.tex; do
+    [ -e "$modele" ] || { manque="$manque modèles-LaTeX"; break; }
+    ( cd "$t" && pdflatex -interaction=nonstopmode -halt-on-error "$modele" >/dev/null 2>&1 \
+              && pdflatex -interaction=nonstopmode -halt-on-error "$modele" >/dev/null 2>&1 ) \
+        || manque="$manque compilation:$(basename "$modele")"
+done
+rm -rf "$t"
 [ "$(plymouth-set-default-theme)" = matos ] || manque="$manque thème-plymouth"
 if [ -n "$manque" ]; then
     echo "matOS : composants manquants :$manque" >&2

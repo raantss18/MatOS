@@ -3,7 +3,7 @@
 # Exécuté en root dans le conteneur Debian de build (voir build.sh).
 #
 # Usage : build-debs.sh [PAQUET...]   (par défaut : tous)
-# MATOS_SKIP_HEAVY=1 saute SageMath et Lean (build de test rapide).
+# MATOS_SKIP_HEAVY=1 saute SageMath (build de test rapide).
 
 . "$(dirname "$0")/lib.sh"
 
@@ -102,8 +102,20 @@ build_matos_installer() {
     sed -i "s/^\( *\)- 'calamares-settings-debian'/\1- 'calamares-settings-debian'\n\1- 'matos-installer'\n\1- 'calamares'/" \
         "$c/modules/packages.conf"
     grep -q "'matos-installer'" "$c/modules/packages.conf" || die "packages.conf non modifié"
-    # matOS installé occupe ~25 Go
-    sed -i 's/^\( *requiredStorage: *\).*/\132/' "$c/modules/welcome.conf"
+    # la base installée occupe une douzaine de Go ; les modules s'ajoutent ensuite
+    sed -i 's/^\( *requiredStorage: *\).*/\116/' "$c/modules/welcome.conf"
+    grep -q '^ *requiredStorage: *16$' "$c/modules/welcome.conf" || die "welcome.conf : espace requis non modifié"
+    [ -f "$c/modules/partition.conf" ] || die "partition.conf (présélection) a disparu du paquet matos-installer"
+    # Dates en français par défaut : Calamares choisit le format des dates d'après le pays du
+    # fuseau parmi /usr/share/i18n/SUPPORTED (avec Madagascar : le malgache, dans un système en
+    # français). Le lanceur lui présente la liste matOS le temps de l'installation ; le système
+    # installé, copié depuis l'image, garde la liste complète de Debian.
+    local lanceur="$dir/usr/bin/calamares-install-debian"
+    local liste=/usr/share/matos/installateur/locales
+    [ -s "$dir$liste" ] || die "liste des langues de l'installateur absente"
+    ! grep -qv '^[a-z][a-zA-Z_@.0-9-]* UTF-8$' "$dir$liste" || die "liste des langues : une ligne par langue, sans commentaire"
+    sed -i "s|^pkexec calamares\$|sudo mount --bind $liste /usr/share/i18n/SUPPORTED\npkexec calamares\nsudo umount /usr/share/i18n/SUPPORTED|" "$lanceur"
+    grep -q "^sudo mount --bind $liste" "$lanceur" || die "lanceur Calamares non modifié (pkexec calamares introuvable)"
     # Lanceur : nom et icône matOS
     local app="$dir/usr/share/applications/calamares-install-debian.desktop"
     sed -i 's/^Name=.*/Name=Install matOS\nName[fr]=Installer matOS/; s/^Icon=.*/Icon=matos/; s/Debian Live/matOS/' "$app"
@@ -254,73 +266,12 @@ build_matos_sagemath() {
     build_deb "$dir"
 }
 
-# ── matos-lean : Lean 4 + Mathlib précompilée ───────────────────────────
-build_matos_lean() {
-    local dir; dir=$(stage matos-lean)
-    local prefix=/opt/matos/lean
-    local tarball; tarball=$(fetch "$ELAN_URL" "$ELAN_SHA256" "elan-$ELAN_VERSION.tar.gz")
-    rm -rf "$prefix" "$BUILD_DIR/elan"; mkdir -p "$prefix" "$BUILD_DIR/elan"
-    tar -xzf "$tarball" -C "$BUILD_DIR/elan"
-
-    export ELAN_HOME="$prefix/elan"
-    "$BUILD_DIR/elan/elan-init" -y --no-modify-path --default-toolchain "$LEAN_TOOLCHAIN"
-    local path_save="$PATH"
-    export PATH="$ELAN_HOME/bin:$PATH"
-
-    local modele="$prefix/modele"
-    mkdir -p "$modele/Projet"
-    echo "$LEAN_TOOLCHAIN" > "$modele/lean-toolchain"
-    cat > "$modele/lakefile.toml" <<EOF
-name = "projet"
-defaultTargets = ["Projet"]
-
-[[require]]
-name = "mathlib"
-git = "$MATHLIB_GIT"
-rev = "$MATHLIB_REV"
-
-[[lean_lib]]
-name = "Projet"
-EOF
-    echo 'import Projet.Basic' > "$modele/Projet.lean"
-    cat > "$modele/Projet/Basic.lean" <<'EOF'
-import Mathlib
-
-/-! Premier fichier de votre projet Lean 4 (Mathlib est disponible hors ligne). -/
-
-open Real
-
-example (a b : ℝ) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by ring
-
-theorem racine_deux_irrationnelle : Irrational (√2) := irrational_sqrt_two
-EOF
-    # cache des oleans Mathlib conservé entre deux builds (plusieurs Go)
-    export MATHLIB_CACHE_DIR="$BUILD_DIR/mathlib-cache"; mkdir -p "$MATHLIB_CACHE_DIR"
-    (cd "$modele" && lake update && lake exe cache get)
-    # La toolchain doit être exactement celle de Mathlib, sinon tout serait recompilé
-    cmp -s "$modele/lean-toolchain" "$modele/.lake/packages/mathlib/lean-toolchain" \
-        || die "LEAN_TOOLCHAIN ($LEAN_TOOLCHAIN) ≠ toolchain de Mathlib $MATHLIB_REV"
-    (cd "$modele" && lake build)
-    rm -rf "$modele/.lake/build"
-    chmod -R a+rX "$prefix"
-
-    log "Test Lean + Mathlib (utilisateur sans droits, /opt en lecture seule)"
-    # même réglage que DEBIAN/postinst de matos-lean
-    git config --system --add safe.directory "$prefix/modele/.lake/packages/*"
-    run_as_nobody env ELAN_HOME="$ELAN_HOME" PATH="$ELAN_HOME/bin:/usr/bin:/bin" sh -c '
-        sh "$0" essai && cd essai && lake build && echo "lean OK"' \
-        "$dir/usr/bin/matos-lean-projet"
-
-    export PATH="$path_save"; unset ELAN_HOME
-    mkdir -p "$dir/opt/matos"
-    mv "$prefix" "$dir/opt/matos/lean"
-    build_deb "$dir"
-}
-
 # ── Sélection ───────────────────────────────────────────────────────────
-ALL="matos-base matos-archive-keyring matos-stats matos-desktop matos-math matos-documentation matos-installer matos-bibliotheque
-     matos-geogebra codium rstudio matos-vscodium-config"
-HEAVY="matos-sagemath matos-lean"
+ALL="matos-base matos-archive-keyring matos-stats matos-modules matos-desktop matos-math matos-documentation matos-installer matos-bibliotheque matos-enseignant
+     matos-geogebra"
+# rstudio, codium et matos-vscodium-config ne sont construits que pour les modules
+# preuve-calcul et lean (scripts/build-modules.sh)
+HEAVY="matos-sagemath"
 [ "${MATOS_SKIP_HEAVY:-0}" = 1 ] || ALL="$ALL $HEAVY"
 
 for pkg in ${@:-$ALL}; do

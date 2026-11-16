@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=matOS test report
+Exec=matos-test-rapport
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

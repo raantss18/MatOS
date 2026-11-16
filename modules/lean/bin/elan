@@ -1,0 +1,9 @@
+#!/bin/sh
+# Lean 4 matOS : toolchain figée dans /opt/matos/lean/elan.
+# Pour installer d'autres toolchains, définir ELAN_HOME vers un dossier personnel.
+: "${ELAN_HOME:=/opt/matos/lean/elan}"
+export ELAN_HOME
+# Mathlib partagée appartient à root : git la refuserait (« dubious ownership ») sans ceci
+export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory \
+       GIT_CONFIG_VALUE_0='/opt/matos/lean/modele/.lake/packages/*'
+exec "$ELAN_HOME/bin/elan" "$@"

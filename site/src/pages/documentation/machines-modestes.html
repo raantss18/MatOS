@@ -11,12 +11,13 @@
     <h2>Ce qui est prévu</h2>
     <ul>
       <li><strong>Mémoire</strong> : swap compressé en mémoire (zram), <code>earlyoom</code> (termine le programme le plus gourmand avant que le système ne se bloque, le bureau étant protégé), journaux limités.</li>
+      <li><strong>Disque</strong> : l'image est compressée par petits blocs pour que les logiciels se lancent vite depuis une clé ou un disque dur ; l'ordonnanceur BFQ garde le bureau réactif pendant une copie ; le démarrage n'attend pas le réseau.</li>
       <li><strong>Bureau</strong> : XFCE. Au premier démarrage, les effets visuels (composition d'xfwm4) sont coupés sur une machine à 4 Go ou sans accélération 3D.</li>
       <li><strong>Processeur</strong> : paquets Debian amd64 de base (sans AVX exigé) ; l'environnement SageMath est figé au niveau x86-64 de base pour fonctionner sur de vieux processeurs.</li>
       <li><strong>UEFI 32 bits</strong> : un chargeur <code>bootia32.efi</code> est inclus pour les tablettes et mini-PC dont le micrologiciel UEFI est en 32 bits avec un processeur 64 bits (non testé sur du vrai matériel).</li>
     </ul>
     <h2>Ce qui tient à 4 Go</h2>
-    <p>Testé dans une machine virtuelle avec 4 Go de RAM et un processeur de génération Core 2 : le démarrage, le bureau et l'installation. Le bureau, le navigateur, LaTeX, Python, Xcas, Maxima, GAP, PARI/GP, Singular, R et Octave sont des usages normaux pour cette taille.</p>
-    <p><strong>Gourmands</strong> : SageMath, Lean avec Mathlib, RStudio, VSCodium et GeoGebra 6 (Electron ou Java). Lancez-les un par un, fermez le reste avant, ou préférez Xcas, wxMaxima, Mousepad et TeXstudio, bien plus légers. La consommation mémoire réelle de SageMath et de Lean <strong>n'a pas encore été mesurée</strong> : vos retours sont les bienvenus (<a href="compatibilite.html">Compatibilité</a>).</p>
+    <p>Mesuré dans une machine virtuelle avec 4 Go de RAM et un processeur de génération Core 2 : le bureau complet 45 secondes après le lancement, 1,9 Go de mémoire occupée avec la page de bienvenue ouverte dans Firefox, aucun service en échec. Le bureau, le navigateur, LaTeX, Python, Xcas, Maxima, GAP, PARI/GP, Singular, R, Octave et Geany sont des usages normaux pour cette taille.</p>
+    <p><strong>Gourmands</strong> : SageMath, GeoGebra 6 et, dans les modules, Lean avec Mathlib, RStudio et VSCodium. Lancez-les un par un, fermez le reste avant, ou préférez Xcas, wxMaxima, Geany et TeXstudio, bien plus légers. Dans Lean, gardez des imports ciblés : <code>import Mathlib</code> charge toute la bibliothèque. La consommation mémoire réelle de SageMath et de Lean <strong>n'a pas encore été mesurée</strong> : vos retours sont les bienvenus (<a href="compatibilite.html">Compatibilité</a>).</p>
   </div>
 </div>

@@ -1,0 +1,13 @@
+[Unit]
+Description=matOS : montage des modules hors ligne
+After=local-fs.target
+Before=display-manager.service
+ConditionDirectoryNotEmpty=/var/lib/matos/modules
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/matos-modules activer --tout
+
+[Install]
+WantedBy=multi-user.target

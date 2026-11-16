@@ -1,9 +1,11 @@
 #!/bin/bash
 # Publie l'ISO matOS dans une release GitHub.
 #
-# GitHub limite chaque fichier d'une release à 2 Gio ; l'ISO (≈ 8 Go) est donc découpée
-# en parts de 1900 Mio, avec un fichier SHA256SUMS. Les utilisateurs la récupèrent avec
-# scripts/telecharger-matos.sh, qui vérifie chaque part et recompose l'ISO.
+# GitHub limite chaque fichier d'une release à 2 Gio ; l'ISO est donc découpée en parts de
+# 1900 Mio, avec un fichier SHA256SUMS. Les utilisateurs la récupèrent avec
+# scripts/telecharger-matos.sh, qui vérifie chaque part et recompose l'ISO. Les modules hors
+# ligne (out/modules/*.matmod) sont joints tels quels, ou découpés de la même façon s'ils
+# dépassent 2 Gio (Lean + Mathlib).
 #
 # Usage : scripts/publier-release.sh [--a-blanc | --publier]
 #   (sans option)  crée la release en BROUILLON (invisible du public) et envoie les fichiers
@@ -39,13 +41,36 @@ split -b "$taille_part" -d -a 2 "$iso" "$sortie/$iso_nom.part-"
 [ -f "$MATOS_ROOT/out/matos-$MATOS_VERSION-$MATOS_CODENAME-amd64.paquets.txt" ] \
     && cp "$MATOS_ROOT/out/matos-$MATOS_VERSION-$MATOS_CODENAME-amd64.paquets.txt" "$sortie/paquets.txt"
 
+limite=$((2 * 1024 * 1024 * 1024 - 1))   # taille maximale d'un fichier de release GitHub
+# Modules hors ligne : seulement ceux que le catalogue de cette ISO reconnaît (même build)
+catalogue="$MATOS_ROOT/out/modules/catalogue"
+nb_modules=0; liste_modules=""
+if [ -f "$catalogue" ]; then
+    while IFS='|' read -r m_sha m_nom m_version m_taille m_desc; do
+        case "$m_sha" in ''|'#'*) continue ;; esac
+        m="$MATOS_ROOT/out/modules/matos-$m_nom-$m_version.matmod"
+        [ -f "$m" ] || die "module du catalogue absent : $m"
+        [ "$(sha256sum "$m" | cut -d' ' -f1)" = "$m_sha" ] \
+            || die "$(basename "$m") ne correspond pas au catalogue de l'ISO : reconstruire (./build.sh)"
+        if [ "$m_taille" -gt "$limite" ]; then
+            split -b "$taille_part" -d -a 2 "$m" "$sortie/$(basename "$m").part-"
+            (cd "$sortie" && sha256sum "$(basename "$m").part-"* >> SHA256SUMS)
+        else
+            ln "$m" "$sortie/" 2>/dev/null || cp "$m" "$sortie/"
+        fi
+        echo "$m_sha  $(basename "$m")" >> "$sortie/SHA256SUMS"
+        nb_modules=$((nb_modules + 1))
+        liste_modules="$liste_modules| \`$m_nom\` | $((m_taille / 1048576)) Mio | $m_desc |"$'\n'
+    done < "$catalogue"
+fi
+log "Modules joints : $nb_modules"
+
 # Chaque part doit tenir sous la limite de GitHub (2 Gio)
-limite=$((2 * 1024 * 1024 * 1024 - 1))
 for f in "$sortie"/*; do
     [ "$(stat -c %s "$f")" -le "$limite" ] || die "$(basename "$f") dépasse 2 Gio"
 done
 
-nb=$(ls "$sortie/$iso_nom.part-"* | wc -l)
+nb=$(ls "$sortie/$iso_nom".part-* | wc -l)
 taille=$(du -h "$iso" | cut -f1)
 iso_sha=$(cut -d' ' -f1 < <(grep " $iso_nom\$" "$sortie/SHA256SUMS"))
 cat > "$sortie/NOTES.md" <<EOF
@@ -72,10 +97,26 @@ SHA256 de l'ISO : \`$iso_sha\`
 
 ## Installer
 
-Copier l'ISO sur une clé USB de **16 Go** (Ventoy, balenaEtcher, GNOME Disques ou \`dd\`). Elle démarre en
-BIOS et en UEFI. Machines modestes : 64 bits uniquement, 4 Go de RAM suffisent pour le bureau et la
-plupart des logiciels ; SageMath, Lean + Mathlib, RStudio et GeoGebra sont gourmands.
+Copier l'ISO sur une clé USB de **8 Go ou plus** (Ventoy, balenaEtcher, GNOME Disques ou \`dd\`). Elle
+démarre en BIOS et en UEFI. Machines modestes : 64 bits uniquement, 4 Go de RAM suffisent pour le
+bureau et la plupart des logiciels ; SageMath, Lean + Mathlib et GeoGebra sont gourmands.
 EOF
+if [ "$nb_modules" -gt 0 ]; then
+    cat >> "$sortie/NOTES.md" <<EOF
+
+## Modules hors ligne
+
+Compléments facultatifs, à télécharger une fois puis à passer de main en main sur une clé USB.
+Dans matOS : menu **Modules matOS**, ou \`sudo matos-modules installer FICHIER.matmod\`. Chaque fichier
+est vérifié (SHA256) par matOS avant l'installation.
+
+| Module | Taille | Contenu |
+|---|---|---|
+$liste_modules
+Avec le script : \`bash telecharger-matos.sh $tag --modules\` (ou \`--module=lean\`). Un module de plus
+de 2 Go est fourni en parts \`.matmod.part-NN\`, que le script recompose (ou \`cat\`, \`copy /b\`).
+EOF
+fi
 
 log "Fichiers prêts dans $sortie :"; ls -lh "$sortie" | sed 's/^/    /'
 [ "$mode" = --a-blanc ] && { log "À blanc : rien n'a été envoyé."; exit 0; }

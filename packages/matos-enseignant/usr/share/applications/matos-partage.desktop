@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Classroom sharing
+Name[fr]=Partage en salle
+Comment[fr]=Mettre un dossier à disposition des ordinateurs de la salle, sans Internet
+Exec=matos-partage
+Icon=folder-publicshare
+Categories=Education;Network;X-matOS-Math;

@@ -23,7 +23,8 @@ MENU = [("accueil", "Accueil", ""), ("telecharger", "Télécharger", "telecharge
         ("documentation", "Documentation", "documentation/"), ("communaute", "Communauté", "communaute.html")]
 
 DOCS = [("./", "Vue d'ensemble"), ("installer.html", "Installer matOS"), ("premiers-pas.html", "Premiers pas"),
-        ("logiciels.html", "Les logiciels"), ("machines-modestes.html", "Machines modestes"),
+        ("logiciels.html", "Les logiciels"), ("modules.html", "Modules, persistance, enseignants"),
+        ("machines-modestes.html", "Machines modestes"),
         ("compatibilite.html", "Compatibilité matérielle"), ("faq.html", "Questions fréquentes"),
         ("confidentialite.html", "Confidentialité"), ("construire.html", "Construire et contribuer")]
 

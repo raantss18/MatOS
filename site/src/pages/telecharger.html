@@ -1,20 +1,20 @@
 <!-- titre: Télécharger matOS -->
-<!-- description: Télécharger l'ISO de matOS (8,3 Go, découpée en parts vérifiées), créer la clé USB et démarrer. -->
+<!-- description: Télécharger l'ISO de matOS (3,9 Go, en parts vérifiées) et ses modules hors ligne, créer la clé USB et démarrer. -->
 <!-- section: telecharger -->
 <div class="conteneur">
   <h1>Télécharger matOS</h1>
-  <p class="lecture">Version <strong id="rel-version">{{version}}</strong> — ISO hybride pour PC 64 bits (BIOS et UEFI). Elle pèse environ 8,3 Go et tient sur une <strong>clé USB de 16 Go</strong>.</p>
+  <p class="lecture">Version <strong id="rel-version">{{version}}</strong> — ISO hybride pour PC 64 bits (BIOS et UEFI). Elle pèse 3,9 Go et tient sur une <strong>clé USB de 8 Go</strong>.</p>
 
   <div class="note lecture">
     <p class="note-titre">Pourquoi plusieurs parts ?</p>
-    <p>GitHub limite chaque fichier à 2 Go. L'ISO est donc découpée en 5 parts d'environ 2 Go. Le script ci-dessous les télécharge, <strong>vérifie chacune</strong>, reprend après une coupure de connexion et recompose l'ISO.</p>
+    <p>GitHub limite chaque fichier à 2 Go. L'ISO est donc découpée en parts d'au plus 2 Go. Le script ci-dessous les télécharge, <strong>vérifie chacune</strong>, reprend après une coupure de connexion et recompose l'ISO.</p>
   </div>
 
   <h2>En quatre étapes</h2>
   <ol class="etapes">
     <li>
       <h3>Télécharger l'ISO</h3>
-      <p><strong>Linux, macOS</strong>, ou Windows avec Git Bash (installé avec Git pour Windows). Prévoir 10 Go d'espace libre.</p>
+      <p><strong>Linux, macOS</strong>, ou Windows avec Git Bash (installé avec Git pour Windows). Prévoir 6 Go d'espace libre.</p>
       <pre class="code">curl -fLO https://raw.githubusercontent.com/raantss18/MatOS/main/scripts/telecharger-matos.sh</pre>
       <pre class="code">bash telecharger-matos.sh</pre>
       <p class="discret">Pour une version précise : <code id="rel-cmd-version">bash telecharger-matos.sh v{{version}}</code>. Le script n'a été testé que sous Linux.</p>
@@ -22,7 +22,7 @@
         <summary>Sans le script (Windows ou téléchargement manuel)</summary>
         <p>Téléchargez toutes les parts du tableau ci-dessous dans un même dossier, puis recomposez-les :</p>
         <p><strong>Windows</strong> (Invite de commandes, dans le dossier des parts) :</p>
-        <pre class="code">copy /b matos-{{version}}-ralambo-amd64.hybrid.iso.part-00+matos-{{version}}-ralambo-amd64.hybrid.iso.part-01+matos-{{version}}-ralambo-amd64.hybrid.iso.part-02+matos-{{version}}-ralambo-amd64.hybrid.iso.part-03+matos-{{version}}-ralambo-amd64.hybrid.iso.part-04 matos-{{version}}-ralambo-amd64.hybrid.iso</pre>
+        <pre class="code">copy /b matos-{{version}}-ralambo-amd64.hybrid.iso.part-* matos-{{version}}-ralambo-amd64.hybrid.iso</pre>
         <p><strong>Linux, macOS</strong> :</p>
         <pre class="code">cat matos-{{version}}-ralambo-amd64.hybrid.iso.part-* &gt; matos-{{version}}-ralambo-amd64.hybrid.iso</pre>
       </details>
@@ -67,6 +67,23 @@
       </table>
     </div>
   </div>
+  <h2 id="modules">Les modules hors ligne</h2>
+  <p class="lecture">Les modules complètent matOS sans connexion : téléchargez-les une fois, copiez-les sur une clé, installez-les par le menu <strong>Modules matOS</strong>. Ils sont joints à chaque version sur GitHub. Guide : <a href="{{racine}}documentation/modules.html">Modules hors ligne</a>.</p>
+  <div class="defile">
+    <table>
+      <caption>Modules de matOS {{version}}</caption>
+      <thead><tr><th scope="col">Module</th><th scope="col">Taille</th><th scope="col">Contenu</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><code>lean</code></th><td>2,8 Go</td><td>Lean 4, Mathlib précompilée, VSCodium</td></tr>
+        <tr><th scope="row"><code>preuve-calcul</code></th><td>0,96 Go</td><td>Coq et CoqIDE, Scilab, RStudio</td></tr>
+        <tr><th scope="row"><code>bibliotheque</code></th><td>0,44 Go</td><td>13 livres de L3 à M2, documentation de Python, R, SymPy, Git</td></tr>
+        <tr><th scope="row"><code>encyclopedie</code></th><td>0,80 Go</td><td>Wikipédia en français : mathématiques, informatique, physique</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <pre class="code">bash telecharger-matos.sh --modules</pre>
+  <p class="discret">Un seul module, sans l'ISO : <code>bash telecharger-matos.sh --sans-iso --module=lean</code>. Le module <code>lean</code> dépasse 2 Go : il est fourni en deux parts que le script recompose.</p>
+
   <p>Toutes les versions, avec leurs notes : <a href="https://github.com/raantss18/MatOS/releases">page des versions sur GitHub</a>. Historique : <a href="https://github.com/raantss18/MatOS/blob/main/CHANGELOG.md">CHANGELOG</a>.</p>
 
   <h2>Avant de télécharger</h2>
@@ -75,9 +92,9 @@
       <caption>Configuration</caption>
       <tbody>
         <tr><th scope="row">Processeur</th><td>64 bits (x86-64) uniquement. Les processeurs 32 bits ne sont pas pris en charge.</td></tr>
-        <tr><th scope="row">Mémoire</th><td>4 Go de RAM suffisent pour le bureau et la plupart des logiciels ; SageMath, Lean avec Mathlib, RStudio et GeoGebra sont gourmands.</td></tr>
-        <tr><th scope="row">Disque</th><td>32 Go libres pour l'installation (l'installateur l'exige).</td></tr>
-        <tr><th scope="row">Clé USB</th><td>16 Go (pas de DVD : l'ISO dépasse 4,7 Go).</td></tr>
+        <tr><th scope="row">Mémoire</th><td>4 Go de RAM suffisent pour le bureau et la plupart des logiciels ; SageMath et GeoGebra sont gourmands, comme Lean et RStudio (modules).</td></tr>
+        <tr><th scope="row">Disque</th><td>16 Go libres pour l'installation (l'installateur l'exige ; matOS en occupe 12). Prévoir 32 Go pour ajouter les modules <code>lean</code> et <code>preuve-calcul</code> (3 Go chacun).</td></tr>
+        <tr><th scope="row">Clé USB</th><td>8 Go ou plus. La place restante peut garder vos fichiers (persistance).</td></tr>
       </tbody>
     </table>
   </div>

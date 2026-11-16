@@ -1,0 +1,47 @@
+% Modèle matOS : feuille de travaux dirigés. Compiler avec pdflatex.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern,microtype}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\newcounter{exercice}
+\newenvironment{exercice}[1][]{%
+  \refstepcounter{exercice}\par\medskip\noindent
+  \textbf{Exercice \theexercice}\ifx&#1&\else\ (#1)\fi\textbf{.}\ }{\par}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+\pagestyle{fancy}
+\lhead{Mention Mathématiques --- L1}
+\rhead{Analyse 1 --- 2026--2027}
+\cfoot{\thepage}
+
+\begin{document}
+\begin{center}
+  {\Large\bfseries Feuille de TD n\textsuperscript{o} 1 : suites réelles}
+\end{center}
+
+\begin{exercice}[limites]
+Étudier la convergence des suites suivantes :
+\begin{enumerate}[label=\alph*)]
+  \item $u_n = \dfrac{3n^2 + 1}{n^2 + n}$ ;
+  \item $v_n = \sqrt{n+1} - \sqrt{n}$ ;
+  \item $w_n = \left(1 + \dfrac{1}{n}\right)^{n}$.
+\end{enumerate}
+\end{exercice}
+
+\begin{exercice}
+Soit $(u_n)$ une suite croissante et majorée. Montrer qu'elle converge vers
+$\sup \{ u_n : n \in \N \}$.
+\end{exercice}
+
+\begin{exercice}[à chercher avant la séance]
+Montrer que toute suite convergente est bornée. La réciproque est-elle vraie ?
+\end{exercice}
+
+\end{document}

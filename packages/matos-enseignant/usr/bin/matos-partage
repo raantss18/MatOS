@@ -1,0 +1,35 @@
+#!/bin/sh
+# matos-partage : met un dossier à disposition des ordinateurs du même réseau (salle de
+# cours, point d'accès Wi-Fi d'un portable), sans Internet. Les autres l'ouvrent dans leur
+# navigateur. Lecture seule ; le partage s'arrête à la fermeture de la fenêtre.
+set -eu
+port=8080
+dossier=${1:-}
+if [ -z "$dossier" ]; then
+    dossier=$(zenity --file-selection --directory --title="Dossier à partager avec la salle") || exit 0
+fi
+[ -d "$dossier" ] || { zenity --error --text="Dossier introuvable : $dossier"; exit 1; }
+adresses=$(ip -4 -o addr show scope global | awk '{ sub(/\/.*/, "", $4); print "http://" $4 ":'"$port"'/" }')
+if [ -z "$adresses" ]; then
+    zenity --error --width=460 --title="Partage en salle" --text="Cet ordinateur n'est relié à aucun réseau.
+
+Connectez-le au réseau de la salle, ou créez un point d'accès Wi-Fi depuis l'icône réseau
+(« Créer un nouveau réseau Wi-Fi »), puis relancez le partage."
+    exit 1
+fi
+python3 -m http.server "$port" --bind 0.0.0.0 --directory "$dossier" >/dev/null 2>&1 &
+serveur=$!
+trap 'kill "$serveur" 2>/dev/null || true' EXIT INT TERM
+sleep 1
+if ! kill -0 "$serveur" 2>/dev/null; then
+    zenity --error --width=420 --text="Le partage n'a pas pu démarrer (le port $port est peut-être déjà utilisé)."
+    exit 1
+fi
+zenity --info --width=520 --title="Partage en salle" --ok-label="Arrêter le partage" --text="Le dossier « $(basename "$dossier") » est partagé en lecture seule.
+
+Sur les autres ordinateurs du même réseau, ouvrir dans le navigateur :
+
+<b>$adresses</b>
+
+Toute personne connectée à ce réseau peut lire ce dossier.
+Le partage s'arrête quand vous fermez cette fenêtre."
