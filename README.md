@@ -322,7 +322,7 @@ consommation mémoire de SageMath et de Lean en usage réel.
 - Les modules `lean` et `preuve-calcul` ne s'installent pas dans une session live sans
   persistance sur une machine à 4 Go : les paquets se décompresseraient en mémoire vive.
 - Le module `lean` (2,8 Go) dépasse la limite de 2 Go par fichier de GitHub : il est publié en
-  deux parts que `telecharger-matos.sh` recompose.
+  parts de 400 Mo que `telecharger-matos.sh` recompose.
 - Certaines adresses de livres changent de contenu sans changer de nom : la construction échoue
   alors sur l'empreinte. Un miroir des sources est à prévoir.
 - RStudio ne publie pas de paquet propre à Debian 13 : c'est le paquet officiel

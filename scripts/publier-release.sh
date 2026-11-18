@@ -26,6 +26,8 @@ iso_nom="matos-$MATOS_VERSION-$MATOS_CODENAME-amd64.hybrid.iso"
 iso="$MATOS_ROOT/out/$iso_nom"
 sortie="$MATOS_ROOT/out/release"
 taille_part=${MATOS_PART_SIZE:-1900M}
+# Modules de plus de 2 Gio : parts plus petites, qu'une connexion lente envoie sans coupure (HTTP 408)
+taille_part_module=${MATOS_PART_SIZE_MODULES:-400M}
 
 [ -f "$iso" ] || die "ISO absente : $iso (lancer ./build.sh)"
 if [ -f "$iso.sha256" ]; then
@@ -53,7 +55,7 @@ if [ -f "$catalogue" ]; then
         [ "$(sha256sum "$m" | cut -d' ' -f1)" = "$m_sha" ] \
             || die "$(basename "$m") ne correspond pas au catalogue de l'ISO : reconstruire (./build.sh)"
         if [ "$m_taille" -gt "$limite" ]; then
-            split -b "$taille_part" -d -a 2 "$m" "$sortie/$(basename "$m").part-"
+            split -b "$taille_part_module" -d -a 2 "$m" "$sortie/$(basename "$m").part-"
             (cd "$sortie" && sha256sum "$(basename "$m").part-"* >> SHA256SUMS)
         else
             ln "$m" "$sortie/" 2>/dev/null || cp "$m" "$sortie/"
